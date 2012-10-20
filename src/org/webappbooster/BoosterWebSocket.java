@@ -1,8 +1,5 @@
 package org.webappbooster;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
@@ -12,20 +9,16 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.exceptions.InvalidDataException;
 import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.handshake.Handshakedata;
 import org.java_websocket.handshake.ServerHandshakeBuilder;
 import org.java_websocket.server.WebSocketServer;
 
-/**
- * A simple WebSocketServer implementation. Keeps track of a "chatroom".
- */
-public class ChatServer extends WebSocketServer {
+public class BoosterWebSocket extends WebSocketServer {
 
-	public ChatServer(int port) throws UnknownHostException {
+	public BoosterWebSocket(int port) throws UnknownHostException {
 		super(new InetSocketAddress(port));
 	}
 
-	public ChatServer(InetSocketAddress address) {
+	public BoosterWebSocket(InetSocketAddress address) {
 		super(address);
 	}
 
@@ -62,26 +55,6 @@ public class ChatServer extends WebSocketServer {
 	public void onMessage(WebSocket conn, String message) {
 		this.sendToAll(message);
 		System.out.println(conn + ": " + message);
-	}
-
-	public static void main(String[] args) throws InterruptedException,
-			IOException {
-		WebSocket.DEBUG = true;
-		int port = 8887; // 843 flash policy port
-		try {
-			port = Integer.parseInt(args[0]);
-		} catch (Exception ex) {
-		}
-		ChatServer s = new ChatServer(port);
-		s.start();
-		System.out.println("ChatServer started on port: " + s.getPort());
-
-		BufferedReader sysin = new BufferedReader(new InputStreamReader(
-				System.in));
-		while (true) {
-			String in = sysin.readLine();
-			s.sendToAll(in);
-		}
 	}
 
 	@Override
