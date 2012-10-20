@@ -37,6 +37,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".ProxyActivity"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:taskAffinity="com.android.browser">
+			<intent-filter>
+				<category android:name="android.intent.category.DEFAULT"></category>
+			</intent-filter>
+        </activity>
+        
         <service android:name=".BoosterService"></service>
     </application>
 
