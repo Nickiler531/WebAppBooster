@@ -10,15 +10,24 @@ import android.os.IBinder;
 
 public class BoosterService extends Service {
 
-    final private static int PORT      = 8080;
+    final private static int PORT           = 8080;
 
-    private IBinder          binder    = new LocalBinder();
-    private BoosterWebSocket webSocket = null;
+    private IBinder          binder         = new LocalBinder();
+    private BoosterWebSocket webSocket      = null;
+
+    static private boolean   serviceRunning = false;
 
     class LocalBinder extends Binder {
         BoosterService getService() {
             return BoosterService.this;
         }
+    }
+
+    @Override
+    public void onCreate() {
+        serviceRunning = true;
+        openWebSocket();
+
     }
 
     @Override
@@ -33,22 +42,15 @@ public class BoosterService extends Service {
 
     @Override
     public void onDestroy() {
-        if (webSocket != null) {
-            try {
-                webSocket.stop();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        webSocket = null;
+        serviceRunning = false;
+        closeWebSocket();
     }
 
-    public void openWebSocket() {
+    private void openWebSocket() {
         // WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
-                webSocket = new BoosterWebSocket(PORT);
+                webSocket = new BoosterWebSocket(this, PORT);
                 webSocket.start();
             }
         } catch (UnknownHostException e) {
@@ -58,7 +60,7 @@ public class BoosterService extends Service {
         }
     }
 
-    public void closeWebSocket() {
+    private void closeWebSocket() {
         if (webSocket != null) {
             try {
                 webSocket.stop();
@@ -68,7 +70,11 @@ public class BoosterService extends Service {
         }
     }
 
-    public boolean isWebSocketOpen() {
-        return webSocket != null;
+    static public boolean isServiceRunning() {
+        return serviceRunning;
+    }
+
+    public void resultFromProxy(int id, String result) {
+        webSocket.resultFromProxy(id, result);
     }
 }

@@ -7,5 +7,7 @@
     <string name="booster_deactive">Booster deactive</string>
     <string name="start_booster">Start Booster</string>
     <string name="stop_booster">Stop Booster</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
     
 </resources>

@@ -15,11 +15,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements ServiceConnection {
+public class MainActivity extends Activity {
 
     static public Activity activity;
-
-    private Intent         serviceIntent;
 
     private long           token;
 
@@ -30,9 +28,6 @@ public class MainActivity extends Activity implements ServiceConnection {
         super.onCreate(savedInstanceState);
         activity = this;
         token = new Random().nextLong();
-        serviceIntent = new Intent(this, BoosterService.class);
-        this.startService(serviceIntent);
-        this.bindService(serviceIntent, this, 0);
 
         setContentView(R.layout.activity_main);
 
@@ -43,12 +38,12 @@ public class MainActivity extends Activity implements ServiceConnection {
             public void onClick(View v) {
                 TextView t = (TextView) MainActivity.this.findViewById(R.id.status_active);
                 Button b = (Button) v;
-                if (boundService.isWebSocketOpen()) {
-                    boundService.closeWebSocket();
+                if (BoosterService.isServiceRunning()) {
+                    stopBoosterService();
                     b.setText(R.string.start_booster);
                     t.setText(R.string.booster_deactive);
                 } else {
-                    boundService.openWebSocket();
+                    startBoosterService();
                     b.setText(R.string.stop_booster);
                     t.setText(R.string.booster_active);
                 }
@@ -58,30 +53,31 @@ public class MainActivity extends Activity implements ServiceConnection {
     }
 
     @Override
-    public void onServiceConnected(ComponentName className, IBinder service) {
-        boundService = ((BoosterService.LocalBinder) service).getService();
-        // Uri uri = Uri.parse("http://localhost:8080/www/index.html?token=" +
-        // token);
-        // Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // this.startActivity(intent);
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName className) {
-        boundService = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        this.stopService(serviceIntent);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
 
+    private void startBoosterService() {
+        Intent intent = new Intent(this, BoosterService.class);
+        this.startService(intent);
+        this.bindService(intent, new ServiceConnection() {
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                boundService = ((BoosterService.LocalBinder) service).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                boundService = null;
+            }
+        }, 0);
+
+    }
+
+    private void stopBoosterService() {
+        Intent intent = new Intent(this, BoosterService.class);
+        this.stopService(intent);
+    }
 }
