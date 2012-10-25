@@ -39,6 +39,11 @@
         </activity>
         
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        
+        <activity
             android:name=".ProxyActivity"
             android:theme="@android:style/Theme.NoDisplay"
             android:taskAffinity="com.android.browser">

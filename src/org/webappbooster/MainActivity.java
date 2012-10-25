@@ -2,14 +2,15 @@ package org.webappbooster;
 
 import java.util.Random;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         activity = this;
         token = new Random().nextLong();
 
@@ -56,6 +58,21 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_settings:
+            showSettings();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showSettings() {
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     private void startBoosterService() {
