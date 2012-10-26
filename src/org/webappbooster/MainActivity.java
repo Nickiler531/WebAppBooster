@@ -9,8 +9,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -24,6 +28,16 @@ public class MainActivity extends Activity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         activity = this;
         setContentView(R.layout.activity_main);
+    	ListView listView = (ListView) findViewById(R.id.list_connections);
+    	listView.setOnItemClickListener(new OnItemClickListener() {
+        	  @Override
+        	  public void onItemClick(AdapterView<?> parent, View view,
+        	    int position, long id) {
+        	    Toast.makeText(getApplicationContext(),
+        	      "Click ListItem Number " + position, Toast.LENGTH_LONG)
+        	      .show();
+        	  }
+        	}); 
     }
 
     @Override
@@ -54,7 +68,7 @@ public class MainActivity extends Activity {
     }
 
     private void refreshConnections() {
-    	ListView connections = (ListView) findViewById(R.id.list_connections);
+    	ListView listView = (ListView) findViewById(R.id.list_connections);
     	String[] values = new String[] {};
     	BoosterService service = BoosterService.getService();
     	if (service != null) {
@@ -62,7 +76,7 @@ public class MainActivity extends Activity {
     	}
     	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
     	  android.R.layout.simple_list_item_1, android.R.id.text1, values);
-    	connections.setAdapter(adapter); 
+    	listView.setAdapter(adapter); 
     }
 
     private void startBoosterService() {
