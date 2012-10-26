@@ -17,9 +17,18 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
     
+    <TextView
+        android:id="@+id/text_no_connections"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/no_connections" />
+
     <ListView
         android:id="@+id/list_connections"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:visibility="gone" >
     </ListView>
 </LinearLayout>

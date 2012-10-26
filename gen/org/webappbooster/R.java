@@ -20,12 +20,13 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int button_allow=0x7f090003;
-        public static final int button_booster=0x7f090001;
-        public static final int button_deny=0x7f090004;
-        public static final int menu_settings=0x7f090005;
-        public static final int requested_permission=0x7f090002;
+        public static final int button_allow=0x7f090004;
+        public static final int button_deny=0x7f090005;
+        public static final int list_connections=0x7f090002;
+        public static final int menu_settings=0x7f090006;
+        public static final int requested_permission=0x7f090003;
         public static final int status_active=0x7f090000;
+        public static final int text_no_connections=0x7f090001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -35,19 +36,20 @@ public final class R {
         public static final int activity_main=0x7f080000;
     }
     public static final class string {
-        public static final int allow=0x7f060008;
+        public static final int allow=0x7f060009;
         public static final int app_name=0x7f060000;
         public static final int booster_active=0x7f060004;
         public static final int booster_deactive=0x7f060005;
-        public static final int deny=0x7f060009;
+        public static final int deny=0x7f06000a;
         public static final int menu_settings=0x7f060001;
-        public static final int pref_summary_enable_wab=0x7f06000b;
-        public static final int pref_summary_enable_wab_on_boot=0x7f06000d;
+        public static final int no_connections=0x7f060006;
+        public static final int pref_summary_enable_wab=0x7f06000d;
+        public static final int pref_summary_enable_wab_on_boot=0x7f06000f;
         public static final int pref_title_enable_wab=0x7f06000c;
         public static final int pref_title_enable_wab_on_boot=0x7f06000e;
-        public static final int pref_title_general=0x7f06000a;
-        public static final int start_booster=0x7f060006;
-        public static final int stop_booster=0x7f060007;
+        public static final int pref_title_general=0x7f06000b;
+        public static final int start_booster=0x7f060007;
+        public static final int stop_booster=0x7f060008;
         public static final int title_activity_main=0x7f060002;
         public static final int title_activity_settings=0x7f060003;
     }
