@@ -65,6 +65,10 @@ public class BoosterWebSocket extends WebSocketServer {
         ex.printStackTrace();
     }
 
+    public String[] getOpenConnections() {
+    	return (String[]) originMap.values().toArray();
+    }
+    
     /**
      * Sends <var>text</var> to all currently connected WebSocket clients.
      * 

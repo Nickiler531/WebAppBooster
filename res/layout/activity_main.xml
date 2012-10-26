@@ -12,11 +12,14 @@
         android:text="@string/booster_deactive"
         tools:context=".MainActivity" />
 
-    <Button 
-        android:id="@+id/button_booster"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_medium"
-        android:text="@string/start_booster"
-        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+    
+    <ListView
+        android:id="@+id/list_connections"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </ListView>
 </LinearLayout>

@@ -1,7 +1,5 @@
 package org.webappbooster;
 
-import java.util.Random;
-
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -11,16 +9,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends Activity {
 
     static public Activity activity;
-
-    private long           token;
 
     private BoosterService boundService;
 
@@ -29,31 +23,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         activity = this;
-        token = new Random().nextLong();
-
         setContentView(R.layout.activity_main);
-
-        Button button = (Button) this.findViewById(R.id.button_booster);
-        button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                TextView t = (TextView) MainActivity.this.findViewById(R.id.status_active);
-                Button b = (Button) v;
-                if (BoosterService.isServiceRunning()) {
-                    stopBoosterService();
-                    b.setText(R.string.start_booster);
-                    t.setText(R.string.booster_deactive);
-                } else {
-                    startBoosterService();
-                    b.setText(R.string.stop_booster);
-                    t.setText(R.string.booster_active);
-                }
-            }
-
-        });
     }
 
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	refreshConnections();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -73,6 +51,18 @@ public class MainActivity extends Activity {
 
     private void showSettings() {
         startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    private void refreshConnections() {
+    	ListView connections = (ListView) findViewById(R.id.list_connections);
+    	String[] values = new String[] {};
+    	BoosterService service = BoosterService.getService();
+    	if (service != null) {
+    		values = service.getOpenConnections();
+    	}
+    	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+    	  android.R.layout.simple_list_item_1, android.R.id.text1, values);
+    	connections.setAdapter(adapter); 
     }
 
     private void startBoosterService() {

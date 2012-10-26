@@ -15,7 +15,7 @@ public class BoosterService extends Service {
     private IBinder          binder         = new LocalBinder();
     private BoosterWebSocket webSocket      = null;
 
-    static private boolean   serviceRunning = false;
+    static private BoosterService   service = null;
 
     class LocalBinder extends Binder {
         BoosterService getService() {
@@ -25,7 +25,7 @@ public class BoosterService extends Service {
 
     @Override
     public void onCreate() {
-        serviceRunning = true;
+        service = this;
         openWebSocket();
 
     }
@@ -42,7 +42,7 @@ public class BoosterService extends Service {
 
     @Override
     public void onDestroy() {
-        serviceRunning = false;
+        service = null;;
         closeWebSocket();
     }
 
@@ -70,11 +70,15 @@ public class BoosterService extends Service {
         }
     }
 
-    static public boolean isServiceRunning() {
-        return serviceRunning;
+    static public BoosterService getService() {
+        return service;
     }
 
     public void resultFromProxy(int id, String result) {
         webSocket.resultFromProxy(id, result);
+    }
+    
+    public String[] getOpenConnections() {
+    	return webSocket.getOpenConnections();
     }
 }
