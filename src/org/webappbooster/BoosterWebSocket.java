@@ -66,7 +66,7 @@ public class BoosterWebSocket extends WebSocketServer {
     }
 
     public String[] getOpenConnections() {
-    	return (String[]) originMap.values().toArray();
+        return originMap.values().toArray(new String[originMap.size()]);
     }
     
     /**

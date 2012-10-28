@@ -1,12 +1,12 @@
 package org.webappbooster;
 
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.app.Activity;
-import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,13 +16,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
     static public Activity activity;
-
-    private BoosterService boundService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,8 +39,15 @@ public class MainActivity extends Activity {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Click ListItem Number " + position,
-                        Toast.LENGTH_LONG).show();
+                PermissionsDialog w = new PermissionsDialog(MainActivity.this);
+                w.requestPermissions("http://pear", new String[] { "Permission 1", "Permission 2" });
+                w.show(new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("WAB", "Clicked: " + which);
+                    }
+                });
             }
         });
     }
@@ -80,15 +84,23 @@ public class MainActivity extends Activity {
         ListView listView = (ListView) findViewById(R.id.list_connections);
         View noConnectionView = findViewById(R.id.text_no_connections);
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean enableWAB = sharedPref.getBoolean(SettingsActivity.PREF_KEY_ENABLE_WAB, false);
+        if (enableWAB) {
+            startBoosterService();
+            statusView.setText(R.string.booster_active);
+        } else {
+            stopBoosterService();
+            statusView.setText(R.string.booster_deactive);
+        }
+
         String[] values = new String[] {};
         BoosterService service = BoosterService.getService();
         if (service != null) {
             values = service.getOpenConnections();
-            statusView.setText(R.string.booster_active);
-        } else {
-            statusView.setText(R.string.booster_deactive);
         }
 
+        values = new String[] { "ABC", "123" };
         if (values.length == 0) {
             listView.setVisibility(View.GONE);
             noConnectionView.setVisibility(View.VISIBLE);
@@ -104,19 +116,6 @@ public class MainActivity extends Activity {
     private void startBoosterService() {
         Intent intent = new Intent(this, BoosterService.class);
         this.startService(intent);
-        this.bindService(intent, new ServiceConnection() {
-
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                boundService = ((BoosterService.LocalBinder) service).getService();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                boundService = null;
-            }
-        }, 0);
-
     }
 
     private void stopBoosterService() {

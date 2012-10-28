@@ -8,8 +8,16 @@
     <string name="no_connections">No active connections!</string>
     <string name="start_booster">Start Booster</string>
     <string name="stop_booster">Stop Booster</string>
+    <string name="ok">OK</string>
+    <string name="revoke">Revoke</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
+    <string name="allow_once">Allow once</string>
+    <string name="allow_always">Allow always</string>
+    <string name="reject">Reject</string>
+    <string name="permissions">Permissions</string>
+    <string name="request_permissions">Site %1$s requests the following permissions:</string>
+    <string name="show_permissions">Permissions for site %1$s:</string>
     <string name="pref_title_general">General</string>
     <string name="pref_title_enable_wab">Enable WebAppBooster</string>
     <string name="pref_summary_enable_wab">Web applications can only access WebAppBooster if it is enabled</string>
