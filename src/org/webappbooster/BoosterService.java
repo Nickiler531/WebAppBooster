@@ -20,7 +20,6 @@ public class BoosterService extends Service {
 
     static private BoosterService   service = null;
 
-    static int count = 0;
     class LocalBinder extends Binder {
         BoosterService getService() {
             return BoosterService.this;
@@ -31,11 +30,6 @@ public class BoosterService extends Service {
     public void onCreate() {
         service = this;
         openWebSocket();
-        count++;
-        if (count > 1) {
-            Log.d("WAB", "COUNTER: " + count);
-        }
-
     }
 
     @Override
@@ -52,7 +46,6 @@ public class BoosterService extends Service {
     public void onDestroy() {
         service = null;;
         closeWebSocket();
-        count--;
     }
 
     private void openWebSocket() {
