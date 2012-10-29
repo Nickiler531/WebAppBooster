@@ -7,17 +7,13 @@
 
     <TextView
         android:id="@+id/status_active"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
+        android:background="@android:color/background_light"
         android:text="@string/booster_deactive"
         tools:context=".MainActivity" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-    
     <TextView
         android:id="@+id/text_no_connections"
         android:layout_width="match_parent"
@@ -26,10 +22,28 @@
         android:visibility="gone"
         android:text="@string/no_connections" />
 
-    <ListView
-        android:id="@+id/list_connections"
+    <LinearLayout
+        android:id="@+id/open_connections"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" >
-    </ListView>
+        android:orientation="vertical"
+       	android:visibility="gone" >
+        
+        <TextView
+	        android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+	        android:padding="@dimen/padding_medium"
+    	    android:text="@string/list_of_connections" />
+        
+    	<View
+    	    android:layout_width="match_parent"
+    	    android:layout_height="1dp"
+    	    android:background="@android:color/darker_gray"/>
+    
+        	<ListView
+        	android:id="@+id/list_connections"
+        	android:layout_width="match_parent"
+        	android:layout_height="match_parent" >
+    	</ListView>
+    </LinearLayout>
 </LinearLayout>

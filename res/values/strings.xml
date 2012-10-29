@@ -6,6 +6,7 @@
     <string name="booster_active">WebAppBooster enabled</string>
     <string name="booster_deactive">WebAppBooster disabled</string>
     <string name="no_connections">No active connections!</string>
+    <string name="list_of_connections">Currently open connections:</string>
     <string name="start_booster">Start Booster</string>
     <string name="stop_booster">Stop Booster</string>
     <string name="ok">OK</string>

@@ -87,6 +87,7 @@ public class MainActivity extends Activity {
     private void refreshView() {
         TextView statusView = (TextView) findViewById(R.id.status_active);
         ListView listView = (ListView) findViewById(R.id.list_connections);
+        View connectionView = findViewById(R.id.open_connections);
         View noConnectionView = findViewById(R.id.text_no_connections);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -106,11 +107,11 @@ public class MainActivity extends Activity {
         }
 
         if (values.length == 0) {
-            listView.setVisibility(View.GONE);
+            connectionView.setVisibility(View.GONE);
             noConnectionView.setVisibility(View.VISIBLE);
         } else {
             noConnectionView.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
+            connectionView.setVisibility(View.VISIBLE);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, values);
             listView.setAdapter(adapter);

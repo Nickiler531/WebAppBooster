@@ -15,6 +15,7 @@ public class PermissionsDialog implements DialogInterface.OnClickListener {
     private AlertDialog.Builder             builder;
     private DialogInterface.OnClickListener listener;
 
+
     public PermissionsDialog(Context context) {
         this.context = context;
         builder = new AlertDialog.Builder(context);
@@ -28,7 +29,9 @@ public class PermissionsDialog implements DialogInterface.OnClickListener {
     public void showPermissions(String url, String[] permissions) {
         setPermissions(R.string.show_permissions, url, permissions);
         builder.setPositiveButton(R.string.ok, this);
-        builder.setNegativeButton(R.string.revoke, this);
+        if (permissions.length > 0) {
+            builder.setNegativeButton(R.string.revoke, this);
+        }
     }
 
     public void requestPermissions(String url, String[] permissions) {
