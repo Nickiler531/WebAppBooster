@@ -21,21 +21,17 @@ public final class R {
     }
     public static final class id {
         public static final int activity_main=0x7f090000;
-        public static final int button_allow=0x7f090006;
-        public static final int button_deny=0x7f090007;
         public static final int list_connections=0x7f090004;
-        public static final int menu_settings=0x7f09000a;
+        public static final int menu_settings=0x7f090007;
         public static final int open_connections=0x7f090003;
-        public static final int requested_permission=0x7f090005;
         public static final int status_active=0x7f090001;
         public static final int text_no_connections=0x7f090002;
-        public static final int text_permissions=0x7f090009;
-        public static final int url_permission=0x7f090008;
+        public static final int text_permissions=0x7f090006;
+        public static final int url_permission=0x7f090005;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int authorize=0x7f030001;
-        public static final int permissions=0x7f030002;
+        public static final int permissions=0x7f030001;
     }
     public static final class menu {
         public static final int activity_main=0x7f080000;
