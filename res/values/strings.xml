@@ -15,7 +15,7 @@
     <string name="allow_once">Allow once</string>
     <string name="allow_always">Allow always</string>
     <string name="reject">Reject</string>
-    <string name="permissions">Permissions</string>
+    <string name="permissions">WebAppBooster</string>
     <string name="request_permissions">Site %1$s requests the following permissions:</string>
     <string name="show_permissions">Permissions for site %1$s:</string>
     <string name="pref_title_general">General</string>

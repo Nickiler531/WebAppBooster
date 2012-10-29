@@ -32,32 +32,25 @@ public class BoosterWebSocket extends WebSocketServer {
         String origin = handshake.getFieldValue("origin");
         originMap.put(conn, origin);
         idMap.put(conn, id++);
-        this.sendToAll("new connection: " + handshake.getResourceDescriptor());
-        System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress()
-                + " entered the room!");
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         originMap.remove(conn);
         idMap.remove(conn);
-        this.sendToAll(conn + " has left the room!");
-        System.out.println(conn + " has left the room!");
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
         String origin = originMap.get(conn);
-        Log.d("TAG", "Got request from: " + origin);
+        Log.d("WAB", "Got request from: " + origin);
         Intent intent = new Intent(MainActivity.activity, ProxyActivity.class);
-        intent.putExtra("ACTION", ProxyActivity.PICK_CONTACT);
+        intent.putExtra("REQUEST", message);
+        intent.putExtra("ORIGIN", origin);
         intent.putExtra("ID", idMap.get(conn));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         service.startActivity(intent);
-
-        this.sendToAll(message);
-        System.out.println(conn + ": " + message);
     }
 
     @Override
@@ -87,7 +80,9 @@ public class BoosterWebSocket extends WebSocketServer {
     }
 
     public void resultFromProxy(int id, String result) {
+        //WebSocket sock = idMap.get(id);
         // TODO Auto-generated method stub
+        Log.d("WAB", "Result: " + result);
         sendToAll(result);
     }
 }

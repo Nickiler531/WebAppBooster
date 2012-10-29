@@ -40,12 +40,17 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PermissionsDialog w = new PermissionsDialog(MainActivity.this);
-                w.requestPermissions("http://pear", new String[] { "Permission 1", "Permission 2" });
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) parent.getAdapter();
+                final String origin = adapter.getItem(position);
+                String[] permissions = Authorization.getPermissions(origin);
+                w.showPermissions(origin, permissions);
                 w.show(new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d("WAB", "Clicked: " + which);
+                        if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            Authorization.revokePermissions(origin);
+                        }
                     }
                 });
             }
@@ -100,7 +105,6 @@ public class MainActivity extends Activity {
             values = service.getOpenConnections();
         }
 
-        values = new String[] { "ABC", "123" };
         if (values.length == 0) {
             listView.setVisibility(View.GONE);
             noConnectionView.setVisibility(View.VISIBLE);
