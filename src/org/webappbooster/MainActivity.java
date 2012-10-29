@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         activity = this;
+        Authorization.init(getApplicationContext());
         setContentView(R.layout.activity_main);
         View textView = findViewById(R.id.status_active);
         textView.setOnClickListener(new OnClickListener() {
