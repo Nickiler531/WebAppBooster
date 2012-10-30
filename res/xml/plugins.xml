@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugins>
     <plugin class="PickContactPlugin" action="PICK_CONTACT"/>
+    <plugin class="PermissionsPlugin" action="REQUEST_PERMISSIONS"/>
 </plugins>

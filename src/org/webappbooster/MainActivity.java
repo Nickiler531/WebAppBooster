@@ -26,9 +26,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         activity = this;
-        
-        new PluginManager(this).dispatchRequest("PICK_CONTACT", "Hello World");
-        
         Authorization.init(getApplicationContext());
         setContentView(R.layout.activity_main);
         View textView = findViewById(R.id.status_active);

@@ -19,6 +19,8 @@ public class BoosterService extends Service {
     private BoosterWebSocket webSocket      = null;
 
     static private BoosterService   service = null;
+    
+    private PluginManager pluginManager;
 
     class LocalBinder extends Binder {
         BoosterService getService() {
@@ -29,6 +31,7 @@ public class BoosterService extends Service {
     @Override
     public void onCreate() {
         service = this;
+        pluginManager = new PluginManager(this);
         openWebSocket();
     }
 
@@ -52,7 +55,7 @@ public class BoosterService extends Service {
         WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
-                webSocket = new BoosterWebSocket(this, PORT);
+                webSocket = new BoosterWebSocket(pluginManager, PORT);
                 webSocket.start();
                 Log.d("WAB", "Starting webSocket");
             }
