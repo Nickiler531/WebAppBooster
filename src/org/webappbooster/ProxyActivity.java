@@ -53,6 +53,15 @@ public class ProxyActivity extends Activity {
         for (int i = 0; i < p.length; i++) {
             p[i] = permissions.getString(i);
         }
+        if (Authorization.checkPermissions(origin, p)) {
+            // Permissions were granted earlier
+            JSONObject result = new JSONObject();
+            result.put("permission_granted", true);
+            returnResultToService(id, result);
+            return;
+        }
+
+        // Open dialog to ask user
         PermissionsDialog w = new PermissionsDialog(this);
         w.requestPermissions(origin, p);
         w.show(new DialogInterface.OnClickListener() {
@@ -122,13 +131,14 @@ public class ProxyActivity extends Activity {
     }
 
     private void returnResultToService(final int id, final JSONObject result) {
-        Intent intent = new Intent(this, BoosterService.class);
+        final Intent intent = new Intent(this, BoosterService.class);
         this.bindService(intent, new ServiceConnection() {
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 ((BoosterService.LocalBinder) service).getService().resultFromProxy(id,
                         result.toString());
+                ProxyActivity.this.unbindService(this);
             }
 
             @Override

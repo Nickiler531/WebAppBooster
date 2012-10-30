@@ -36,8 +36,8 @@ public class PermissionsDialog implements DialogInterface.OnClickListener {
 
     public void requestPermissions(String url, String[] permissions) {
         setPermissions(R.string.request_permissions, url, permissions);
-        builder.setPositiveButton(R.string.allow_once, this);
-        builder.setNeutralButton(R.string.allow_always, this);
+        builder.setPositiveButton(R.string.allow_always, this);
+        builder.setNeutralButton(R.string.allow_once, this);
         builder.setNegativeButton(R.string.reject, this);
     }
 

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class Authorization {
 
@@ -86,6 +87,10 @@ public class Authorization {
         List<String> p = permissionsTemp.get(origin);
         if (p == null) {
             p = permissionsPers.get(origin);
+        } else {
+            if (p.remove(permission)) {
+                permissionsTemp.put(origin, p);
+            }
         }
         if (p == null) {
             return false;
@@ -95,7 +100,7 @@ public class Authorization {
 
     static public boolean checkPermissions(String origin, String[] permissions) {
         for (int i = 0; i < permissions.length; i++) {
-            if (checkOnePermission(origin, permissions[i])) {
+            if (!checkOnePermission(origin, permissions[i])) {
                 return false;
             }
         }
