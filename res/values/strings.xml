@@ -24,4 +24,7 @@
     <string name="pref_summary_enable_wab">Web applications can only access WebAppBooster if it is enabled</string>
     <string name="pref_title_enable_wab_on_boot">Enable on boot</string>
     <string name="pref_summary_enable_wab_on_boot">Automatically enables WebAppBooster when the device is booted</string>
+    
+    <string name="PERMISSION_READ_CONTACTS">Read contacts from your address book</string>
+    <string name="PERMISSION_GYRO">Access the gyroscope</string>
 </resources>

@@ -3,6 +3,7 @@ package org.webappbooster;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ public class PermissionsDialog implements DialogInterface.OnClickListener {
     private View                            popupView;
     private AlertDialog.Builder             builder;
     private DialogInterface.OnClickListener listener;
-
 
     public PermissionsDialog(Context context) {
         this.context = context;
@@ -41,17 +41,21 @@ public class PermissionsDialog implements DialogInterface.OnClickListener {
         builder.setNegativeButton(R.string.reject, this);
     }
 
-    private void setPermissions(int id, String url, String[] permissions) {
+    private void setPermissions(int titleId, String url, String[] permissions) {
         // Show the permissions in a TextView
+        Resources res = context.getResources();
         String t = "";
         for (String p : permissions) {
-            t += "&#8226; " + p + "<br/>";
+            int id = res.getIdentifier("PERMISSION_" + p, "string", "org.webappbooster");
+            if (id != 0) {
+                t += "&#8226; " + context.getString(id) + "<br/>";
+            }
         }
         TextView v = (TextView) popupView.findViewById(R.id.text_permissions);
         v.setText(Html.fromHtml(t));
 
         // Show sub-title for the dialog
-        String s = context.getString(id, url);
+        String s = context.getString(titleId, url);
         v = (TextView) popupView.findViewById(R.id.url_permission);
         v.setText(s);
     }
