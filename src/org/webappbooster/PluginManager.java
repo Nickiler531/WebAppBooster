@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -144,7 +145,7 @@ public class PluginManager {
     }
 
     public static void websocketClosed(int connectionId) {
-        Set<String> keys = pluginMap.keySet();
+        Set<String> keys = new HashSet<String>(pluginMap.keySet());
         String suffix = "-" + connectionId;
         for (String key : keys) {
             if (key.endsWith(suffix)) {
