@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,17 +55,13 @@ public class PluginManager {
         parser.close();
     }
 
-    public void dispatchRequest(String origin, String message) {
-        Plugin instance;
+    public void dispatchRequest(int connectionId, String origin, String message) {
         try {
             JSONObject msg = new JSONObject(message);
             String action = msg.getString("action");
-            Class<? extends Plugin> clazz = plugins.get(action);
-            instance = clazz.newInstance();
-            instance.setContext(context);
-            instance.setOrigin(origin);
+            Plugin instance = getPluginInstance(connectionId, origin, action);
             Class<?>[] args = new Class[] { JSONObject.class };
-            Method meth = clazz.getDeclaredMethod("execute", args);
+            Method meth = Plugin.class.getDeclaredMethod("execute", args);
             meth.invoke(instance, msg);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
@@ -85,6 +82,24 @@ public class PluginManager {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private static Map<String, Plugin> pluginMap = new HashMap<String, Plugin>();
+
+    private Plugin getPluginInstance(int connectionId, String origin, String action)
+            throws InstantiationException, IllegalAccessException {
+        Class<? extends Plugin> clazz = plugins.get(action);
+        String key = clazz.getName() + "-" + connectionId;
+        Plugin plugin = pluginMap.get(key);
+        if (plugin == null) {
+            // No plugin for this connection created yet
+            plugin = clazz.newInstance();
+            plugin.setConnectionId(connectionId);
+            plugin.setContext(context);
+            plugin.onCreate(origin);
+            pluginMap.put(key, plugin);
+        }
+        return plugin;
     }
 
     static private int                  nextRequestId = 0;
@@ -124,5 +139,17 @@ public class PluginManager {
         requestMap.remove(id);
         caller.setContext(proxy);
         caller.callbackFromProxy();
+    }
+
+    public static void websocketClosed(int connectionId) {
+        Set<String> keys = pluginMap.keySet();
+        String suffix = "-" + connectionId;
+        for (String key : keys) {
+            if (key.endsWith(suffix)) {
+                Plugin plugin = pluginMap.get(key);
+                plugin.onDestroy();
+                pluginMap.remove(key);
+            }
+        }
     }
 }

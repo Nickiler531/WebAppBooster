@@ -16,10 +16,10 @@ public class BoosterWebSocket extends WebSocketServer {
 
     private PluginManager           pluginManager;
 
-    private Map<WebSocket, String>  originMap = new HashMap<WebSocket, String>();
-    private Map<WebSocket, Integer> idMap     = new HashMap<WebSocket, Integer>();
+    private Map<WebSocket, String>  originMap        = new HashMap<WebSocket, String>();
+    private Map<WebSocket, Integer> idMap            = new HashMap<WebSocket, Integer>();
 
-    static private int              id        = 0;
+    static private int              nextConnectionId = 0;
 
     public BoosterWebSocket(PluginManager pluginManager, int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -28,22 +28,25 @@ public class BoosterWebSocket extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
+        int id = nextConnectionId++;
         String origin = handshake.getFieldValue("origin");
         originMap.put(conn, origin);
-        idMap.put(conn, id++);
+        idMap.put(conn, id);
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+        int id = idMap.get(conn);
+        PluginManager.websocketClosed(id);
         originMap.remove(conn);
         idMap.remove(conn);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
+        int id = idMap.get(conn);
         String origin = originMap.get(conn);
-        Log.d("WAB", "Got request from: " + origin);
-        pluginManager.dispatchRequest(origin, message);
+        pluginManager.dispatchRequest(id, origin, message);
     }
 
     @Override

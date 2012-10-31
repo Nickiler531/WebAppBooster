@@ -46,7 +46,7 @@ public class PickContactPlugin extends Plugin {
                 result.put("status", "ok");
                 result.put("name", name);
                 result.put("email", emailAddress);
-                returnResult(result);
+                sendResultAndExit(result);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -13,7 +13,13 @@ import android.util.Log;
 public class PermissionsPlugin extends Plugin {
 
     private JSONObject request;
-    
+    private String     origin;
+
+    @Override
+    public void onCreate(String origin) {
+        this.origin = origin;
+    }
+
     public void execute(JSONObject request) {
         this.request = request;
         runInContextOfProxyActivity();
@@ -28,23 +34,23 @@ public class PermissionsPlugin extends Plugin {
             for (int i = 0; i < p.length; i++) {
                 p[i] = permissions.getString(i);
             }
-            if (Authorization.checkPermissions(getOrigin(), p)) {
+            if (Authorization.checkPermissions(origin, p)) {
                 // Permissions were granted earlier
                 JSONObject result = new JSONObject();
                 result.put("permission_granted", true);
-                returnResult(result);
+                sendResultAndExit(result);
                 return;
             }
 
             // Open dialog to ask user
             PermissionsDialog w = new PermissionsDialog(getContext());
-            w.requestPermissions(getOrigin(), p);
+            w.requestPermissions(origin, p);
             w.show(new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which != DialogInterface.BUTTON_NEGATIVE) {
-                        Authorization.setPermissions(getOrigin(), p,
+                        Authorization.setPermissions(origin, p,
                                 which == DialogInterface.BUTTON_NEUTRAL);
                     }
                     JSONObject result = new JSONObject();
@@ -54,7 +60,7 @@ public class PermissionsPlugin extends Plugin {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    returnResult(result);
+                    sendResultAndExit(result);
                     Log.d("WAB", "Clicked: " + which);
                 }
             });

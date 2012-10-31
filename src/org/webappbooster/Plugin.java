@@ -12,7 +12,6 @@ public abstract class Plugin {
 
     private Context context;
     private int     connectionId;
-    private String  origin;
 
     abstract public void execute(JSONObject request);
 
@@ -28,12 +27,12 @@ public abstract class Plugin {
         this.connectionId = id;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public void onCreate(String origin) {
+        // Do nothing
     }
 
-    protected String getOrigin() {
-        return this.origin;
+    public void onDestroy() {
+        // Do nothing
     }
 
     protected void callActivity(Intent intent) {
@@ -44,26 +43,31 @@ public abstract class Plugin {
         // Do nothing
     }
 
-    protected void returnResult(JSONObject result) {
-        final String r = result.toString();
-        final Intent intent = new Intent(context, BoosterService.class);
-        context.bindService(intent, new ServiceConnection() {
+    protected void sendResultAndExit(JSONObject result) {
+        sendResult(result);
+        // final String r = result.toString();
+        // final Intent intent = new Intent(context, BoosterService.class);
+        // context.bindService(intent, new ServiceConnection() {
+        //
+        // @Override
+        // public void onServiceConnected(ComponentName name, IBinder service) {
+        // ((BoosterService.LocalBinder) service).getService()
+        // .resultFromProxy(connectionId, r);
+        // context.unbindService(this);
+        // }
+        //
+        // @Override
+        // public void onServiceDisconnected(ComponentName name) {
+        // }
+        // }, 0);
 
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                ((BoosterService.LocalBinder) service).getService()
-                        .resultFromProxy(connectionId, r);
-                context.unbindService(this);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-            }
-        }, 0);
-        
         if (context instanceof ProxyActivity) {
             ((ProxyActivity) context).finish();
         }
+    }
+
+    protected void sendResult(JSONObject result) {
+        BoosterService.getService().resultFromProxy(connectionId, result.toString());
     }
 
     protected void runInContextOfProxyActivity() {

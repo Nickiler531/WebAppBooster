@@ -52,7 +52,7 @@ public class BoosterService extends Service {
     }
 
     private void openWebSocket() {
-        WebSocket.DEBUG = true;
+        //WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
                 webSocket = new BoosterWebSocket(pluginManager, PORT);
