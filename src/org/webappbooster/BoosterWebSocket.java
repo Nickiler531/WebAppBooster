@@ -75,7 +75,7 @@ public class BoosterWebSocket extends WebSocketServer {
         }
     }
 
-    public void resultFromProxy(int id, String result) {
+    public void sendResult(int id, String result) {
         // WebSocket sock = idMap.get(id);
         // TODO Auto-generated method stub
         Log.d("WAB", "Result: " + result);

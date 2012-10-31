@@ -10,12 +10,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 public class PickContactPlugin extends Plugin {
 
-    public void execute(JSONObject request) {
-        Log.d("WAB", "PickContactPlugin: " + request);
+    public void execute(String action, JSONObject request) {
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         // intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         callActivity(intent);
@@ -46,7 +44,7 @@ public class PickContactPlugin extends Plugin {
                 result.put("status", "ok");
                 result.put("name", name);
                 result.put("email", emailAddress);
-                sendResultAndExit(result);
+                sendResult(result);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

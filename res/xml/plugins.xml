@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugins>
-    <plugin class="PermissionsPlugin" action="REQUEST_PERMISSIONS"/>
-    <plugin class="PickContactPlugin" action="PICK_CONTACT"/>
-    <plugin class="GyroscopePlugin" action="START_GYRO"/>
+    <plugin class="PermissionsPlugin" actions="REQUEST_PERMISSIONS"/>
+    <plugin class="PickContactPlugin" actions="PICK_CONTACT"/>
+    <plugin class="GyroscopePlugin" actions="START_GYRO|STOP_GYRO"/>
 </plugins>

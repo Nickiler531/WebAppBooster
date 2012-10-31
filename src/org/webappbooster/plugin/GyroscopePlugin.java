@@ -23,8 +23,13 @@ public class GyroscopePlugin extends Plugin implements SensorEventListener {
     }
 
     @Override
-    public void execute(JSONObject request) {
-        sensorManager.registerListener(this, sensorGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+    public void execute(String action, JSONObject request) {
+        if (action.equals("START_GYRO")) {
+            sensorManager
+                    .registerListener(this, sensorGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+        } else if (action.equals("STOP_GYRO")) {
+            sensorManager.unregisterListener(this);
+        }
     }
 
     @Override

@@ -81,8 +81,8 @@ public class BoosterService extends Service {
         return service;
     }
 
-    public void resultFromProxy(int id, String result) {
-        webSocket.resultFromProxy(id, result);
+    public void sendResult(int id, String result) {
+        webSocket.sendResult(id, result);
     }
     
     public String[] getOpenConnections() {

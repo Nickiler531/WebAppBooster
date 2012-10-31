@@ -20,7 +20,7 @@ public class PermissionsPlugin extends Plugin {
         this.origin = origin;
     }
 
-    public void execute(JSONObject request) {
+    public void execute(String action, JSONObject request) {
         this.request = request;
         runInContextOfProxyActivity();
     }
@@ -38,7 +38,7 @@ public class PermissionsPlugin extends Plugin {
                 // Permissions were granted earlier
                 JSONObject result = new JSONObject();
                 result.put("permission_granted", true);
-                sendResultAndExit(result);
+                sendResult(result);
                 return;
             }
 
@@ -60,7 +60,7 @@ public class PermissionsPlugin extends Plugin {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    sendResultAndExit(result);
+                    sendResult(result);
                     Log.d("WAB", "Clicked: " + which);
                 }
             });

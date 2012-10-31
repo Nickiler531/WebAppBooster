@@ -2,18 +2,15 @@ package org.webappbooster;
 
 import org.json.JSONObject;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 
 public abstract class Plugin {
 
     private Context context;
     private int     connectionId;
 
-    abstract public void execute(JSONObject request);
+    abstract public void execute(String action, JSONObject request);
 
     public void setContext(Context context) {
         this.context = context;
@@ -43,31 +40,12 @@ public abstract class Plugin {
         // Do nothing
     }
 
-    protected void sendResultAndExit(JSONObject result) {
-        sendResult(result);
-        // final String r = result.toString();
-        // final Intent intent = new Intent(context, BoosterService.class);
-        // context.bindService(intent, new ServiceConnection() {
-        //
-        // @Override
-        // public void onServiceConnected(ComponentName name, IBinder service) {
-        // ((BoosterService.LocalBinder) service).getService()
-        // .resultFromProxy(connectionId, r);
-        // context.unbindService(this);
-        // }
-        //
-        // @Override
-        // public void onServiceDisconnected(ComponentName name) {
-        // }
-        // }, 0);
+    protected void sendResult(JSONObject result) {
+        BoosterService.getService().sendResult(connectionId, result.toString());
 
         if (context instanceof ProxyActivity) {
             ((ProxyActivity) context).finish();
         }
-    }
-
-    protected void sendResult(JSONObject result) {
-        BoosterService.getService().resultFromProxy(connectionId, result.toString());
     }
 
     protected void runInContextOfProxyActivity() {

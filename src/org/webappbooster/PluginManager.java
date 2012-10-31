@@ -36,8 +36,10 @@ public class PluginManager {
                         clazzName = "org.webappbooster.plugin." + clazzName;
                         Class<? extends Plugin> clazz = (Class<? extends Plugin>) Class
                                 .forName(clazzName);
-                        String action = parser.getAttributeValue(null, "action");
-                        plugins.put(action, clazz);
+                        String[] actions = parser.getAttributeValue(null, "actions").split("\\|");
+                        for (String action : actions) {
+                            plugins.put(action, clazz);
+                        }
                     }
                 }
                 eventType = parser.next();
@@ -60,9 +62,9 @@ public class PluginManager {
             JSONObject msg = new JSONObject(message);
             String action = msg.getString("action");
             Plugin instance = getPluginInstance(connectionId, origin, action);
-            Class<?>[] args = new Class[] { JSONObject.class };
+            Class<?>[] args = new Class[] { String.class, JSONObject.class };
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
-            meth.invoke(instance, msg);
+            meth.invoke(instance, action, msg);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
