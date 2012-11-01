@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,7 +29,7 @@ public class MainActivity extends Activity {
         activity = this;
         Authorization.init(getApplicationContext());
         setContentView(R.layout.activity_main);
-        View textView = findViewById(R.id.status_active);
+        View textView = findViewById(R.id.status_view);
         textView.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -87,6 +88,7 @@ public class MainActivity extends Activity {
 
     private void refreshView() {
         TextView statusView = (TextView) findViewById(R.id.status_active);
+        ImageView imageView = (ImageView) findViewById(R.id.icon_active);
         ListView listView = (ListView) findViewById(R.id.list_connections);
         View connectionView = findViewById(R.id.open_connections);
         View noConnectionView = findViewById(R.id.text_no_connections);
@@ -96,9 +98,11 @@ public class MainActivity extends Activity {
         if (enableWAB) {
             startBoosterService();
             statusView.setText(R.string.booster_active);
+            imageView.setImageResource(R.drawable.enabled);
         } else {
             stopBoosterService();
             statusView.setText(R.string.booster_deactive);
+            imageView.setImageResource(R.drawable.disabled);
         }
 
         String[] values = new String[] {};

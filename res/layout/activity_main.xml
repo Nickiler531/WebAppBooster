@@ -5,19 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/status_active"
+    
+    <LinearLayout
+        android:id="@+id/status_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_medium"
-        android:background="@android:color/background_light"
-        android:text="@string/booster_deactive"
-        tools:context=".MainActivity" />
+        android:orientation="horizontal"
+        android:background="@android:color/background_light">
+    	<TextView
+        	android:id="@+id/status_active"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:gravity="center_vertical"
+        	android:textStyle="bold"
+        	android:padding="@dimen/padding_medium"
+        	android:text="@string/booster_deactive"
+        	tools:context=".MainActivity" />
+    	<ImageView
+    	    android:id="@+id/icon_active"
+	        android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+        	android:padding="@dimen/padding_small"
+    	    android:src="@drawable/disabled"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/text_no_connections"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+       	android:textStyle="bold"
         android:gravity="center"
         android:visibility="gone"
         android:text="@string/no_connections" />
