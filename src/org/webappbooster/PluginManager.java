@@ -20,11 +20,15 @@ import android.content.res.XmlResourceParser;
 public class PluginManager {
 
     static private Context                       context;
-    private Map<String, Class<? extends Plugin>> plugins;
+    static private Map<String, Plugin>           pluginInstanceMap = new HashMap<String, Plugin>();
+    static private int                           nextRequestId     = 0;
+    static private Map<Integer, Plugin>          requestMap        = new HashMap<Integer, Plugin>();
+
+    private Map<String, Class<? extends Plugin>> pluginClassMap;
 
     public PluginManager(Context c) {
         context = c;
-        plugins = new HashMap<String, Class<? extends Plugin>>();
+        pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
         XmlResourceParser parser = context.getResources().getXml(R.xml.plugins);
         try {
             parser.next();
@@ -39,7 +43,7 @@ public class PluginManager {
                                 .forName(clazzName);
                         String[] actions = parser.getAttributeValue(null, "actions").split("\\|");
                         for (String action : actions) {
-                            plugins.put(action, clazz);
+                            pluginClassMap.put(action, clazz);
                         }
                     }
                 }
@@ -62,10 +66,11 @@ public class PluginManager {
         try {
             JSONObject msg = new JSONObject(message);
             String action = msg.getString("action");
+            int requestId = msg.getInt("id");
             Plugin instance = getPluginInstance(connectionId, origin, action);
-            Class<?>[] args = new Class[] { String.class, JSONObject.class };
+            Class<?>[] args = new Class[] { int.class, String.class, JSONObject.class };
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
-            meth.invoke(instance, action, msg);
+            meth.invoke(instance, requestId, action, msg);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -87,26 +92,21 @@ public class PluginManager {
         }
     }
 
-    private static Map<String, Plugin> pluginMap = new HashMap<String, Plugin>();
-
     private Plugin getPluginInstance(int connectionId, String origin, String action)
             throws InstantiationException, IllegalAccessException {
-        Class<? extends Plugin> clazz = plugins.get(action);
+        Class<? extends Plugin> clazz = pluginClassMap.get(action);
         String key = clazz.getName() + "-" + connectionId;
-        Plugin plugin = pluginMap.get(key);
+        Plugin plugin = pluginInstanceMap.get(key);
         if (plugin == null) {
             // No plugin for this connection created yet
             plugin = clazz.newInstance();
             plugin.setConnectionId(connectionId);
             plugin.setContext(context);
             plugin.onCreate(origin);
-            pluginMap.put(key, plugin);
+            pluginInstanceMap.put(key, plugin);
         }
         return plugin;
     }
-
-    static private int                  nextRequestId = 0;
-    static private Map<Integer, Plugin> requestMap    = new HashMap<Integer, Plugin>();
 
     static public void callActivityViaProxy(Plugin caller, Intent intent) {
         int id = nextRequestId++;
@@ -145,13 +145,13 @@ public class PluginManager {
     }
 
     public static void websocketClosed(int connectionId) {
-        Set<String> keys = new HashSet<String>(pluginMap.keySet());
+        Set<String> keys = new HashSet<String>(pluginInstanceMap.keySet());
         String suffix = "-" + connectionId;
         for (String key : keys) {
             if (key.endsWith(suffix)) {
-                Plugin plugin = pluginMap.get(key);
+                Plugin plugin = pluginInstanceMap.get(key);
                 plugin.onDestroy();
-                pluginMap.remove(key);
+                pluginInstanceMap.remove(key);
             }
         }
     }

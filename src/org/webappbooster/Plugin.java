@@ -1,5 +1,6 @@
 package org.webappbooster;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -10,7 +11,7 @@ public abstract class Plugin {
     private Context context;
     private int     connectionId;
 
-    abstract public void execute(String action, JSONObject request);
+    abstract public void execute(int requestId, String action, JSONObject request);
 
     public void setContext(Context context) {
         this.context = context;
@@ -40,8 +41,14 @@ public abstract class Plugin {
         // Do nothing
     }
 
-    protected void sendResult(JSONObject result) {
-        BoosterService.getService().sendResult(connectionId, result.toString());
+    protected void sendResult(int requestId, JSONObject result) {
+        try {
+            result.put("id", requestId);
+            BoosterService.getService().sendResult(connectionId, result.toString());
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         if (context instanceof ProxyActivity) {
             ((ProxyActivity) context).finish();

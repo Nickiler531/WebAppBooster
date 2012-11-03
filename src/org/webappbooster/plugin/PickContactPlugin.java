@@ -13,7 +13,11 @@ import android.provider.ContactsContract;
 
 public class PickContactPlugin extends Plugin {
 
-    public void execute(String action, JSONObject request) {
+    private int requestId;
+    
+    @Override
+    public void execute(int requestId, String action, JSONObject request) {
+        this.requestId = requestId;
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         // intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         callActivity(intent);
@@ -44,7 +48,7 @@ public class PickContactPlugin extends Plugin {
                 result.put("status", "ok");
                 result.put("name", name);
                 result.put("email", emailAddress);
-                sendResult(result);
+                sendResult(requestId, result);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

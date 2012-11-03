@@ -3,8 +3,6 @@ package org.webappbooster;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import org.java_websocket.WebSocket;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -13,14 +11,14 @@ import android.util.Log;
 
 public class BoosterService extends Service {
 
-    final private static int PORT           = 8080;
+    final private static int      PORT      = 8042;
 
-    private IBinder          binder         = new LocalBinder();
-    private BoosterWebSocket webSocket      = null;
+    private IBinder               binder    = new LocalBinder();
+    private BoosterWebSocket      webSocket = null;
 
-    static private BoosterService   service = null;
-    
-    private PluginManager pluginManager;
+    static private BoosterService service   = null;
+
+    private PluginManager         pluginManager;
 
     class LocalBinder extends Binder {
         BoosterService getService() {
@@ -47,12 +45,12 @@ public class BoosterService extends Service {
 
     @Override
     public void onDestroy() {
-        service = null;;
+        service = null;
         closeWebSocket();
     }
 
     private void openWebSocket() {
-        //WebSocket.DEBUG = true;
+        // WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
                 webSocket = new BoosterWebSocket(pluginManager, PORT);
@@ -81,11 +79,11 @@ public class BoosterService extends Service {
         return service;
     }
 
-    public void sendResult(int id, String result) {
-        webSocket.sendResult(id, result);
+    public void sendResult(int connectionId, String result) {
+        webSocket.sendResult(connectionId, result);
     }
-    
+
     public String[] getOpenConnections() {
-    	return webSocket.getOpenConnections();
+        return webSocket.getOpenConnections();
     }
 }

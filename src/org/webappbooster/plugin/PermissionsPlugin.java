@@ -8,11 +8,11 @@ import org.webappbooster.PermissionsDialog;
 import org.webappbooster.Plugin;
 
 import android.content.DialogInterface;
-import android.util.Log;
 
 public class PermissionsPlugin extends Plugin {
 
     private JSONObject request;
+    private int        requestId;
     private String     origin;
 
     @Override
@@ -20,7 +20,9 @@ public class PermissionsPlugin extends Plugin {
         this.origin = origin;
     }
 
-    public void execute(String action, JSONObject request) {
+    @Override
+    public void execute(int requestId, String action, JSONObject request) {
+        this.requestId = requestId;
         this.request = request;
         runInContextOfProxyActivity();
     }
@@ -37,8 +39,8 @@ public class PermissionsPlugin extends Plugin {
             if (Authorization.checkPermissions(origin, p)) {
                 // Permissions were granted earlier
                 JSONObject result = new JSONObject();
-                result.put("permission_granted", true);
-                sendResult(result);
+                result.put("status", 0);
+                sendResult(requestId, result);
                 return;
             }
 
@@ -55,13 +57,12 @@ public class PermissionsPlugin extends Plugin {
                     }
                     JSONObject result = new JSONObject();
                     try {
-                        result.put("permission_granted", which != DialogInterface.BUTTON_NEGATIVE);
+                        result.put("status", (which != DialogInterface.BUTTON_NEGATIVE) ? 0: -1);
                     } catch (JSONException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    sendResult(result);
-                    Log.d("WAB", "Clicked: " + which);
+                    sendResult(requestId, result);
                 }
             });
         } catch (JSONException e1) {

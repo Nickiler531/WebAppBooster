@@ -14,6 +14,7 @@ public class GyroscopePlugin extends Plugin implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor        sensorGyroscope;
+    private int           requestId;
 
     @Override
     public void onCreate(String origin) {
@@ -23,12 +24,21 @@ public class GyroscopePlugin extends Plugin implements SensorEventListener {
     }
 
     @Override
-    public void execute(String action, JSONObject request) {
+    public void execute(int requestId, String action, JSONObject request) {
         if (action.equals("START_GYRO")) {
+            this.requestId = requestId;
             sensorManager
                     .registerListener(this, sensorGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
         } else if (action.equals("STOP_GYRO")) {
             sensorManager.unregisterListener(this);
+            try {
+                JSONObject sensorEvent = new JSONObject();
+                sensorEvent.put("startId", this.requestId);
+                sendResult(requestId, sensorEvent);
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -48,7 +58,7 @@ public class GyroscopePlugin extends Plugin implements SensorEventListener {
             sensorEvent.put("x", event.values[0]);
             sensorEvent.put("y", event.values[1]);
             sensorEvent.put("z", event.values[2]);
-            sendResult(sensorEvent);
+            sendResult(requestId, sensorEvent);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

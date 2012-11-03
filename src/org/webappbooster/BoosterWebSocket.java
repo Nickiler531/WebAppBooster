@@ -4,20 +4,18 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-
-import android.util.Log;
 
 public class BoosterWebSocket extends WebSocketServer {
 
     private PluginManager           pluginManager;
 
     private Map<WebSocket, String>  originMap        = new HashMap<WebSocket, String>();
-    private Map<WebSocket, Integer> idMap            = new HashMap<WebSocket, Integer>();
+    private Map<WebSocket, Integer> connectionIdMap  = new HashMap<WebSocket, Integer>();
+    private Map<Integer, WebSocket> websocketMap     = new HashMap<Integer, WebSocket>();
 
     static private int              nextConnectionId = 0;
 
@@ -31,20 +29,22 @@ public class BoosterWebSocket extends WebSocketServer {
         int id = nextConnectionId++;
         String origin = handshake.getFieldValue("origin");
         originMap.put(conn, origin);
-        idMap.put(conn, id);
+        connectionIdMap.put(conn, id);
+        websocketMap.put(id, conn);
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        int id = idMap.get(conn);
+        int id = connectionIdMap.get(conn);
         PluginManager.websocketClosed(id);
         originMap.remove(conn);
-        idMap.remove(conn);
+        connectionIdMap.remove(conn);
+        websocketMap.remove(id);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        int id = idMap.get(conn);
+        int id = connectionIdMap.get(conn);
         String origin = originMap.get(conn);
         pluginManager.dispatchRequest(id, origin, message);
     }
@@ -58,27 +58,8 @@ public class BoosterWebSocket extends WebSocketServer {
         return originMap.values().toArray(new String[originMap.size()]);
     }
 
-    /**
-     * Sends <var>text</var> to all currently connected WebSocket clients.
-     * 
-     * @param text
-     *            The String to send across the network.
-     * @throws InterruptedException
-     *             When socket related I/O errors occur.
-     */
-    public void sendToAll(String text) {
-        Set<WebSocket> con = connections();
-        synchronized (con) {
-            for (WebSocket c : con) {
-                c.send(text);
-            }
-        }
-    }
-
-    public void sendResult(int id, String result) {
-        // WebSocket sock = idMap.get(id);
-        // TODO Auto-generated method stub
-        Log.d("WAB", "Result: " + result);
-        sendToAll(result);
+    public void sendResult(int connectionId, String result) {
+        WebSocket conn = websocketMap.get(connectionId);
+        conn.send(result);
     }
 }
