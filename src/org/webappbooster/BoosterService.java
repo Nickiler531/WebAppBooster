@@ -70,6 +70,7 @@ public class BoosterService extends Service {
                 webSocket.stop();
                 Log.d("WAB", "Stopping webSocket");
             } catch (IOException e) {
+            } catch (InterruptedException e) {
             }
             webSocket = null;
         }
