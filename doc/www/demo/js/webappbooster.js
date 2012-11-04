@@ -6,6 +6,7 @@ var WebAppBooster = {
     OK: 0,
     ERR_PERMISSION_DENIED: -1,
     ERR_WEBSOCK_NOT_AVAILABLE: -2,
+    ERR_WEBSOCK_NOT_CONNECTED: -3,
 
     PERMISSION_READ_CONTACTS: "READ_CONTACTS",
     PERMISSION_GYRO: "GYRO",
@@ -50,6 +51,10 @@ var WebAppBooster = {
     },
     
     _sendRequest: function(req, cb, keep_cb) {
+        if (this._ws == 0) {
+            cb({status: WebAppBooster.ERR_WEBSOCK_NOT_CONNECTED});
+            return;
+        }
         req.id = this._nextRequestId++;
         this._requestIdMap["id" + req.id] = [cb, keep_cb];
         this._ws.send(JSON.stringify(req));
