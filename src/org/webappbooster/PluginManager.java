@@ -25,10 +25,12 @@ public class PluginManager {
     static private Map<Integer, Plugin>          requestMap        = new HashMap<Integer, Plugin>();
 
     private Map<String, Class<? extends Plugin>> pluginClassMap;
+    private Map<String, String>                  permissionMap;
 
     public PluginManager(Context c) {
         context = c;
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
+        permissionMap = new HashMap<String, String>();
         XmlResourceParser parser = context.getResources().getXml(R.xml.plugins);
         try {
             parser.next();
@@ -42,8 +44,12 @@ public class PluginManager {
                         Class<? extends Plugin> clazz = (Class<? extends Plugin>) Class
                                 .forName(clazzName);
                         String[] actions = parser.getAttributeValue(null, "actions").split("\\|");
+                        String permission = parser.getAttributeValue(null, "permission");
                         for (String action : actions) {
                             pluginClassMap.put(action, clazz);
+                            if (permission != null) {
+                                permissionMap.put(action, permission);
+                            }
                         }
                     }
                 }
@@ -67,6 +73,13 @@ public class PluginManager {
             JSONObject msg = new JSONObject(message);
             String action = msg.getString("action");
             int requestId = msg.getInt("id");
+            if (!hasPermission(connectionId, origin, action)) {
+                JSONObject result = new JSONObject();
+                result.put("id", requestId);
+                result.put("status", -1);
+                BoosterService.getService().sendResult(connectionId, result.toString());
+                return;
+            }
             Plugin instance = getPluginInstance(connectionId, origin, action);
             Class<?>[] args = new Class[] { int.class, String.class, JSONObject.class };
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
@@ -90,6 +103,14 @@ public class PluginManager {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private boolean hasPermission(int connectionId, String origin, String action) {
+        String permission = permissionMap.get(action);
+        if (permission == null) {
+            return true;
+        }
+        return Authorization.checkOnePermission(origin, permission);
     }
 
     private Plugin getPluginInstance(int connectionId, String origin, String action)

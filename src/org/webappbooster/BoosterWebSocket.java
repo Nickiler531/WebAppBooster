@@ -37,6 +37,8 @@ public class BoosterWebSocket extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         int id = connectionIdMap.get(conn);
         PluginManager.websocketClosed(id);
+        String origin = originMap.get(conn);
+        Authorization.revokeOneTimePermissions(origin);
         originMap.remove(conn);
         connectionIdMap.remove(conn);
         websocketMap.remove(id);

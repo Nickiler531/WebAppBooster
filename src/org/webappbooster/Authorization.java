@@ -14,30 +14,27 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 public class Authorization {
 
-    final static private String              FILE_NAME       = "webappbooster-permissions";
+    final static private String              FILE_NAME         = "webappbooster-permissions";
 
-    static private Map<String, List<String>> permissionsTemp = null;
-    static private Map<String, List<String>> permissionsPers = null;
-    static private Context                   context         = null;
-
+    static private Map<String, List<String>> permissionsOnce   = null;
+    static private Map<String, List<String>> permissionsAlways = null;
+    static private Context                   context           = null;
 
     static public void init(Context c) {
         context = c;
-        permissionsTemp = new HashMap<String, List<String>>();
+        permissionsOnce = new HashMap<String, List<String>>();
         readPermissions();
     }
 
     static private void readPermissions() {
-        permissionsPers = new HashMap<String, List<String>>();
+        permissionsAlways = new HashMap<String, List<String>>();
         try {
             FileInputStream is = context.openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(is);
-            permissionsPers = (Map<String, List<String>>) ois.readObject();
+            permissionsAlways = (Map<String, List<String>>) ois.readObject();
             ois.close();
             is.close();
         } catch (FileNotFoundException e) {
@@ -51,7 +48,7 @@ public class Authorization {
         try {
             FileOutputStream os = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
-            oos.writeObject(permissionsPers);
+            oos.writeObject(permissionsAlways);
             oos.close();
             os.close();
         } catch (FileNotFoundException e) {
@@ -65,17 +62,17 @@ public class Authorization {
         Collections.addAll(p, perm);
 
         if (once) {
-            permissionsTemp.put(origin, p);
+            permissionsOnce.put(origin, p);
         } else {
-            permissionsPers.put(origin, p);
+            permissionsAlways.put(origin, p);
             writePermissions();
         }
     }
 
     static public String[] getPermissions(String origin) {
-        List<String> p = permissionsTemp.get(origin);
+        List<String> p = permissionsOnce.get(origin);
         if (p == null) {
-            p = permissionsPers.get(origin);
+            p = permissionsAlways.get(origin);
         }
         if (p == null) {
             return new String[0];
@@ -84,18 +81,15 @@ public class Authorization {
     }
 
     static public boolean checkOnePermission(String origin, String permission) {
-        List<String> p = permissionsTemp.get(origin);
-        if (p == null) {
-            p = permissionsPers.get(origin);
-        } else {
-            if (p.remove(permission)) {
-                permissionsTemp.put(origin, p);
-            }
+        List<String> p = permissionsOnce.get(origin);
+        if (p != null && p.contains(permission)) {
+            return true;
         }
-        if (p == null) {
-            return false;
+        p = permissionsAlways.get(origin);
+        if (p != null) {
+            return p.contains(permission);
         }
-        return p.contains(permission);
+        return false;
     }
 
     static public boolean checkPermissions(String origin, String[] permissions) {
@@ -107,12 +101,16 @@ public class Authorization {
         return true;
     }
 
-    static public void revokePermissions(String origin) {
-        if (permissionsTemp.containsKey(origin)) {
-            permissionsTemp.remove(origin);
+    static public void revokeOneTimePermissions(String origin) {
+        if (permissionsOnce.containsKey(origin)) {
+            permissionsOnce.remove(origin);
         }
-        if (permissionsPers.containsKey(origin)) {
-            permissionsPers.remove(origin);
+    }
+
+    static public void revokePermissions(String origin) {
+        revokeOneTimePermissions(origin);
+        if (permissionsAlways.containsKey(origin)) {
+            permissionsAlways.remove(origin);
             writePermissions();
         }
     }
