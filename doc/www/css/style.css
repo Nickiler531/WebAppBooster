@@ -1,78 +1,153 @@
-body{margin:0 auto; padding:0px; background:#002b41; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#2f1a1a;}
+/* A Free Design by Bryant Smith (bryantsmith.com) */
 
-p{margin:0px; padding:0px;}
+html, body {
+text-align: center;
+}
+p {text-align: left;}
 
-#main-wraper{width:926px; margin:0 auto; padding:0px;}
+body {
+	margin: 0;
+	padding: 0;
+	background: #697281;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #F1F5F8;
+	background-color:#697281;
+}
+*
+{
+  margin: 0 auto 0 auto;
+ text-align:left;}
 
-#top-wraper{width:926px; float:left;}
+#page
+{
+  margin: 0 auto 0 auto; 
+  display: block; 
+  height:auto;
+  position: relative; 
+  overflow: hidden; 
+  background: #697281 url(../images/background.png) repeat-y;
+  width: 750px;
+}
 
-#banner{width:806px; float:left; background:url(../images/banner.jpg) top no-repeat; height:119px; font-family:Georgia, "Times New Roman", Times, serif; font-size:40px; color:#fff; padding:80px 0px 0px 120px;}
+#header
+{
+background-image:url(../images/header.png);
+background-repeat:no-repeat;
+height:156px;
+width:750px;
+}
 
-#nav{width:896px; float:left; padding:10px 15px 0px; height:29px; background:url(../images/nav-bg.jpg) top repeat-x;}
+#headerTitle
+{
+position:relative;
+left:30px;
+top:75px;
+color:#FFFFFF;
+text-align:left;
+font-size:30px;
+font-weight:bold;
+font-family:Arial, Helvetica, sans-serif;
+}
 
-#nav ul{margin:0px; padding:0px; list-style-type:none; float:left; display:inline;}
+#headerSubText
+{
+position:relative;
+left:30px;
+top:72px;
+color:#DEE6F8;
+text-align:left;
+font-size:16px;
+font-weight:bold;
+font-family:Arial, Helvetica, sans-serif;
+}
 
-#nav ul li{float:left; padding:0px 25px; text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#FFF; line-height:18px; border-right:1px solid #081e2c;}
 
-#nav ul li a{float:left; padding:0px 22px; text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#FFF; line-height:18px; text-decoration:none;}
+#bar
+{
+background-image:url(../images/bar.png);
+background-repeat:no-repeat;
+height:53px;
+width:750px;
+padding-bottom:15px;
 
-#nav ul li a:hover{float:left; padding:0px 22px; text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#0aa8f9; line-height:18px; text-decoration:none;}
+}
 
-#mid-wraper{width:926px; margin:0 auto; padding:0px;}
 
-.mid-wraper-top{width:926px; float:left;  background: url(../images/mid-repet.jpg) repeat-y; overflow:hidden;}
 
-.mid-leftouter{width:618px; float:left;}
+#bar .navLink a
+{
+position:relative;
+top:16px;
+margin-left:35px;
+color:#FFFFFF;
+text-align:center;
+font-size:15px;
+float:left;
 
-.mid-wraper-bttm{width:926px; float:left;}
+}
 
-.mid-left-container{width:618px; float:left; padding:10px 0px 0px 20px;}
+#bar .navLink a:hover
+{
+color:#E4EBFA;
+}
 
-h1{background:url(../images/divider-1.jpg) bottom no-repeat; display:block; width:603px; margin:0px 0px 10px 0px; padding:0px 0px 10px 15px; font-family:Arial, Helvetica, sans-serif; font-size:24px; color:#2f1a1a; font-weight:normal;}
 
-.yellow-heading{color:#c79214; font-size:18px;}
+.contentTitle
+{
+width:700px;
+height:44px;
+margin-top:20px;
+margin-left:25px;
+margin-right:25px;
+background-image:url(../images/tab_back.png);
+background-repeat:no-repeat;
 
-.left-bullet{padding:10px 0px 10px 14px; margin:0px; background:url(../images/bullet1.jpg) left top no-repeat; float:left; display:block; background-position:0px 13px; width:550px;}
+}
 
-.inner-left{width:308px; float:left;}
+.contentTitle h1
+{
+margin-left:21px;
+padding-top:8px;
+font-size:17px;
+font-weight:bold;
+color:#071027;
+}
 
-.inner-right{width:300px; float:right;}
 
-h2{background:url(../images/divider-2.jpg) bottom no-repeat; display:block; width:280px; margin:0px 0px 10px 0px; padding:0px 0px 8px 15px; font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#2f1a1a; font-weight:normal;}
+.contentText
+{
+width:680px;
+padding-left:30px;
+padding-right:30px;
+font-size:13px;
+color:#030712;
+line-height:30px;
+}
 
-.read-more{float:right; color:#333333; text-decoration:none;}
+a
+{
+text-decoration:none;
+color:#223F8D;
+}
 
-.read-more:hover{float:right; color:#333333; text-decoration:none;}
+a:hover
+{
+color:#5478D6;
+}
 
-.right-container{width:275px; float:right; color:#fff;}
 
-.right-container-top{width:245px; background:#ced6da url(../images/right-grey.jpg) bottom no-repeat; float:left; padding:10px 15px;}
+#footer {
+width: 750px;
+height:49px;
+background: url(../images/footer.png) no-repeat;
+text-align:center;
+font-size:9px;
+color:#223F8D;
+padding-top:36px;
+}
 
-h3{background:url(../images/divider-4.jpg) bottom no-repeat; display:block; width:224px; margin:0px 0px 10px 0px; padding:0px 0px 8px 10px; font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#2f1a1a; font-weight:normal;}
-
-.right-container-top ul{margin:0px; padding:0px; list-style-type:none; display:block; float:left;}
-
-.right-container-top ul li{float:left; background:url(../images/bullet-2.jpg) left top no-repeat; width:225px; padding:5px 0px 5px 15px; margin:6px 0px 6px 10px; background-position:0px 9px;}
-
-.right-container-top ul li a{float:left; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#2f1a1a; text-decoration:none;}
-
-.right-container-top ul li a:hover{float:left; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#2f1a1a; text-decoration: underline;}
-
-.right-container-dwn{width:245px; float:left; padding:10px 15px; }
-
-h4{background:url(../images/divider-3.jpg) bottom no-repeat; display:block; width:224px; margin:0px 0px 10px 0px; padding:0px 0px 8px 10px; font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#fff; font-weight:normal;}
-
-.read-more-right{float:right; color:#fff; text-decoration:none;}
-
-.read-more-right:hover{float:right; color:#fff; text-decoration:none;}
-
-.footer{width:906px; float:left; padding:10px; color:#fff;}
-
-.footer-side{width:500px; float:left; padding-left:10px;}
-
-.footer-right{width:300px; float:right; padding-right:10px; text-align:right;}
-
-.footer-link{color:#fff; text-decoration:none; padding:0px 4px;}
-
-.footer-link:hover{color:#0aacff; text-decoration:none}
-
+html, body {
+text-align: center;
+}
+p {text-align: left;}
