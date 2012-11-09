@@ -1,47 +1,95 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0083)http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/ -->
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<link rel="stylesheet" type="text/css" href="./css/style.css">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>Creative Inspiration by Bryant Smith</title>
-<style type="text/css"></style></head>
+    <title>WebAppBooster</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <style type="text/css">
+     .hidden
+     {
+       display: none;
+     }
+     .visible
+     {
+     }
+    </style>
+    <script type="text/javascript">
+        function showSection(id) {
+            var sections = ["sectionHome", "sectionScreenshots"];
+            var e = document.getElementById(id);
+            for (var i in sections) {
+                var s = document.getElementById(sections[i]);
+                s.className = "hidden";
+            }
+            e.className = "visible";
+            return true;
+        }
+    </script>
+</head>
 
 <body>
-    <div id="page">
-		
-        <div id="header">
-       	    <div id="headerTitle">WebAppBooster</div>
-            <div id="headerSubText">Give your Android web apps a little boost</div>
-        </div>
-        <div id="bar">
+  <div id="page">
+	
+    <div id="header">
+        <div id="headerTitle">WebAppBooster</div>
+        <div id="headerSubText">Give your web apps a little boost</div>
+    </div>
+    <div id="bar">
+        <div class="navLink"><a href="#" onclick="return showSection('sectionHome')">home</a></div>
+        <div class="navLink"><a href="#" onclick="return showSection('sectionScreenshots')">screenshots</a></div>
+        <div class="navLink"><a href="#">developer</a></div>
+        <div class="navLink"><a href="#">demo</a></div>
+        <div class="navLink"><a href="#">faq</a></div>
+    </div>
 
-        	<div class="navLink"><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">home</a></div>
-           	<div class="navLink"><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">about us</a></div>
-            <div class="navLink"><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">products</a></div>
-            <div class="navLink"><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">services</a></div>
-            <div class="navLink"><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">portfolio</a></div>
-            <div class="navLink"><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">our process</a></div>
-            <div class="navLink"><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">contact</a></div>
-      </div>
-        <div class="contentTitle"><h1>Template Usage</h1></div>
+    <!-- ========================================================================= -->
+    <!-- HOME                                                                      -->
+    <!-- ========================================================================= -->
+    <div id="sectionHome" class="visible">
+        <div class="contentTitle"><h1>What is WebAppBooster?</h1></div>
         <div class="contentText">
-          <p>You may use this template on any site, anywhere, for free just please leave the link back to me in the footer. This template validates XHTML Strict 1.0, CSS Validates as well; enjoy :) </p>
-          <p>&nbsp;</p>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer mi. Vivamus sit amet neque vitae sapien bibendum sodales. Curabitur elementum. Duis imperdiet. Donec eleifend porttitor sapien. Praesent leo. Quisque auctor velit sed tellus. Suspendisse potenti. Aenean laoreet imperdiet nunc. Donec commodo suscipit dolor. Aenean nibh. Sed id odio. Aliquam lobortis risus ut felis. Sed vehicula pellentesque quam.</p>
-          <p>&nbsp;</p>
-          <p><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">(read more)</a></p>
+          <p>WebAppBooster is a free Android app you can download from Google's Play Store.
+             It gives web applications you visit access to your smartphone's
+             sensors and locally stored data. The benefit is that WebAppBooster enriches
+             a web application by enabling functionality that ordinarily only a native
+             app can do.</p>
         </div>
-        <div class="contentTitle"><h1>Another Title Goes Here!</h1></div>
+
+        <div class="contentTitle"><h1>How does is work?</h1></div>
         <div class="contentText">
-          <p>This particular template goes not have a naviagation panel; it was intended for simple sites.   I am also making a version of this template with navigation, check out <a href="http://www.bryantsmith.com/">BryantSmith.com</a> to get it.</p>
-          <p>&nbsp;</p>
-          <p><a href="http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/index.html">(read more)</a></p>
+          <p>WebAppBooster runs a service in the background of your smartphone. When
+             you surf to a web page with your browser, the web application can contact
+             this background service to request access to your devices capabilities.</p>
         </div>
-        <div class="contentTitle"><h1>Yet Another?</h1></div>
-        <div class="contentText">Each title is an H1 tag, so choose them carefully :)</div>  
+
+        <div class="contentTitle"><h1>Is it safe?</h1></div>
+        <div class="contentText">
+          <p>Yes. You will have to grant permissions to a web application before it can
+             access any sensors or local data on your device. This is identical to
+             when you install an app from the Google Play Store: before Android will
+             allow installation of an app, you first have to grant it the requested
+             permissions. WebAppBooster will do the same for web apps.</p>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SCREENSHOTS                                                               -->
+    <!-- ========================================================================= -->
+    <div id="sectionScreenshots" class="hidden">
+        <div class="contentTitle"><h1>Screenshots</h1></div>
+        <div class="contentText">
+          <p>Screenshots.</p>
+        </div>
+    </div>
 </div>
-        <div id="footer"><a href="http://www.aszx.net/">web development</a> by <a href="http://www.bryantsmith.com/">bryant smith</a></div>
+<div id="footer">
+  <a href="http://www.aszx.net/">web template</a> by
+  <a href="http://www.bryantsmith.com/">bryant smith</a>
+</div>
 
 
-</body><style type="text/css"></style></html>
+</body>
+</html>
