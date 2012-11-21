@@ -27,6 +27,7 @@ public class PluginManager {
     private Map<String, Class<? extends Plugin>> pluginClassMap;
     private Map<String, String>                  permissionMap;
 
+
     public PluginManager(Context c) {
         context = c;
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
@@ -68,8 +69,11 @@ public class PluginManager {
         parser.close();
     }
 
-    public void dispatchRequest(int connectionId, String origin, String message) {
+    public void dispatchRequest(WebSocketInfo info, String message) {
         try {
+            int connectionId= info.getConnectionId();
+            String origin = info.getOrigin();
+
             JSONObject msg = new JSONObject(message);
             String action = msg.getString("action");
             int requestId = msg.getInt("id");
