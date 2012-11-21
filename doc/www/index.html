@@ -18,7 +18,7 @@
     </style>
     <script type="text/javascript">
         function showSection(id) {
-            var sections = ["sectionHome", "sectionScreenshots"];
+            var sections = ["sectionHome", "sectionScreenshots", "sectionFaq"];
             var e = document.getElementById(id);
             for (var i in sections) {
                 var s = document.getElementById(sections[i]);
@@ -42,7 +42,7 @@
         <div class="navLink"><a href="#" onclick="return showSection('sectionScreenshots')">screenshots</a></div>
         <div class="navLink"><a href="#">developer</a></div>
         <div class="navLink"><a href="#">demo</a></div>
-        <div class="navLink"><a href="#">faq</a></div>
+        <div class="navLink"><a href="#" onclick="return showSection('sectionFaq')">faq</a></div>
     </div>
 
     <!-- ========================================================================= -->
@@ -82,6 +82,33 @@
         <div class="contentTitle"><h1>Screenshots</h1></div>
         <div class="contentText">
           <p>Screenshots.</p>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- FAQ                                                                       -->
+    <!-- ========================================================================= -->
+    <div id="sectionFaq" class="hidden">
+        <div class="contentTitle"><h1>Frequently Asked Questions</h1></div>
+        <div class="contentText">
+          <ol>
+            <li>
+              <div class="faq">Is WebAppBooster also available for iOS?</div>
+              <div>No. Apple restricts the kind of services that can run in the background. WebAppBooster would
+              not comply to Apple's license agreement.</div>
+            </li>
+
+            <li>
+              <div class="faq">What kind of Web API is supported?</div>
+              <div>Currently WebAppBooster only supports access to the users contact list and the gyroscope.
+              Additional plugins can easily be implemented.</div>
+            </li>
+            
+            <li>
+              <div class="faq">Is WebAppBooster free?</div>
+              <div>Yes. WebAppBooster is released under the BSD Open Source license.<div>
+            </li>
+          </ol>
         </div>
     </div>
 </div>
