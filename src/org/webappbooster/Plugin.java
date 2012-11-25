@@ -8,10 +8,11 @@ import android.content.Intent;
 
 public abstract class Plugin {
 
-    private Context context;
-    private int     connectionId;
+    private Context       context;
+    private WebSocketInfo info;
 
-    abstract public void execute(int requestId, String action, JSONObject request);
+    abstract public void execute(int requestId, String action, JSONObject request)
+            throws JSONException;
 
     public void setContext(Context context) {
         this.context = context;
@@ -21,8 +22,12 @@ public abstract class Plugin {
         return context;
     }
 
-    public void setConnectionId(int id) {
-        this.connectionId = id;
+    public void setConnectionInfo(WebSocketInfo info) {
+        this.info = info;
+    }
+
+    protected WebSocketInfo getConnectionInfo() {
+        return info;
     }
 
     public void onCreate(String origin) {
@@ -41,25 +46,29 @@ public abstract class Plugin {
         // Do nothing
     }
 
+    protected void finishProxyActivity() {
+        if (context instanceof ProxyActivity) {
+            ((ProxyActivity) context).finish();
+        }
+    }
+
     protected void sendResult(int requestId, JSONObject result) {
         try {
             result.put("id", requestId);
-            BoosterService.getService().sendResult(connectionId, result.toString());
+            BoosterService.getService().sendResult(info.getConnectionId(), result.toString());
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        if (context instanceof ProxyActivity) {
-            ((ProxyActivity) context).finish();
-        }
+        finishProxyActivity();
     }
 
     protected void runInContextOfProxyActivity() {
         PluginManager.runViaProxy(this);
     }
 
-    public void callbackFromProxy() {
+    public void callbackFromProxy() throws JSONException {
         // Do nothing
     }
 }

@@ -27,7 +27,6 @@ public class PluginManager {
     private Map<String, Class<? extends Plugin>> pluginClassMap;
     private Map<String, String>                  permissionMap;
 
-
     public PluginManager(Context c) {
         context = c;
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
@@ -71,7 +70,7 @@ public class PluginManager {
 
     public void dispatchRequest(WebSocketInfo info, String message) {
         try {
-            int connectionId= info.getConnectionId();
+            int connectionId = info.getConnectionId();
             String origin = info.getOrigin();
 
             JSONObject msg = new JSONObject(message);
@@ -84,7 +83,7 @@ public class PluginManager {
                 BoosterService.getService().sendResult(connectionId, result.toString());
                 return;
             }
-            Plugin instance = getPluginInstance(connectionId, origin, action);
+            Plugin instance = getPluginInstance(info, origin, action);
             Class<?>[] args = new Class[] { int.class, String.class, JSONObject.class };
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
             meth.invoke(instance, requestId, action, msg);
@@ -101,8 +100,12 @@ public class PluginManager {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            try {
+                throw e.getCause();
+            } catch (Throwable ex) {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -117,15 +120,16 @@ public class PluginManager {
         return Authorization.checkOnePermission(origin, permission);
     }
 
-    private Plugin getPluginInstance(int connectionId, String origin, String action)
+    private Plugin getPluginInstance(WebSocketInfo info, String origin, String action)
             throws InstantiationException, IllegalAccessException {
+        int connectionId = info.getConnectionId();
         Class<? extends Plugin> clazz = pluginClassMap.get(action);
         String key = clazz.getName() + "-" + connectionId;
         Plugin plugin = pluginInstanceMap.get(key);
         if (plugin == null) {
             // No plugin for this connection created yet
             plugin = clazz.newInstance();
-            plugin.setConnectionId(connectionId);
+            plugin.setConnectionInfo(info);
             plugin.setContext(context);
             plugin.onCreate(origin);
             pluginInstanceMap.put(key, plugin);
@@ -166,7 +170,12 @@ public class PluginManager {
         Plugin caller = requestMap.get(id);
         requestMap.remove(id);
         caller.setContext(proxy);
-        caller.callbackFromProxy();
+        try {
+            caller.callbackFromProxy();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public static void websocketClosed(int connectionId) {

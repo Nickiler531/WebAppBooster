@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.java_websocket.WebSocket;
+import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -18,11 +19,10 @@ public class BoosterWebSocket extends WebSocketServer {
     private PluginManager                 pluginManager;
 
     private Map<WebSocket, WebSocketInfo> infoMap          = new HashMap<WebSocket, WebSocketInfo>();
-    private Map<String, Double>           tokenMap         = new HashMap<String, Double>();
+    private List<String>                  originList       = new ArrayList<String>();
     private Map<Integer, WebSocket>       websocketMap     = new HashMap<Integer, WebSocket>();
 
     static private int                    nextConnectionId = 0;
-
 
     public BoosterWebSocket(PluginManager pluginManager, int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -31,20 +31,20 @@ public class BoosterWebSocket extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
+        //TODO check for remote address == localhost
         String origin = handshake.getFieldValue("origin");
-        Double token = tokenMap.get(origin);
-        if (token != null) {
+        if (originList.contains(origin)) {
             // There is already an open connection from this origin. Immediately
             // close it.
             Log.d("WAB", "Second connection from origin " + origin);
-            conn.close(-1);
+            conn.close(CloseFrame.GOING_AWAY);
             return;
         }
         int id = nextConnectionId++;
         WebSocketInfo connection = new WebSocketInfo(conn, id, origin);
         infoMap.put(conn, connection);
         websocketMap.put(id, conn);
-        tokenMap.put(origin, Math.random());
+        originList.add(origin);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class BoosterWebSocket extends WebSocketServer {
             Authorization.revokeOneTimePermissions(origin);
             infoMap.remove(conn);
             websocketMap.remove(id);
-            tokenMap.remove(origin);
+            originList.remove(origin);
         }
     }
 
@@ -73,7 +73,7 @@ public class BoosterWebSocket extends WebSocketServer {
     }
 
     public String[] getOpenConnections() {
-        return tokenMap.values().toArray(new String[tokenMap.size()]);
+        return originList.toArray(new String[originList.size()]);
     }
 
     public void sendResult(int connectionId, String result) {
