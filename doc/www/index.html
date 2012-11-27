@@ -6,17 +6,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <title>WebAppBooster</title>
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
-    <style type="text/css">
-     .hidden {display: none;}
-     .visible {}
-     pre {line-height:120%;}
-    </style>
-    <link href="./css/prettify.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/prettify.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/local.css"/>
     <script type="text/javascript" src="js/prettify.js"></script>
     <script type="text/javascript">
         function showSection(id) {
-            var sections = ["sectionHome", "sectionScreenshots", "sectionFaq", "sectionDeveloper"];
+            var sections = ["sectionHome", "sectionScreenshots", "sectionFaq", "sectionDeveloper",
+                            "sectionDoc", "sectionDemo"];
             var e = document.getElementById(id);
             for (var i in sections) {
                 var s = document.getElementById(sections[i]);
@@ -39,8 +36,8 @@
         <div class="navLink"><a href="#" onclick="return showSection('sectionHome')">home</a></div>
         <div class="navLink"><a href="#" onclick="return showSection('sectionScreenshots')">screenshots</a></div>
         <div class="navLink"><a href="#" onclick="return showSection('sectionDeveloper')">developer</a></div>
-        <div class="navLink"><a href="#">doc</a></div>
-        <div class="navLink"><a href="#">demo</a></div>
+        <div class="navLink"><a href="#" onclick="return showSection('sectionDoc')">doc</a></div>
+        <div class="navLink"><a href="#" onclick="return showSection('sectionDemo')">demo</a></div>
         <div class="navLink"><a href="#" onclick="return showSection('sectionFaq')">faq</a></div>
     </div>
 
@@ -72,6 +69,14 @@
              allow installation of an app, you first have to grant it the requested
              permissions. WebAppBooster will do the same for web apps.</p>
         </div>
+
+        <div class="contentTitle"><h1>Where can I get it?</h1></div>
+        <div class="contentText">
+          <p>WebAppBooster is an Open Source application. You can download it from
+             the Google Play Store for your Android device. Once WebAppBooster is
+             installed, you can try out a little
+             <a href="#" onclick="return showSection('sectionDemo')">demo</a>.</p>
+        </div>
     </div>
 
     <!-- ========================================================================= -->
@@ -90,7 +95,14 @@
     <div id="sectionDeveloper" class="hidden">
         <div class="contentTitle"><h1>Developer</h1></div>
         <div class="contentText">
-          <p>Developer</p>
+
+<p>New plugins have to be registered in res/xml/plugins.xml. A plugin has a name that
+corresponds with the name of the Java class implementing the plugin. A plugin responds
+to one or more actions. Before a web app can access the plugin, the user has to first
+grant the appropriate permission. The following excerpt of plugin.xml shows how to
+add a plugin called NewPlugin that responds to actions FOO_COMMAND_1 and FOO_COMMAND_2
+and requires the user to grant a permission called FOO_PERMISSION:</p>
+
 <pre class="prettyprint">
 &lt;plugins&gt;
     &lt;plugin class="AuthenticationPlugin"
@@ -102,6 +114,15 @@
             actions="FOO_COMMAND_1|FOO_COMMAND_2" permission="FOO_PERMISSION"/&gt;
 &lt;/plugins&gt;
 </pre>
+
+<p>The following code excerpt shows the implementation of the plugin NewPlugin. Plugins
+have their own lifecycle. Each web app is serviced by its own instance of a plugin. When
+the connection is opened, onCreate() is invoked. When the web app terminates the connection,
+onDestroy() is invoked. Whenever the web app calls an action, the execute() method of the
+appropriate plugin is invoked. Method execute() runs in the context of the WebAppBooster
+background service. If the plugin needs to render a user interface, it first needs to call
+method runInContextOfProxyActivity(). This will in turn invoke the method callbackFromProxy():
+</p>
 
 <pre class="prettyprint">
 public class FooPlugin extends Plugin {
@@ -119,9 +140,23 @@ public class FooPlugin extends Plugin {
     @Override
     public void execute(int requestId, String action, JSONObject request) {
         // ...
+        // runInContextOfProxyActivity();
+    }
+
+    @Override
+    public void callbackFromProxy() {
+        // ...
     }
 }
 </pre>
+
+<p>Once the new plugin is implemented and registered, it can be accessed from JavaScript by using
+the helper function WebAppBooster._sendRequest(). This function takes three arguments: (1) a JSON object
+that must have an action attribute whose value matches the declaration in plugins.xml. (2) a callback
+function that is invoked when the web app receives a response. (3) a boolean flag that indicates if
+the action will send one (0) or multiple replies (1). The latter is used for actions that trigger a
+continuous stream of sensor data (e.g., gyroscope):
+</p>
 
 <pre class="prettyprint">
 var WebAppBooster = {
@@ -141,12 +176,44 @@ var WebAppBooster = {
     </div>
 
     <!-- ========================================================================= -->
+    <!-- DOC                                                                       -->
+    <!-- ========================================================================= -->
+    <div id="sectionDoc" class="hidden">
+        <div class="contentTitle"><h1>Documentation</h1></div>
+        <div class="contentText">
+          <p>This documentation is intended for web developers who wish to give
+          their web apps a little boost. If you are interested to extend WebAppBooster
+          by new functionality, please see the
+          <a href="#" onclick="return showSection('sectionDeveloper')">developer</a>
+          page.</p>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- DEMO                                                                      -->
+    <!-- ========================================================================= -->
+    <div id="sectionDemo" class="hidden">
+        <div class="contentTitle"><h1>Demo</h1></div>
+        <div class="contentText">
+          <p>Before running the demo, please make sure that you have downloaded
+          and installed WebAppBooster from the Google Play Store. Next open this
+          page on your Android device where you have installed WebAppBooster and
+          click on this <a href="/demo/">link</a>.</p>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
     <!-- FAQ                                                                       -->
     <!-- ========================================================================= -->
     <div id="sectionFaq" class="hidden">
         <div class="contentTitle"><h1>Frequently Asked Questions</h1></div>
         <div class="contentText">
           <ol>
+            <li>
+              <div class="faq">Is WebAppBooster free?</div>
+              <div>Yes. WebAppBooster is released under the BSD Open Source license.<div>
+            </li>
+
             <li>
               <div class="faq">Is WebAppBooster also available for iOS?</div>
               <div>No. Apple restricts the kind of services that can run in the background. WebAppBooster would
@@ -160,9 +227,11 @@ var WebAppBooster = {
             </li>
             
             <li>
-              <div class="faq">Is WebAppBooster free?</div>
-              <div>Yes. WebAppBooster is released under the BSD Open Source license.<div>
-            </li>
+              <div class="faq">What permissions does WebAppBooster require?</div>
+              <div>WebAppBooster acts as a gateway to the phones data and sensors. As such, it requires
+              Android permissions to access to access data such as contacts and sensors such as GPS.
+              However, a web app will only be given access to those sensitive resources if the user
+              explicitly granted the appropriate permissions.</div>
           </ol>
         </div>
     </div>
