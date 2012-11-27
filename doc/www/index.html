@@ -8,17 +8,15 @@
     <title>WebAppBooster</title>
     <link rel="stylesheet" type="text/css" href="./css/style.css">
     <style type="text/css">
-     .hidden
-     {
-       display: none;
-     }
-     .visible
-     {
-     }
+     .hidden {display: none;}
+     .visible {}
+     pre {line-height:120%;}
     </style>
+    <link href="./css/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="js/prettify.js"></script>
     <script type="text/javascript">
         function showSection(id) {
-            var sections = ["sectionHome", "sectionScreenshots", "sectionFaq"];
+            var sections = ["sectionHome", "sectionScreenshots", "sectionFaq", "sectionDeveloper"];
             var e = document.getElementById(id);
             for (var i in sections) {
                 var s = document.getElementById(sections[i]);
@@ -30,7 +28,7 @@
     </script>
 </head>
 
-<body>
+<body onload="prettyPrint()">
   <div id="page">
 	
     <div id="header">
@@ -40,7 +38,8 @@
     <div id="bar">
         <div class="navLink"><a href="#" onclick="return showSection('sectionHome')">home</a></div>
         <div class="navLink"><a href="#" onclick="return showSection('sectionScreenshots')">screenshots</a></div>
-        <div class="navLink"><a href="#">developer</a></div>
+        <div class="navLink"><a href="#" onclick="return showSection('sectionDeveloper')">developer</a></div>
+        <div class="navLink"><a href="#">doc</a></div>
         <div class="navLink"><a href="#">demo</a></div>
         <div class="navLink"><a href="#" onclick="return showSection('sectionFaq')">faq</a></div>
     </div>
@@ -82,6 +81,62 @@
         <div class="contentTitle"><h1>Screenshots</h1></div>
         <div class="contentText">
           <p>Screenshots.</p>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- DEVELOPER                                                                 -->
+    <!-- ========================================================================= -->
+    <div id="sectionDeveloper" class="hidden">
+        <div class="contentTitle"><h1>Developer</h1></div>
+        <div class="contentText">
+          <p>Developer</p>
+<pre class="prettyprint">
+&lt;plugins&gt;
+    &lt;plugin class="AuthenticationPlugin"
+            actions="REQUEST_AUTHENTICATION|AUTHENTICATE"/&gt;
+    &lt;plugin class="PermissionsPlugin"
+            actions="REQUEST_PERMISSIONS"/&gt;
+    ...
+    &lt;plugin class="FooPlugin"
+            actions="FOO_COMMAND_1|FOO_COMMAND_2" permission="FOO_PERMISSION"/&gt;
+&lt;/plugins&gt;
+</pre>
+
+<pre class="prettyprint">
+public class FooPlugin extends Plugin {
+
+    @Override
+    public void onCreate(String origin) {
+        // ...
+    }
+
+    @Override
+    public void onDestroy() {
+        // ...
+    }
+
+    @Override
+    public void execute(int requestId, String action, JSONObject request) {
+        // ...
+    }
+}
+</pre>
+
+<pre class="prettyprint">
+var WebAppBooster = {
+    // ...
+    foo1Command: function(cb) {
+        var req = {action: "FOO_COMMAND_1"};
+        this._sendRequest(req, cb, 0);
+    },
+    foo2Command: function(cb) {
+        var req = {action: "FOO_COMMAND_2"};
+        this._sendRequest(req, cb, 0);
+    }
+};
+</pre>
+
         </div>
     </div>
 
