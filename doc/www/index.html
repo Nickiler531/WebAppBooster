@@ -8,8 +8,11 @@
     <title>WebAppBooster</title>
     <link rel="stylesheet" type="text/css" href="./css/style.css"/>
     <link rel="stylesheet" type="text/css" href="./css/prettify.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/lightbox.css"/>
     <link rel="stylesheet" type="text/css" href="./css/local.css"/>
     <script type="text/javascript" src="js/prettify.js"></script>
+    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="js/lightbox.js"></script>
     <script type="text/javascript">
         function showSection(id) {
             var sections = ["sectionHome", "sectionScreenshots", "sectionFaq", "sectionDeveloper",
@@ -85,7 +88,11 @@
     <div id="sectionScreenshots" class="hidden">
         <div class="contentTitle"><h1>Screenshots</h1></div>
         <div class="contentText">
-          <p>Screenshots.</p>
+          <ol>
+            <li><a href="image-1.jpg" rel="lightbox[screenshots]" title="Title 1">Title image #1</a></li>
+            <li><a href="image-2.jpg" rel="lightbox[screenshots]" title="Title 1">Title image #2</a></li>
+            <li><a href="image-3.jpg" rel="lightbox[screenshots]" title="Title 1">Title image #3</a></li>
+          </ol>
         </div>
     </div>
 
