@@ -4,9 +4,11 @@ var WebAppBooster = {
     URI: "ws://localhost:8042",
     
     OK: 0,
+    CLOSED: 1,
     ERR_PERMISSION_DENIED: -1,
     ERR_WEBSOCK_NOT_AVAILABLE: -2,
     ERR_WEBSOCK_NOT_CONNECTED: -3,
+    ERR_AUTHENTICATION_REQUIRED: -4,
 
     PERMISSION_READ_CONTACTS: "READ_CONTACTS",
     PERMISSION_GYRO: "GYRO",
@@ -14,8 +16,9 @@ var WebAppBooster = {
     _nextRequestId: 0,
     _requestIdMap: {},
     _ws: 0,
+    _token: 0,
     
-    open: function(cb) {
+    open: function(path, cb) {
         if (this._ws != 0) {
             cb({status: WebAppBooster.OK});
             return;
@@ -26,11 +29,22 @@ var WebAppBooster = {
         }
         this._ws = new WebSocket(this.URI);
         this._ws.onopen = function() {
+            var key = 'webappbooster_token';
+            key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + key + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.search);
+            if (results == null) {
+                WebAppBooster.authenticate(path);
+                cb({status: WebAppBooster.ERR_AUTHENTICATION_REQUIRED});
+            }
+            WebAppBooster._token = decodeURIComponent(results[1].replace(/\+/g, " "));
             cb({status: WebAppBooster.OK});
         };
         this._ws.onmessage = this._onmessage;
         this._ws.onclose = function() {
             WebAppBooster._ws = 0;
+            cb({status: WebAppBooster.CLOSED});
         };      
     },
 
@@ -60,6 +74,12 @@ var WebAppBooster = {
         this._ws.send(JSON.stringify(req));
     },
     
+    authenticate: function(path) {
+       var req = {action: "REQUEST_AUTHENTICATION",
+                  path: path};
+       this._sendRequest(req, function(){}, 0);
+    },
+
     requestPermissions: function(permissions, cb) {
         var req = {action: "REQUEST_PERMISSIONS",
                    permissions: permissions};

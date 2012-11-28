@@ -4,6 +4,10 @@
     <title>WebAppBooster Demo</title>
     <script type="text/javascript" src="js/json.js"></script>
     <script type="text/javascript" src="js/webappbooster.js"></script>
+    <style type="text/css">
+    * {font-size: x-large;}
+    h1 {font-size: xx-large;}
+    </style>
 </head>
 
 <body onload="init()">
@@ -16,13 +20,21 @@ function log(msg) {
     if (typeof msg != "string") {
         s = JSON.stringify(msg);
     }
-    l.innerHTML += s + "\n";
+    if (l.innerHTML != '') {
+        l.innerHTML += '\n';
+    }
+    l.innerHTML += s;
+    l.scrollTop = l.scrollHeight;
 }
 
 function init() {
-    WebAppBooster.open(function(res) {
+    WebAppBooster.open('/demo', function(res) {
         if (res.status == WebAppBooster.OK) {
             log("WebAppBooster connected");
+        } else if (res.status == WebAppBooster.CLOSED) {
+            log("Connection closed");
+        } else if (res.status == WebAppBooster.ERR_AUTHENTICATION_REQUIRED) {
+            log("Authentication required");
         } else {
             log("WebAppBooster not connected");
         }
@@ -55,7 +67,7 @@ function startGyro() {
 
 function stopGyro() {
     WebAppBooster.stopGyro(function(resp) {
-        log(resp);
+        // Do nothing
     });
 }
 
@@ -79,7 +91,7 @@ function stopGyro() {
 
 <p>
 
-<textarea id="log" rows="30" cols="100" style="font-family:monospace; color:red;"></textarea>
+<textarea id="log" rows="20" style="width:100%;font-family:monospace; color:red;"></textarea>
 
 </body>
 </html>
