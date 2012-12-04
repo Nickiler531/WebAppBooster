@@ -36,6 +36,7 @@ function init() {
             log("Connection closed");
         } else if (res.status == WebAppBooster.ERR_AUTHENTICATION_REQUIRED) {
             log("Authentication required");
+            window.close();
         } else if (res.status == WebAppBooster.ERR_WEBSOCK_ACCESS_DENIED) {
             log("Connection access denied");
         } else {
