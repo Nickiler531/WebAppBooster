@@ -17,7 +17,7 @@ public class AuthenticationPlugin extends Plugin {
         WebSocketInfo info = this.getConnectionInfo();
         if (action.equals("REQUEST_AUTHENTICATION")) {
             String path = request.getString("path");
-            path += "?webappbooster_token=" + info.getToken();
+            path += "#webappbooster_token=" + info.getToken();
             String url = info.getOrigin() + "/" + path;
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));

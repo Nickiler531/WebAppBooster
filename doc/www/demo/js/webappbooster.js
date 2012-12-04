@@ -7,8 +7,9 @@ var WebAppBooster = {
     CLOSED: 1,
     ERR_PERMISSION_DENIED: -1,
     ERR_WEBSOCK_NOT_AVAILABLE: -2,
-    ERR_WEBSOCK_NOT_CONNECTED: -3,
-    ERR_AUTHENTICATION_REQUIRED: -4,
+    ERR_WEBSOCK_ACCESS_DENIED: -3,
+    ERR_WEBSOCK_NOT_CONNECTED: -4,
+    ERR_AUTHENTICATION_REQUIRED: -5,
 
     PERMISSION_READ_CONTACTS: "READ_CONTACTS",
     PERMISSION_GYRO: "GYRO",
@@ -27,28 +28,63 @@ var WebAppBooster = {
             cb({status: this.ERR_WEBSOCK_NOT_AVAILABLE});
             return;
         }
-        this._ws = new WebSocket(this.URI);
-        this._ws.onopen = function() {
-            var key = 'webappbooster_token';
-            key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-            var regexS = "[\\?&]" + key + "=([^&#]*)";
-            var regex = new RegExp(regexS);
-            var results = regex.exec(window.location.search);
-            if (results == null) {
-                WebAppBooster.authenticate(path);
-                cb({status: WebAppBooster.ERR_AUTHENTICATION_REQUIRED});
-            }
-            WebAppBooster._token = decodeURIComponent(results[1].replace(/\+/g, " "));
-            cb({status: WebAppBooster.OK});
-        };
-        this._ws.onmessage = this._onmessage;
-        this._ws.onclose = function() {
+        try {
+            this._ws = new WebSocket(this.URI);
+            this._ws.onopen = function () {
+                var localStorageKey = "webappbooster_token";
+                var h = window.location.href;
+                var m = h.match(/#webappbooster_token=([^&]*)/);
+                var token;
+                if (m) {
+                    token = decodeURIComponent(m[1].replace(/\+/g, " "));
+                    window.localStorage[localStorageKey] = token;
+                    h = h.replace(/(#webappbooster_token=[^&]*)/, "");
+                    window.location.replace(h);
+                } else
+                    token = window.localStorage[localStorageKey];
+                function authenticate() {
+                    window.localStorage.removeItem(localStorageKey);
+                    var req = {
+                        action: "REQUEST_AUTHENTICATION",
+                        path: path
+                    };
+                    WebAppBooster._sendRequest(req, function () { }, 0);
+                    cb({ status: WebAppBooster.ERR_AUTHENTICATION_REQUIRED });
+                }
+                function success() {
+                    WebAppBooster._token = token;
+                    cb({ status: WebAppBooster.OK });
+                }
+                if (token) {
+                    var req = {
+                        action: "AUTHENTICATE",
+                        token: token
+                    };
+                    WebAppBooster._sendRequest(req, function (res) {
+                        if (res.status == WebAppBooster.OK) {
+                            success();
+                        }
+                        else {
+                            authenticate();
+                        }
+                    }, 0);
+                }
+                else {
+                    authenticate();
+                }
+            };
+            this._ws.onmessage = this._onmessage;
+            this._ws.onclose = function() {
+                WebAppBooster._ws = 0;
+                cb({status: WebAppBooster.CLOSED});
+            };
+        } catch (e) {
             WebAppBooster._ws = 0;
-            cb({status: WebAppBooster.CLOSED});
-        };      
+            cb({ status: WebAppBooster.ERR_WEBSOCK_ACCESS_DENIED });
+        }
     },
 
-    _onmessage: function(e) {
+    _onmessage: function (e) {
         try {
             var resp = JSON.parse(e.data);
             if ("id" in resp) {
@@ -74,12 +110,6 @@ var WebAppBooster = {
         this._ws.send(JSON.stringify(req));
     },
     
-    authenticate: function(path) {
-       var req = {action: "REQUEST_AUTHENTICATION",
-                  path: path};
-       this._sendRequest(req, function(){}, 0);
-    },
-
     requestPermissions: function(permissions, cb) {
         var req = {action: "REQUEST_PERMISSIONS",
                    permissions: permissions};

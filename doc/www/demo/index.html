@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -28,13 +29,15 @@ function log(msg) {
 }
 
 function init() {
-    WebAppBooster.open('/demo', function(res) {
+    WebAppBooster.open('/demo', function (res) {
         if (res.status == WebAppBooster.OK) {
             log("WebAppBooster connected");
         } else if (res.status == WebAppBooster.CLOSED) {
             log("Connection closed");
         } else if (res.status == WebAppBooster.ERR_AUTHENTICATION_REQUIRED) {
             log("Authentication required");
+        } else if (res.status == WebAppBooster.ERR_WEBSOCK_ACCESS_DENIED) {
+            log("Connection access denied");
         } else {
             log("WebAppBooster not connected");
         }
