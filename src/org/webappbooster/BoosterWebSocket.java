@@ -31,7 +31,7 @@ public class BoosterWebSocket extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        //TODO check for remote address == localhost
+        // TODO check for remote address == localhost
         String origin = handshake.getFieldValue("origin");
         if (originList.contains(origin)) {
             // There is already an open connection from this origin. Immediately
@@ -78,6 +78,8 @@ public class BoosterWebSocket extends WebSocketServer {
 
     public void sendResult(int connectionId, String result) {
         WebSocket conn = websocketMap.get(connectionId);
-        conn.send(result);
+        if (conn != null) {
+            conn.send(result);
+        }
     }
 }

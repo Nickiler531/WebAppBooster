@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,9 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    static public Activity activity;
+    final static public String VERSION = "1.0";
+
+    static public Activity     activity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

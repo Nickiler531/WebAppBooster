@@ -26,11 +26,13 @@ public class PluginManager {
 
     private Map<String, Class<? extends Plugin>> pluginClassMap;
     private Map<String, String>                  permissionMap;
+    static private Map<String, String[]>         actionMap;
 
     public PluginManager(Context c) {
         context = c;
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
         permissionMap = new HashMap<String, String>();
+        actionMap = new HashMap<String, String[]>();
         XmlResourceParser parser = context.getResources().getXml(R.xml.plugins);
         try {
             parser.next();
@@ -45,6 +47,7 @@ public class PluginManager {
                                 .forName(clazzName);
                         String[] actions = parser.getAttributeValue(null, "actions").split("\\|");
                         String permission = parser.getAttributeValue(null, "permission");
+                        actionMap.put(permission, actions);
                         for (String action : actions) {
                             pluginClassMap.put(action, clazz);
                             if (permission != null) {
@@ -188,5 +191,9 @@ public class PluginManager {
                 pluginInstanceMap.remove(key);
             }
         }
+    }
+
+    static public String[] getActionsForPermission(String permission) {
+        return actionMap.get(permission);
     }
 }
