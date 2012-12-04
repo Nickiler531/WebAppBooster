@@ -79,11 +79,14 @@ public class PluginManager {
             JSONObject msg = new JSONObject(message);
             String action = msg.getString("action");
             int requestId = msg.getInt("id");
+            if (!info.isAuthenticated()
+                    && !(action.equals("REQUEST_AUTHENTICATION") || action.equals("AUTHENTICATE"))) {
+                // Connection has not yet been authenticated.
+                sendError(connectionId, requestId, -1);
+                return;
+            }
             if (!hasPermission(connectionId, origin, action)) {
-                JSONObject result = new JSONObject();
-                result.put("id", requestId);
-                result.put("status", -1);
-                BoosterService.getService().sendResult(connectionId, result.toString());
+                sendError(connectionId, requestId, -1);
                 return;
             }
             Plugin instance = getPluginInstance(info, origin, action);
@@ -113,6 +116,13 @@ public class PluginManager {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private void sendError(int connectionId, int requestId, int error) throws JSONException {
+        JSONObject result = new JSONObject();
+        result.put("id", requestId);
+        result.put("status", error);
+        BoosterService.getService().sendResult(connectionId, result.toString());
     }
 
     private boolean hasPermission(int connectionId, String origin, String action) {

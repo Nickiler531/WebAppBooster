@@ -31,7 +31,11 @@ public class BoosterWebSocket extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        // TODO check for remote address == localhost
+        if (!conn.getRemoteSocketAddress().getAddress().getHostAddress().equals("127.0.0.1")) {
+            Log.d("WAB", "Connection did not originate from localhost");
+            conn.close(CloseFrame.GOING_AWAY);
+            return;
+        }
         String origin = handshake.getFieldValue("origin");
         if (originList.contains(origin)) {
             // There is already an open connection from this origin. Immediately
