@@ -41,6 +41,7 @@ public final class R {
         public static final int activity_main=0x7f080000;
     }
     public static final class string {
+        public static final int PERMISSION_ACCELEROMETER=0x7f06001b;
         public static final int PERMISSION_GYRO=0x7f06001a;
         public static final int PERMISSION_READ_CONTACTS=0x7f060019;
         public static final int allow=0x7f06000c;

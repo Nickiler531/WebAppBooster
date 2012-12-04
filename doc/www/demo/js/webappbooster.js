@@ -13,6 +13,7 @@ var WebAppBooster = {
 
     PERMISSION_READ_CONTACTS: "READ_CONTACTS",
     PERMISSION_GYRO: "GYRO",
+    PERMISSION_ACCELEROMETER: "ACCELEROMETER",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -130,6 +131,20 @@ var WebAppBooster = {
         var req = {action: "STOP_GYRO"};
         this._sendRequest(req, function(resp) {
             // Delete the callback that was registered with START_GYRO
+            delete WebAppBooster._requestIdMap["id" + resp.startId];
+            cb(resp);
+        }, 0);
+    },
+
+    startAccelerometer: function(cb) {
+        var req = {action: "START_ACCELEROMETER"};
+        this._sendRequest(req, cb, 1);
+    },
+
+    stopAccelerometer: function(cb) {
+        var req = {action: "STOP_ACCELEROMETER"};
+        this._sendRequest(req, function(resp) {
+            // Delete the callback that was registered with START_ACCELEROMETER
             delete WebAppBooster._requestIdMap["id" + resp.startId];
             cb(resp);
         }, 0);
