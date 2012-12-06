@@ -29,6 +29,7 @@ var WebAppBooster = {
     PERMISSION_READ_CONTACTS: "READ_CONTACTS",
     PERMISSION_GYRO: "GYRO",
     PERMISSION_ACCELEROMETER: "ACCELEROMETER",
+    PERMISSION_AUDIO: "AUDIO",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -163,5 +164,10 @@ var WebAppBooster = {
             delete WebAppBooster._requestIdMap["id" + resp.startId];
             cb(resp);
         }, 0);
+    },
+    
+    listSongs: function(cb) {
+    	var req = {action: "LIST_SONGS"};
+    	this._sendRequest(req, cb, 0);
     }
 };

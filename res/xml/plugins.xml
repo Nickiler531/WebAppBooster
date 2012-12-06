@@ -5,4 +5,5 @@
     <plugin class="PickContactPlugin" actions="PICK_CONTACT" permission="READ_CONTACTS"/>
     <plugin class="GyroscopePlugin" actions="START_GYRO|STOP_GYRO" permission="GYRO"/>
     <plugin class="AccelerometerPlugin" actions="START_ACCELEROMETER|STOP_ACCELEROMETER" permission="ACCELEROMETER"/>
+    <plugin class="AudioPlugin" actions="LIST_SONGS" permission="AUDIO"/>
 </plugins>

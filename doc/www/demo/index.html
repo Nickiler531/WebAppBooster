@@ -47,7 +47,8 @@ function init() {
 
 function requestPermissions() {
     var p = [WebAppBooster.PERMISSION_READ_CONTACTS,
-             WebAppBooster.PERMISSION_GYRO];
+             WebAppBooster.PERMISSION_GYRO,
+             WebAppBooster.PERMISSION_AUDIO];
     WebAppBooster.requestPermissions(p, function(resp) {
         if (resp.status == WebAppBooster.OK) {
             log("Permissions granted");
@@ -75,6 +76,12 @@ function stopGyro() {
     });
 }
 
+function listSongs() {
+    WebAppBooster.listSongs(function(resp) {
+        log(resp);
+    });
+}
+
 </script>
 
 <h1>WebAppBooster Demo</h1>
@@ -92,6 +99,10 @@ function stopGyro() {
 <p>
 
 <button type="button" onclick="stopGyro()">Stop Gyro</button>
+
+<p>
+
+<button type="button" onclick="listSongs()">List songs</button>
 
 <p>
 
