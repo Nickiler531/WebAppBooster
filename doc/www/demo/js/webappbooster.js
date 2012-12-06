@@ -30,6 +30,7 @@ var WebAppBooster = {
     PERMISSION_GYRO: "GYRO",
     PERMISSION_ACCELEROMETER: "ACCELEROMETER",
     PERMISSION_AUDIO: "AUDIO",
+    PERMISSION_GALLERY: "GALLERY",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -168,6 +169,11 @@ var WebAppBooster = {
     
     listSongs: function(cb) {
     	var req = {action: "LIST_SONGS"};
+    	this._sendRequest(req, cb, 0);
+    },
+    
+    listImages: function(cb) {
+    	var req = {action: "LIST_IMAGES"};
     	this._sendRequest(req, cb, 0);
     }
 };
