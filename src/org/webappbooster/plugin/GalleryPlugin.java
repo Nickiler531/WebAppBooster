@@ -246,13 +246,17 @@ public class GalleryPlugin extends Plugin {
      * property called <code>uri</code> that contains the URI to the image.
      */
     private void scanForImages(Uri uri, JSONArray result) throws JSONException {
-        String[] projection = { MediaStore.Images.Media._ID };
+        String[] projection = { MediaStore.Images.Media._ID,
+                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME };
         Cursor imageCursor = MainActivity.activity.managedQuery(uri, projection, null, null, null);
         for (imageCursor.moveToFirst(); !imageCursor.isAfterLast(); imageCursor.moveToNext()) {
             int id = imageCursor.getInt(imageCursor
                     .getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
+            String bucketName = imageCursor.getString(imageCursor
+                    .getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
             JSONObject image = new JSONObject();
             image.put("uri", Uri.withAppendedPath(uri, "" + id));
+            image.put("galleryName", bucketName);
             result.put(image);
         }
     }
