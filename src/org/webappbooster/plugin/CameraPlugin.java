@@ -17,9 +17,7 @@
 package org.webappbooster.plugin;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.Plugin;
@@ -29,7 +27,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 
 public class CameraPlugin extends Plugin {
 
@@ -37,7 +34,7 @@ public class CameraPlugin extends Plugin {
 
     private int                 requestId;
 
-    private File                file;
+    private String              path;
 
     @Override
     public void execute(int requestId, String action, JSONObject request) {
@@ -48,7 +45,8 @@ public class CameraPlugin extends Plugin {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        file = new File(dir.getAbsolutePath() + "/camera-output");
+        path = dir.getAbsolutePath() + "/camera-output";
+        File file = new File(path);
         Uri fileUri = Uri.fromFile(file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         callActivity(intent);
@@ -68,15 +66,12 @@ public class CameraPlugin extends Plugin {
                 result.put("status", -1); // TODO should be different error code
                                           // (Aborted)
             } else {
-                byte[] image = FileUtils.readFileToByteArray(file);
-                byte[] imageBase64 = Base64.encode(image, Base64.DEFAULT);
                 result.put("status", 0);
-                result.put("uri", "data:image/png;base64," + new String(imageBase64));
+                String uri = sendResourceViaHTTP(path, "image/png");
+                result.put("uri", uri);
             }
             sendResult(requestId, result);
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

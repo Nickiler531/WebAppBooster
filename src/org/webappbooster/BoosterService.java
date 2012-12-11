@@ -17,7 +17,13 @@
 package org.webappbooster;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
+
+import org.simpleframework.http.core.Container;
+import org.simpleframework.transport.connect.Connection;
+import org.simpleframework.transport.connect.SocketConnection;
 
 import android.app.Service;
 import android.content.Intent;
@@ -27,12 +33,12 @@ import android.util.Log;
 
 public class BoosterService extends Service {
 
-    final private static int      PORT      = 8042;
+    private IBinder               binder           = new LocalBinder();
+    private BoosterWebSocket      webSocket        = null;
+    private Connection            httpSocket       = null;
+    private Thread                httpServerThread = null;
 
-    private IBinder               binder    = new LocalBinder();
-    private BoosterWebSocket      webSocket = null;
-
-    static private BoosterService service   = null;
+    static private BoosterService service          = null;
 
     private PluginManager         pluginManager;
 
@@ -46,7 +52,9 @@ public class BoosterService extends Service {
     public void onCreate() {
         service = this;
         pluginManager = new PluginManager(this);
-        openWebSocket();
+        Log.d("WAB", "Starting WebAppBooster service");
+        startWebSocketServer();
+        startHttpServer();
     }
 
     @Override
@@ -62,16 +70,17 @@ public class BoosterService extends Service {
     @Override
     public void onDestroy() {
         service = null;
-        closeWebSocket();
+        Log.d("WAB", "Stopping WebAppBooster service");
+        stopWebSocketServer();
+        stopHttpServer();
     }
 
-    private void openWebSocket() {
+    private void startWebSocketServer() {
         // WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
-                webSocket = new BoosterWebSocket(pluginManager, PORT);
+                webSocket = new BoosterWebSocket(pluginManager, Config.PORT_WEBSOCKET);
                 webSocket.start();
-                Log.d("WAB", "Starting webSocket");
             }
         } catch (UnknownHostException e) {
             webSocket = null;
@@ -80,15 +89,47 @@ public class BoosterService extends Service {
         }
     }
 
-    private void closeWebSocket() {
+    private void stopWebSocketServer() {
         if (webSocket != null) {
             try {
                 webSocket.stop();
-                Log.d("WAB", "Stopping webSocket");
             } catch (IOException e) {
             } catch (InterruptedException e) {
             }
             webSocket = null;
+        }
+    }
+
+    private void startHttpServer() {
+        if (httpServerThread != null) {
+            return;
+        }
+        httpServerThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Container container = new HTTPServer();
+                    httpSocket = new SocketConnection(container);
+                    SocketAddress address = new InetSocketAddress(Config.PORT_HTTP);
+                    httpSocket.connect(address);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        httpServerThread.start();
+    }
+
+    private void stopHttpServer() {
+        try {
+            httpSocket.close();
+            httpSocket = null;
+            httpServerThread.interrupt();
+            httpServerThread = null;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
