@@ -31,6 +31,7 @@ var WebAppBooster = {
     PERMISSION_ACCELEROMETER: "ACCELEROMETER",
     PERMISSION_AUDIO: "AUDIO",
     PERMISSION_GALLERY: "GALLERY",
+    PERMISSION_CAMERA: "CAMERA",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -174,6 +175,11 @@ var WebAppBooster = {
     
     listImages: function(cb) {
     	var req = {action: "LIST_IMAGES"};
+    	this._sendRequest(req, cb, 0);
+    },
+
+    takePhoto: function(cb) {
+    	var req = {action: "TAKE_PHOTO"};
     	this._sendRequest(req, cb, 0);
     }
 };

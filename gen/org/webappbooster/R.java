@@ -43,6 +43,7 @@ public final class R {
     public static final class string {
         public static final int PERMISSION_ACCELEROMETER=0x7f06001b;
         public static final int PERMISSION_AUDIO=0x7f06001c;
+        public static final int PERMISSION_CAMERA=0x7f06001e;
         public static final int PERMISSION_GALLERY=0x7f06001d;
         public static final int PERMISSION_GYRO=0x7f06001a;
         public static final int PERMISSION_READ_CONTACTS=0x7f060019;

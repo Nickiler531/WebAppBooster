@@ -7,4 +7,5 @@
     <plugin class="AccelerometerPlugin" actions="START_ACCELEROMETER|STOP_ACCELEROMETER" permission="ACCELEROMETER"/>
     <plugin class="AudioPlugin" actions="LIST_SONGS" permission="AUDIO"/>
     <plugin class="GalleryPlugin" actions="CREATE_IMAGE_THUMBNAIL|LIST_IMAGES|SAVE_TO_GALLERY" permission="GALLERY"/>
+    <plugin class="CameraPlugin" actions="TAKE_PHOTO" permission="CAMERA"/>
 </plugins>
