@@ -19,6 +19,7 @@ package org.webappbooster.plugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.webappbooster.BoosterApplication;
 import org.webappbooster.MainActivity;
 import org.webappbooster.Plugin;
 
@@ -121,7 +122,7 @@ public class GalleryPlugin extends Plugin {
                     FileOutputStream out = new FileOutputStream(imageFile);
                     out.write(bytes);
                     out.close();
-                    new MediaScanner(MainActivity.activity, imageFile);
+                    new MediaScanner(BoosterApplication.getAppContext(), imageFile);
                     JSONObject result = new JSONObject();
                     result.put("id", requestId);
                     result.put("status", 0);
@@ -207,8 +208,8 @@ public class GalleryPlugin extends Plugin {
      */
     private synchronized void generateThumbnail(String uri, int width, int height,
             FileOutputStream out) throws FileNotFoundException, IOException {
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                MainActivity.activity.getContentResolver(), Uri.parse(uri));
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(BoosterApplication.getAppContext()
+                .getContentResolver(), Uri.parse(uri));
         Bitmap bmThumbnail = ThumbnailUtils.extractThumbnail(bitmap, width, height);
 
         bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 55, out);
@@ -248,7 +249,8 @@ public class GalleryPlugin extends Plugin {
     private void scanForImages(Uri uri, JSONArray result) throws JSONException {
         String[] projection = { MediaStore.Images.Media._ID,
                 MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME };
-        Cursor imageCursor = MainActivity.activity.managedQuery(uri, projection, null, null, null);
+        Cursor imageCursor = BoosterApplication.getAppContext().getContentResolver()
+                .query(uri, projection, null, null, null);
         for (imageCursor.moveToFirst(); !imageCursor.isAfterLast(); imageCursor.moveToNext()) {
             int id = imageCursor.getInt(imageCursor
                     .getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
@@ -260,5 +262,6 @@ public class GalleryPlugin extends Plugin {
             image.put("galleryName", bucketName);
             result.put(image);
         }
+        imageCursor.close();
     }
 }

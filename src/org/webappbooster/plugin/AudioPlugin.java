@@ -21,6 +21,7 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.webappbooster.BoosterApplication;
 import org.webappbooster.MainActivity;
 import org.webappbooster.Plugin;
 
@@ -90,7 +91,8 @@ public class AudioPlugin extends Plugin {
                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.TRACK };
-        Cursor cursor = MainActivity.activity.managedQuery(uri, projection, null, null, null);
+        Cursor cursor = BoosterApplication.getAppContext().getContentResolver()
+                .query(uri, projection, null, null, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
             String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -122,10 +124,12 @@ public class AudioPlugin extends Plugin {
         Cursor cursor = null;
         if (genreIdMap == null) {
             genreIdMap = new HashMap<String, String>();
-            cursor = MainActivity.activity.managedQuery(
-                    MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, new String[] {
-                            MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME }, null,
-                    null, null);
+            cursor = BoosterApplication
+                    .getAppContext()
+                    .getContentResolver()
+                    .query(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
+                            new String[] { MediaStore.Audio.Genres._ID,
+                                    MediaStore.Audio.Genres.NAME }, null, null, null);
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 genreIdMap.put(
                         cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres._ID)),
@@ -136,9 +140,11 @@ public class AudioPlugin extends Plugin {
         }
         String genre = "";
         for (String genreId : genreIdMap.keySet()) {
-            cursor = MainActivity.activity.managedQuery(makeGenreUri(genreId),
-                    new String[] { MediaStore.Audio.Media.DATA }, MediaStore.Audio.Media.DATA
-                            + " LIKE \"" + path + "\"", null, null);
+            cursor = BoosterApplication
+                    .getAppContext()
+                    .getContentResolver()
+                    .query(makeGenreUri(genreId), new String[] { MediaStore.Audio.Media.DATA },
+                            MediaStore.Audio.Media.DATA + " LIKE \"" + path + "\"", null, null);
             if (cursor.getCount() != 0) {
                 genre = genreIdMap.get(genreId);
                 break;

@@ -37,14 +37,10 @@ public class MainActivity extends Activity {
 
     final static public String VERSION = "1.0";
 
-    static public Activity     activity;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        activity = this;
-        Authorization.init(getApplicationContext());
         setContentView(R.layout.activity_main);
         View textView = findViewById(R.id.status_view);
         textView.setOnClickListener(new OnClickListener() {

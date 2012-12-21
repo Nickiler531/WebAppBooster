@@ -60,7 +60,7 @@ public class WebSocketInfo {
     static private void readTokens() {
         tokenMap = new HashMap<String, Double>();
         try {
-            FileInputStream is = MainActivity.activity.openFileInput(FILE_NAME);
+            FileInputStream is = BoosterApplication.getAppContext().openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(is);
             tokenMap = (Map<String, Double>) ois.readObject();
             ois.close();
@@ -74,7 +74,7 @@ public class WebSocketInfo {
 
     static private void writeTokens() {
         try {
-            FileOutputStream os = MainActivity.activity.openFileOutput(FILE_NAME,
+            FileOutputStream os = BoosterApplication.getAppContext().openFileOutput(FILE_NAME,
                     Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
             oos.writeObject(tokenMap);

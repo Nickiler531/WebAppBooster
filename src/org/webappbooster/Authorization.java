@@ -37,10 +37,8 @@ public class Authorization {
 
     static private Map<String, List<String>> permissionsOnce   = null;
     static private Map<String, List<String>> permissionsAlways = null;
-    static private Context                   context           = null;
 
-    static public void init(Context c) {
-        context = c;
+    static {
         permissionsOnce = new HashMap<String, List<String>>();
         readPermissions();
     }
@@ -48,7 +46,7 @@ public class Authorization {
     static private void readPermissions() {
         permissionsAlways = new HashMap<String, List<String>>();
         try {
-            FileInputStream is = context.openFileInput(FILE_NAME);
+            FileInputStream is = BoosterApplication.getAppContext().openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(is);
             permissionsAlways = (Map<String, List<String>>) ois.readObject();
             ois.close();
@@ -62,7 +60,8 @@ public class Authorization {
 
     static private void writePermissions() {
         try {
-            FileOutputStream os = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
+            FileOutputStream os = BoosterApplication.getAppContext().openFileOutput(FILE_NAME,
+                    Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
             oos.writeObject(permissionsAlways);
             oos.close();
