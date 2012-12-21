@@ -11,6 +11,7 @@
             android:key="pref_key_enable_wab_on_boot"
             android:summary="@string/pref_summary_enable_wab_on_boot"
             android:title="@string/pref_title_enable_wab_on_boot"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:dependency="pref_key_enable_wab"/>
     </PreferenceCategory>
 </PreferenceScreen>
