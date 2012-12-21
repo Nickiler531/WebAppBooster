@@ -61,7 +61,7 @@ public class PickContactPlugin extends Plugin {
             emails.close();
             JSONObject result = new JSONObject();
             try {
-                result.put("status", "ok");
+                result.put("status", 0);
                 result.put("name", name);
                 result.put("email", emailAddress);
                 sendResult(requestId, result);

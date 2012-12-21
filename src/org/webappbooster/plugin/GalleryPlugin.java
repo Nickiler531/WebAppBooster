@@ -255,7 +255,8 @@ public class GalleryPlugin extends Plugin {
             String bucketName = imageCursor.getString(imageCursor
                     .getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
             JSONObject image = new JSONObject();
-            image.put("uri", Uri.withAppendedPath(uri, "" + id));
+            image.put("uri",
+                    sendResourceViaHTTP(Uri.withAppendedPath(uri, "" + id).toString(), "image/png"));
             image.put("galleryName", bucketName);
             result.put(image);
         }

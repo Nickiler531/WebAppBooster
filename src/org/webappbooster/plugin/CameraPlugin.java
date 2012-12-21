@@ -67,7 +67,7 @@ public class CameraPlugin extends Plugin {
                                           // (Aborted)
             } else {
                 result.put("status", 0);
-                String uri = sendResourceViaHTTP(path, "image/png");
+                String uri = sendResourceViaHTTP("file://" + path, "image/png");
                 result.put("uri", uri);
             }
             sendResult(requestId, result);

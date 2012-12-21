@@ -102,7 +102,9 @@ public class AudioPlugin extends Plugin {
                     .getColumnIndex(MediaStore.Audio.Media.DURATION));
             String track = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
             JSONObject song = new JSONObject();
-            song.put("uri", Uri.withAppendedPath(uri, "" + id));
+            song.put(
+                    "uri",
+                    sendResourceViaHTTP(Uri.withAppendedPath(uri, "" + id).toString(), "audio/mpeg"));
             song.put("data", data);
             song.put("title", title);
             song.put("artist", artist);

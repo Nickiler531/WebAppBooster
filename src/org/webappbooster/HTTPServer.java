@@ -23,21 +23,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
 
+import android.net.Uri;
 import android.util.Log;
 
 public class HTTPServer implements Container {
 
     static public class Resource {
-        public Resource(String path, String mimeType) {
-            this.path = path;
+        public Resource(String uri, String mimeType) {
+            this.uri = uri;
             this.mimeType = mimeType;
         }
 
-        public String path;
+        public String uri;
         public String mimeType;
     }
 
@@ -68,7 +70,15 @@ public class HTTPServer implements Container {
             response.setDate("Date", time);
             response.setDate("Last-Modified", time);
 
-            FileUtils.copyFile(new File(resource.path), body);
+            String uri = resource.uri;
+            if (uri.startsWith("file://")) {
+                FileUtils.copyFile(new File(uri.substring("file://".length())), body);
+            }
+            if (uri.startsWith("content://")) {
+                IOUtils.copy(
+                        MainActivity.activity.getContentResolver().openInputStream(Uri.parse(uri)),
+                        body);
+            }
             body.close();
         } catch (IOException e) {
             Log.d("WAB", "Cannot load resourceId: " + resourceId);

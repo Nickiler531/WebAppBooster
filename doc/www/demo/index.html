@@ -1,17 +1,75 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-    <title>WebAppBooster Demo</title>
-    <script type="text/javascript" src="js/json.js"></script>
-    <script type="text/javascript" src="js/webappbooster.js"></script>
-    <style type="text/css">
-    * {font-size: x-large;}
-    h1 {font-size: xx-large;}
-    </style>
-</head>
-
-<body onload="init()">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>WebAppBooster Demo</title>
+        <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.2.0.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/local.css" />
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.2.0.min.js"></script>
+        <script type="text/javascript" src="js/webappbooster.js"></script>
+    </head>
+    <body onload="init()">
+        <!-- Home -->
+        <div data-role="page" id="page1">
+            <div data-theme="a" data-role="header">
+                <h3>
+                    WebAppBooster Demo
+                </h3>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <label for="actions">
+                        Action:
+                    </label>
+                    <select id="actions" name="">
+                        <option value="action_request_permissions">
+                            Request permissions
+                        </option>
+                        <option value="action_pick_contact">
+                            Pick contact
+                        </option>
+                        <option value="action_start_gyro">
+                            Start gyroscope
+                        </option>
+                        <option value="action_stop_gyro">
+                            Stop gyroscope
+                        </option>
+                        <option value="action_list_songs">
+                            List songs
+                        </option>
+                        <option value="action_list_images">
+                            List images
+                        </option>
+                        <option value="action_take_photo">
+                            Take photo
+                        </option>
+                    </select>
+                </div>
+                <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
+                    Do Action
+                </a>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="log">
+                            Log:
+                        </label>
+                        <textarea name="" id="log" placeholder=""></textarea>
+                    </fieldset>
+                </div>
+                <div id="image-container" style="display:none; background-color: #fbfbfb; border: 1px solid #b8b8b8;">
+                    <img id="image" alt="image" />
+                </div>
+            </div>
+            <div data-theme="a" data-role="footer" data-position="fixed" style="display:table;">
+              <div style="display: table-cell; vertical-align: middle; padding-left:50px;">
+                <a href="http://webappbooster.org" data-transition="fade">
+                  Visit WebAppBooster.org for details
+                </a>
+              </div>
+            </div>
+        </div>
 
 <script type="text/javascript">
 
@@ -29,6 +87,7 @@ function log(msg) {
 }
 
 function init() {
+	//$('#log').addClass('logx');
     WebAppBooster.open('/demo', function (res) {
         if (res.status == WebAppBooster.OK) {
             log("WebAppBooster connected");
@@ -45,7 +104,7 @@ function init() {
     });
 }
 
-function requestPermissions() {
+function action_request_permissions() {
     var p = [WebAppBooster.PERMISSION_READ_CONTACTS,
              WebAppBooster.PERMISSION_GYRO,
              WebAppBooster.PERMISSION_AUDIO,
@@ -60,85 +119,55 @@ function requestPermissions() {
     });
 }
 
-function pickContact() {
+function action_pick_contact() {
     WebAppBooster.pickContact(function(resp) {
         log(resp);
     });
 }
 
-function startGyro() {
+function action_start_gyro() {
     WebAppBooster.startGyro(function(resp) {
         log(resp);
     });
 }
 
-function stopGyro() {
+function action_stop_gyro() {
     WebAppBooster.stopGyro(function(resp) {
         // Do nothing
     });
 }
 
-function listSongs() {
+function action_list_songs() {
     WebAppBooster.listSongs(function(resp) {
         log(resp);
     });
 }
 
-function listImages() {
+function action_list_images() {
     WebAppBooster.listImages(function(resp) {
         log(resp);
     });
 }
 
-function takePhoto() {
+function action_take_photo() {
     WebAppBooster.takePhoto(function(resp) {
-    	if (resp.status == 0) {
-    		log("Photo taken");
-    		var img = document.getElementById("image");
-    		img.src = resp.uri;
+        if (resp.status == 0) {
+            log("Photo taken");
+            var img = document.getElementById("image");
+            img.src = resp.uri;
+            var imgContainer = document.getElementById("image-container");
+            imgContainer.style.display = "inline-block";
     	} else {
-    		log(resp);
+            log(resp);
     	}
     });
 }
 
+function do_action() {
+    eval($('#actions').val() + '();');
+}
+
 </script>
 
-<h1>WebAppBooster Demo</h1>
-
-<button type="button" onclick="requestPermissions()">Request Permissions</button>
-
-<p>
-
-<button type="button" onclick="pickContact()">Pick Contact</button>
-
-<p>
-
-<button type="button" onclick="startGyro()">Start Gyro</button>
-
-<p>
-
-<button type="button" onclick="stopGyro()">Stop Gyro</button>
-
-<p>
-
-<button type="button" onclick="listSongs()">List songs</button>
-
-<p>
-
-<button type="button" onclick="listImages()">List images</button>
-
-<p>
-
-<button type="button" onclick="takePhoto()">Take photo</button>
-
-<p>
-
-<textarea id="log" rows="20" style="width:100%;font-family:monospace; color:red;"></textarea>
-
-<p>
-
-<img id="image"/>
-
-</body>
+    </body>
 </html>
