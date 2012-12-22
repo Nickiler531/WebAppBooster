@@ -92,9 +92,9 @@ public class PluginManager {
             int connectionId = info.getConnectionId();
             String origin = info.getOrigin();
 
-            JSONObject msg = new JSONObject(message);
-            String action = msg.getString("action");
-            int requestId = msg.getInt("id");
+            Request req = new Request(message);
+            String action = req.getAction();
+            int requestId = req.getRequestId();
             if (!info.isAuthenticated()
                     && !(action.equals("REQUEST_AUTHENTICATION") || action.equals("AUTHENTICATE"))) {
                 // Connection has not yet been authenticated.
@@ -106,9 +106,9 @@ public class PluginManager {
                 return;
             }
             Plugin instance = getPluginInstance(info, origin, action);
-            Class<?>[] args = new Class[] { int.class, String.class, JSONObject.class };
+            Class<?>[] args = new Class[] { int.class, String.class, Request.class };
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
-            meth.invoke(instance, requestId, action, msg);
+            meth.invoke(instance, requestId, action, req);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

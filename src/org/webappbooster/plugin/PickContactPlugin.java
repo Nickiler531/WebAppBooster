@@ -19,6 +19,7 @@ package org.webappbooster.plugin;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.Plugin;
+import org.webappbooster.Request;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -30,12 +31,11 @@ import android.provider.ContactsContract;
 public class PickContactPlugin extends Plugin {
 
     private int requestId;
-    
+
     @Override
-    public void execute(int requestId, String action, JSONObject request) {
+    public void execute(int requestId, String action, Request request) {
         this.requestId = requestId;
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-        // intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         callActivity(intent);
     }
 

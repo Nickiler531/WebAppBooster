@@ -22,8 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.BoosterApplication;
-import org.webappbooster.MainActivity;
 import org.webappbooster.Plugin;
+import org.webappbooster.Request;
 
 import android.net.Uri;
 import android.database.Cursor;
@@ -37,7 +37,7 @@ public class AudioPlugin extends Plugin {
     private JSONArray songs = null;
 
     @Override
-    public void execute(int requestId, String action, JSONObject request) throws JSONException {
+    public void execute(int requestId, String action, Request request) throws JSONException {
         if (action.equals("LIST_SONGS")) {
             executeListSongs(requestId);
         }

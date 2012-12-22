@@ -27,7 +27,7 @@ public abstract class Plugin {
     private Context       context;
     private WebSocketInfo info;
 
-    abstract public void execute(int requestId, String action, JSONObject request)
+    abstract public void execute(int requestId, String action, Request request)
             throws JSONException;
 
     public void setContext(Context context) {

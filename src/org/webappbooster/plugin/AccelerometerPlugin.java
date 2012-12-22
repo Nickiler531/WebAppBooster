@@ -19,6 +19,7 @@ package org.webappbooster.plugin;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.Plugin;
+import org.webappbooster.Request;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -40,7 +41,7 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
     }
 
     @Override
-    public void execute(int requestId, String action, JSONObject request) throws JSONException {
+    public void execute(int requestId, String action, Request request) throws JSONException {
         if (action.equals("START_ACCELEROMETER")) {
             this.requestId = requestId;
             sensorManager.registerListener(this, sensorAccelerometer,

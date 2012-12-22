@@ -20,8 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.BoosterApplication;
-import org.webappbooster.MainActivity;
 import org.webappbooster.Plugin;
+import org.webappbooster.Request;
 
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
@@ -79,7 +79,7 @@ public class GalleryPlugin extends Plugin {
     }
 
     @Override
-    public void execute(int requestId, String action, JSONObject request) throws JSONException {
+    public void execute(int requestId, String action, Request request) throws JSONException {
         if (action.equals("CREATE_IMAGE_THUMBNAIL")) {
             executeCreateImageThumbnail(requestId, request);
         } else if (action.equals("LIST_IMAGES")) {
@@ -96,7 +96,7 @@ public class GalleryPlugin extends Plugin {
      * thread. Class MediaScanner is used to inform the Gallery app of the new
      * image.
      */
-    private void executeSaveToGallery(final int requestId, final JSONObject request)
+    private void executeSaveToGallery(final int requestId, final Request request)
             throws JSONException {
         File sdcard = Environment.getExternalStorageDirectory();
         File dir = new File(sdcard.getAbsolutePath() + PATH + "Gallery");
@@ -145,7 +145,7 @@ public class GalleryPlugin extends Plugin {
      * cache does not contain an appropriate thumbnail image, it is computed and
      * stored in the cache.
      */
-    private void executeCreateImageThumbnail(final int requestId, JSONObject request)
+    private void executeCreateImageThumbnail(final int requestId, Request request)
             throws JSONException {
         final String uri = request.getString("uri");
         final int width = request.getInt("width");

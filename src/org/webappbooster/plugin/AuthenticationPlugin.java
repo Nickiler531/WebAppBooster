@@ -19,6 +19,7 @@ package org.webappbooster.plugin;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.Plugin;
+import org.webappbooster.Request;
 import org.webappbooster.WebSocketInfo;
 
 import android.content.Intent;
@@ -29,7 +30,7 @@ public class AuthenticationPlugin extends Plugin {
     private Intent intent;
 
     @Override
-    public void execute(int requestId, String action, JSONObject request) throws JSONException {
+    public void execute(int requestId, String action, Request request) throws JSONException {
         WebSocketInfo info = this.getConnectionInfo();
         if (action.equals("REQUEST_AUTHENTICATION")) {
             String path = request.getString("path");

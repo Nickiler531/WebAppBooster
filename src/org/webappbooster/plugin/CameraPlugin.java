@@ -21,6 +21,7 @@ import java.io.File;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.Plugin;
+import org.webappbooster.Request;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,7 +38,7 @@ public class CameraPlugin extends Plugin {
     private String              path;
 
     @Override
-    public void execute(int requestId, String action, JSONObject request) {
+    public void execute(int requestId, String action, Request request) {
         this.requestId = requestId;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File sdcard = Environment.getExternalStorageDirectory();

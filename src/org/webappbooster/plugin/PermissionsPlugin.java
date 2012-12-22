@@ -28,15 +28,16 @@ import org.webappbooster.MainActivity;
 import org.webappbooster.PermissionsDialog;
 import org.webappbooster.Plugin;
 import org.webappbooster.PluginManager;
+import org.webappbooster.Request;
 
 import android.content.DialogInterface;
 
 public class PermissionsPlugin extends Plugin {
 
-    private JSONObject request;
-    private int        requestId;
-    private String     origin;
-    private String[]   permissions;
+    private Request  request;
+    private int      requestId;
+    private String   origin;
+    private String[] permissions;
 
     @Override
     public void onCreate(String origin) {
@@ -44,7 +45,7 @@ public class PermissionsPlugin extends Plugin {
     }
 
     @Override
-    public void execute(int requestId, String action, JSONObject request) {
+    public void execute(int requestId, String action, Request request) {
         this.requestId = requestId;
         this.request = request;
         runInContextOfProxyActivity();
@@ -52,11 +53,7 @@ public class PermissionsPlugin extends Plugin {
 
     @Override
     public void callbackFromProxy() throws JSONException {
-        JSONArray p = request.getJSONArray("permissions");
-        permissions = new String[p.length()];
-        for (int i = 0; i < permissions.length; i++) {
-            permissions[i] = p.getString(i);
-        }
+        permissions = request.getStringArray("permissions");
         if (Authorization.checkPermissions(origin, permissions)) {
             // Permissions were granted earlier
             sendStatus(0);
