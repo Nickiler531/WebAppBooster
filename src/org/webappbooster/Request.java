@@ -25,8 +25,10 @@ public class Request {
     private JSONObject msg;
     private String     action;
     private int        requestId;
+    private Plugin     managingPlugin;
 
     public Request(String message) {
+        managingPlugin = null;
         try {
             msg = new JSONObject(message);
             action = msg.getString("action");
@@ -80,5 +82,13 @@ public class Request {
         } catch (JSONException e) {
             return new String[0];
         }
+    }
+
+    public void setManagingPlugin(Plugin plugin) {
+        this.managingPlugin = plugin;
+    }
+
+    public Plugin getManagingPlugin() {
+        return this.managingPlugin;
     }
 }

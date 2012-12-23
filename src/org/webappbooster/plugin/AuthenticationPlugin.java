@@ -30,8 +30,9 @@ public class AuthenticationPlugin extends Plugin {
     private Intent intent;
 
     @Override
-    public void execute(int requestId, String action, Request request) throws JSONException {
+    public void execute(Request request) throws JSONException {
         WebSocketInfo info = this.getConnectionInfo();
+        String action = request.getAction();
         if (action.equals("REQUEST_AUTHENTICATION")) {
             String path = request.getString("path");
             path += "#webappbooster_token=" + info.getToken();
@@ -39,7 +40,7 @@ public class AuthenticationPlugin extends Plugin {
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
             info.closeConnection();
-            runInContextOfProxyActivity();
+            runInContextOfProxyActivity(request);
         } else {
             double token = request.getDouble("token");
             int status = 0;
@@ -50,12 +51,12 @@ public class AuthenticationPlugin extends Plugin {
             }
             JSONObject result = new JSONObject();
             result.put("status", status);
-            sendResult(requestId, result);
+            sendResult(request.getRequestId(), result);
         }
     }
 
     @Override
-    public void callbackFromProxy() throws JSONException {
+    public void callbackFromProxy(Request request) throws JSONException {
         getContext().startActivity(intent);
         finishProxyActivity();
     }

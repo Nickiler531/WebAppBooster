@@ -37,16 +37,17 @@ public class AudioPlugin extends Plugin {
     private JSONArray songs = null;
 
     @Override
-    public void execute(int requestId, String action, Request request) throws JSONException {
+    public void execute(Request request) throws JSONException {
+        String action = request.getAction();
         if (action.equals("LIST_SONGS")) {
-            executeListSongs(requestId);
+            executeListSongs(request);
         }
     }
 
     /**
      * Retrieve all songs stored on the device.
      */
-    synchronized private void executeListSongs(final int requestId) {
+    synchronized private void executeListSongs(final Request request) {
         new Thread(new Runnable() {
 
             @Override
@@ -55,13 +56,13 @@ public class AudioPlugin extends Plugin {
                 JSONObject result = new JSONObject();
                 try {
                     scanForSongs(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songs);
-                    result.put("id", requestId);
+                    result.put("id", request.getRequestId());
                     result.put("status", 0);
                     result.put("songs", songs);
                 } catch (JSONException e) {
                     // TODO
                 }
-                sendResult(requestId, result);
+                sendResult(request.getRequestId(), result);
             }
 
         }).start();

@@ -27,8 +27,7 @@ public abstract class Plugin {
     private Context       context;
     private WebSocketInfo info;
 
-    abstract public void execute(int requestId, String action, Request request)
-            throws JSONException;
+    abstract public void execute(Request request) throws JSONException;
 
     public void setContext(Context context) {
         this.context = context;
@@ -54,11 +53,11 @@ public abstract class Plugin {
         // Do nothing
     }
 
-    protected void callActivity(Intent intent) {
-        PluginManager.callActivityViaProxy(this, intent);
+    protected void callActivity(Request request, Intent intent) {
+        PluginManager.callActivityViaProxy(request, intent);
     }
 
-    public void resultFromActivity(int resultCode, Intent data) {
+    public void resultFromActivity(Request request, int resultCode, Intent data) {
         // Do nothing
     }
 
@@ -80,11 +79,11 @@ public abstract class Plugin {
         finishProxyActivity();
     }
 
-    protected void runInContextOfProxyActivity() {
-        PluginManager.runViaProxy(this);
+    protected void runInContextOfProxyActivity(Request request) {
+        PluginManager.runViaProxy(request);
     }
 
-    public void callbackFromProxy() throws JSONException {
+    public void callbackFromProxy(Request request) throws JSONException {
         // Do nothing
     }
 

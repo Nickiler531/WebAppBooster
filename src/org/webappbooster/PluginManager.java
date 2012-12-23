@@ -38,7 +38,7 @@ public class PluginManager {
     static private Context                       context;
     static private Map<String, Plugin>           pluginInstanceMap = new HashMap<String, Plugin>();
     static private int                           nextRequestId     = 0;
-    static private Map<Integer, Plugin>          requestMap        = new HashMap<Integer, Plugin>();
+    static private Map<Integer, Request>         requestMap        = new HashMap<Integer, Request>();
 
     private Map<String, Class<? extends Plugin>> pluginClassMap;
     private Map<String, String>                  permissionMap;
@@ -106,9 +106,10 @@ public class PluginManager {
                 return;
             }
             Plugin instance = getPluginInstance(info, origin, action);
-            Class<?>[] args = new Class[] { int.class, String.class, Request.class };
+            req.setManagingPlugin(instance);
+            Class<?>[] args = new Class[] { Request.class };
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
-            meth.invoke(instance, requestId, action, req);
+            meth.invoke(instance, req);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -166,41 +167,41 @@ public class PluginManager {
         return plugin;
     }
 
-    static public void callActivityViaProxy(Plugin caller, Intent intent) {
+    static public void callActivityViaProxy(Request request, Intent intent) {
         int id = nextRequestId++;
-        requestMap.put(id, caller);
+        requestMap.put(id, request);
         Intent i = new Intent(context, ProxyActivity.class);
         i.putExtra("ACTION", "CALL_ACTIVITY");
         i.putExtra("INTENT", intent);
         i.putExtra("ID", id);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         context.startActivity(i);
     }
 
     static public void resultFromActivity(int requestCode, int resultCode, Intent data) {
-        Plugin caller = requestMap.get(requestCode);
+        Request request = requestMap.get(requestCode);
+        Plugin caller = request.getManagingPlugin();
         requestMap.remove(requestCode);
-        caller.resultFromActivity(resultCode, data);
+        caller.resultFromActivity(request, resultCode, data);
     }
 
-    static public void runViaProxy(Plugin caller) {
+    static public void runViaProxy(Request request) {
         int id = nextRequestId++;
-        requestMap.put(id, caller);
+        requestMap.put(id, request);
         Intent i = new Intent(context, ProxyActivity.class);
         i.putExtra("ACTION", "CALL_PLUGIN");
         i.putExtra("ID", id);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         context.startActivity(i);
     }
 
     static public void runPlugin(Context proxy, int id) {
-        Plugin caller = requestMap.get(id);
+        Request request = requestMap.get(id);
+        Plugin caller = request.getManagingPlugin();
         requestMap.remove(id);
         caller.setContext(proxy);
         try {
-            caller.callbackFromProxy();
+            caller.callbackFromProxy(request);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -33,13 +33,10 @@ public class CameraPlugin extends Plugin {
 
     final private static String PATH = "/WebAppBooster/";
 
-    private int                 requestId;
-
     private String              path;
 
     @Override
-    public void execute(int requestId, String action, Request request) {
-        this.requestId = requestId;
+    public void execute(Request request) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File sdcard = Environment.getExternalStorageDirectory();
         File dir = new File(sdcard.getAbsolutePath() + PATH);
@@ -50,11 +47,11 @@ public class CameraPlugin extends Plugin {
         File file = new File(path);
         Uri fileUri = Uri.fromFile(file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        callActivity(intent);
+        callActivity(request, intent);
     }
 
     @Override
-    public void resultFromActivity(int resultCode, Intent data) {
+    public void resultFromActivity(Request request, int resultCode, Intent data) {
         /*
          * Unfortunately we cannot return the URI to the web app since Chrome
          * under Android does not permit access to a file:// for security
@@ -71,7 +68,7 @@ public class CameraPlugin extends Plugin {
                 String uri = sendResourceViaHTTP("file://" + path, "image/png");
                 result.put("uri", uri);
             }
-            sendResult(requestId, result);
+            sendResult(request.getRequestId(), result);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -79,13 +79,14 @@ public class GalleryPlugin extends Plugin {
     }
 
     @Override
-    public void execute(int requestId, String action, Request request) throws JSONException {
+    public void execute(Request request) throws JSONException {
+        String action = request.getAction();
         if (action.equals("CREATE_IMAGE_THUMBNAIL")) {
-            executeCreateImageThumbnail(requestId, request);
+            executeCreateImageThumbnail(request);
         } else if (action.equals("LIST_IMAGES")) {
-            executeListImages(requestId);
+            executeListImages(request);
         } else if (action.equals("SAVE_TO_GALLERY")) {
-            executeSaveToGallery(requestId, request);
+            executeSaveToGallery(request);
         }
     }
 
@@ -96,8 +97,7 @@ public class GalleryPlugin extends Plugin {
      * thread. Class MediaScanner is used to inform the Gallery app of the new
      * image.
      */
-    private void executeSaveToGallery(final int requestId, final Request request)
-            throws JSONException {
+    private void executeSaveToGallery(final Request request) throws JSONException {
         File sdcard = Environment.getExternalStorageDirectory();
         File dir = new File(sdcard.getAbsolutePath() + PATH + "Gallery");
         if (!dir.exists()) {
@@ -124,10 +124,10 @@ public class GalleryPlugin extends Plugin {
                     out.close();
                     new MediaScanner(BoosterApplication.getAppContext(), imageFile);
                     JSONObject result = new JSONObject();
-                    result.put("id", requestId);
+                    result.put("id", request.getRequestId());
                     result.put("status", 0);
                     result.put("imageFile", imageFile.getName());
-                    sendResult(requestId, result);
+                    sendResult(request.getRequestId(), result);
                 } catch (FileNotFoundException e) {
                     // Do nothing
                 } catch (IOException e) {
@@ -145,8 +145,7 @@ public class GalleryPlugin extends Plugin {
      * cache does not contain an appropriate thumbnail image, it is computed and
      * stored in the cache.
      */
-    private void executeCreateImageThumbnail(final int requestId, Request request)
-            throws JSONException {
+    private void executeCreateImageThumbnail(final Request request) throws JSONException {
         final String uri = request.getString("uri");
         final int width = request.getInt("width");
         final int height = request.getInt("height");
@@ -182,12 +181,12 @@ public class GalleryPlugin extends Plugin {
                     status = -1;
                 }
                 try {
-                    result.put("id", requestId);
+                    result.put("id", request);
                     result.put("status", status);
                     if (thumbUri != null) {
                         result.put("thumbUri", thumbUri.toString());
                     }
-                    sendResult(requestId, result);
+                    sendResult(request.getRequestId(), result);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -218,7 +217,7 @@ public class GalleryPlugin extends Plugin {
     /**
      * Retrieve all images stored in internal and external memory. The result is
      */
-    private void executeListImages(final int requestId) throws JSONException {
+    private void executeListImages(final Request request) throws JSONException {
         new Thread(new Runnable() {
 
             @Override
@@ -228,13 +227,13 @@ public class GalleryPlugin extends Plugin {
                 try {
                     scanForImages(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, gallery);
                     scanForImages(MediaStore.Images.Media.INTERNAL_CONTENT_URI, gallery);
-                    result.put("id", requestId);
+                    result.put("id", request.getRequestId());
                     result.put("status", 0);
                     result.put("gallery", gallery);
                 } catch (JSONException e) {
                     // TODO
                 }
-                sendResult(requestId, result);
+                sendResult(request.getRequestId(), result);
             }
 
         }).start();

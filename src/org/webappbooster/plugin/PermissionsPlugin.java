@@ -34,8 +34,6 @@ import android.content.DialogInterface;
 
 public class PermissionsPlugin extends Plugin {
 
-    private Request  request;
-    private int      requestId;
     private String   origin;
     private String[] permissions;
 
@@ -45,18 +43,16 @@ public class PermissionsPlugin extends Plugin {
     }
 
     @Override
-    public void execute(int requestId, String action, Request request) {
-        this.requestId = requestId;
-        this.request = request;
-        runInContextOfProxyActivity();
+    public void execute(Request request) {
+        runInContextOfProxyActivity(request);
     }
 
     @Override
-    public void callbackFromProxy() throws JSONException {
+    public void callbackFromProxy(final Request request) throws JSONException {
         permissions = request.getStringArray("permissions");
         if (Authorization.checkPermissions(origin, permissions)) {
             // Permissions were granted earlier
-            sendStatus(0);
+            sendStatus(request, 0);
             return;
         }
 
@@ -71,12 +67,12 @@ public class PermissionsPlugin extends Plugin {
                     Authorization.setPermissions(origin, permissions,
                             which == DialogInterface.BUTTON_NEUTRAL);
                 }
-                sendStatus((which != DialogInterface.BUTTON_NEGATIVE) ? 0 : -1);
+                sendStatus(request, (which != DialogInterface.BUTTON_NEGATIVE) ? 0 : -1);
             }
         });
     }
 
-    private void sendStatus(int status) {
+    private void sendStatus(Request request, int status) {
         JSONObject result = new JSONObject();
         try {
             result.put("status", status);
@@ -94,7 +90,7 @@ public class PermissionsPlugin extends Plugin {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        sendResult(requestId, result);
+        sendResult(request.getRequestId(), result);
 
     }
 }

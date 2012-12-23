@@ -31,7 +31,7 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor        sensorAccelerometer;
-    private int           requestId;
+    private Request       request;
 
     @Override
     public void onCreate(String origin) {
@@ -41,16 +41,17 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
     }
 
     @Override
-    public void execute(int requestId, String action, Request request) throws JSONException {
+    public void execute(Request request) throws JSONException {
+        String action = request.getAction();
         if (action.equals("START_ACCELEROMETER")) {
-            this.requestId = requestId;
+            this.request = request;
             sensorManager.registerListener(this, sensorAccelerometer,
                     SensorManager.SENSOR_DELAY_NORMAL);
         } else if (action.equals("STOP_ACCELEROMETER")) {
             sensorManager.unregisterListener(this);
             JSONObject sensorEvent = new JSONObject();
-            sensorEvent.put("startId", this.requestId);
-            sendResult(requestId, sensorEvent);
+            sensorEvent.put("startId", this.request.getRequestId());
+            sendResult(request.getRequestId(), sensorEvent);
         }
     }
 
@@ -70,7 +71,7 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
             sensorEvent.put("x", event.values[0]);
             sensorEvent.put("y", event.values[1]);
             sensorEvent.put("z", event.values[2]);
-            sendResult(requestId, sensorEvent);
+            sendResult(request.getRequestId(), sensorEvent);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
