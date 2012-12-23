@@ -16,10 +16,9 @@
 
 package org.webappbooster.plugin;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
+import org.webappbooster.Response;
 import org.webappbooster.WebSocketInfo;
 
 import android.content.Intent;
@@ -30,7 +29,7 @@ public class AuthenticationPlugin extends Plugin {
     private Intent intent;
 
     @Override
-    public void execute(Request request) throws JSONException {
+    public void execute(Request request) {
         WebSocketInfo info = this.getConnectionInfo();
         String action = request.getAction();
         if (action.equals("REQUEST_AUTHENTICATION")) {
@@ -43,20 +42,19 @@ public class AuthenticationPlugin extends Plugin {
             runInContextOfProxyActivity(request);
         } else {
             double token = request.getDouble("token");
-            int status = 0;
+            int status = Response.OK;
             if (token == info.getToken()) {
                 info.connectionIsAuthorized();
             } else {
-                status = -1;
+                status = -1; // TODO
             }
-            JSONObject result = new JSONObject();
-            result.put("status", status);
-            sendResult(request.getRequestId(), result);
+            Response response = request.createResponse(status);
+            response.send();
         }
     }
 
     @Override
-    public void callbackFromProxy(Request request) throws JSONException {
+    public void callbackFromProxy(Request request) {
         getContext().startActivity(intent);
         finishProxyActivity();
     }

@@ -16,10 +16,9 @@
 
 package org.webappbooster.plugin;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
+import org.webappbooster.Response;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -31,7 +30,7 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor        sensorAccelerometer;
-    private Request       request;
+    private Request       startRequest;
 
     @Override
     public void onCreate(String origin) {
@@ -41,17 +40,17 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
     }
 
     @Override
-    public void execute(Request request) throws JSONException {
+    public void execute(Request request) {
         String action = request.getAction();
         if (action.equals("START_ACCELEROMETER")) {
-            this.request = request;
+            startRequest = request;
             sensorManager.registerListener(this, sensorAccelerometer,
                     SensorManager.SENSOR_DELAY_NORMAL);
         } else if (action.equals("STOP_ACCELEROMETER")) {
             sensorManager.unregisterListener(this);
-            JSONObject sensorEvent = new JSONObject();
-            sensorEvent.put("startId", this.request.getRequestId());
-            sendResult(request.getRequestId(), sensorEvent);
+            Response response = request.createResponse(Response.OK);
+            response.add("removeCallbackId", startRequest.getRequestId());
+            response.send();
         }
     }
 
@@ -66,16 +65,11 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        try {
-            JSONObject sensorEvent = new JSONObject();
-            sensorEvent.put("x", event.values[0]);
-            sensorEvent.put("y", event.values[1]);
-            sensorEvent.put("z", event.values[2]);
-            sendResult(request.getRequestId(), sensorEvent);
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Response response = startRequest.createResponse(Response.OK);
+        response.add("x", event.values[0]);
+        response.add("y", event.values[1]);
+        response.add("z", event.values[2]);
+        response.send();
     }
 
 }

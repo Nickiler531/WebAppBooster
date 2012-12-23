@@ -200,12 +200,7 @@ public class PluginManager {
         Plugin caller = request.getManagingPlugin();
         requestMap.remove(id);
         caller.setContext(proxy);
-        try {
-            caller.callbackFromProxy(request);
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        caller.callbackFromProxy(request);
     }
 
     public static void websocketClosed(int connectionId) {

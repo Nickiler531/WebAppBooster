@@ -39,6 +39,10 @@ public class Request {
         }
     }
 
+    public Response createResponse(int code) {
+        return new Response(code, requestId, managingPlugin);
+    }
+
     public String getAction() {
         return action;
     }

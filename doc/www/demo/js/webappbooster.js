@@ -116,6 +116,9 @@ var WebAppBooster = {
                 }
                 cb(resp);
             }
+            if ("removeCallbackId" in resp) {
+                delete WebAppBooster._requestIdMap["id" + resp.removeCallbackId];
+            }
         } catch(ex) {}
     },
     
@@ -147,11 +150,7 @@ var WebAppBooster = {
 
     stopGyro: function(cb) {
         var req = {action: "STOP_GYRO"};
-        this._sendRequest(req, function(resp) {
-            // Delete the callback that was registered with START_GYRO
-            delete WebAppBooster._requestIdMap["id" + resp.startId];
-            cb(resp);
-        }, 0);
+        this._sendRequest(req, cb, 0);
     },
 
     startAccelerometer: function(cb) {
@@ -161,21 +160,25 @@ var WebAppBooster = {
 
     stopAccelerometer: function(cb) {
         var req = {action: "STOP_ACCELEROMETER"};
-        this._sendRequest(req, function(resp) {
-            // Delete the callback that was registered with START_ACCELEROMETER
-            delete WebAppBooster._requestIdMap["id" + resp.startId];
-            cb(resp);
-        }, 0);
+        this._sendRequest(req, cb, 0);
     },
     
     listSongs: function(cb) {
-    	var req = {action: "LIST_SONGS"};
-    	this._sendRequest(req, cb, 0);
+        var req = {action: "LIST_SONGS"};
+        this._sendRequest(req, function (resp) {
+            if (!("removeCallbackId" in resp)) {
+                cb(resp);
+            }
+        }, 1);
     },
     
     listImages: function(cb) {
-    	var req = {action: "LIST_IMAGES"};
-    	this._sendRequest(req, cb, 0);
+        var req = {action: "LIST_IMAGES"};
+        this._sendRequest(req, function (resp) {
+            if (!("removeCallbackId" in resp)) {
+                cb(resp);
+            }
+        }, 1);
     },
 
     takePhoto: function(cb) {

@@ -20,15 +20,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webappbooster.Authorization;
 import org.webappbooster.MainActivity;
 import org.webappbooster.PermissionsDialog;
 import org.webappbooster.Plugin;
 import org.webappbooster.PluginManager;
 import org.webappbooster.Request;
+import org.webappbooster.Response;
 
 import android.content.DialogInterface;
 
@@ -48,7 +46,7 @@ public class PermissionsPlugin extends Plugin {
     }
 
     @Override
-    public void callbackFromProxy(final Request request) throws JSONException {
+    public void callbackFromProxy(final Request request) {
         permissions = request.getStringArray("permissions");
         if (Authorization.checkPermissions(origin, permissions)) {
             // Permissions were granted earlier
@@ -73,24 +71,17 @@ public class PermissionsPlugin extends Plugin {
     }
 
     private void sendStatus(Request request, int status) {
-        JSONObject result = new JSONObject();
-        try {
-            result.put("status", status);
-            result.put("version", MainActivity.VERSION);
-            if (status == 0) {
-                // Get all supported actions for the requested permissions
-                List<String> supportedActions = new ArrayList<String>();
-                for (String p : permissions) {
-                    String[] actions = PluginManager.getActionsForPermission(p);
-                    supportedActions.addAll(Arrays.asList(actions));
-                }
-                result.put("supportedActions", new JSONArray(supportedActions));
+        Response response = request.createResponse(status);
+        response.add("version", MainActivity.VERSION);
+        if (status == Response.OK) {
+            // Get all supported actions for the requested permissions
+            List<String> supportedActions = new ArrayList<String>();
+            for (String p : permissions) {
+                String[] actions = PluginManager.getActionsForPermission(p);
+                supportedActions.addAll(Arrays.asList(actions));
             }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            response.add("supportedActions", supportedActions);
         }
-        sendResult(request.getRequestId(), result);
-
+        response.send();
     }
 }

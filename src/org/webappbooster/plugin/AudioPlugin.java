@@ -18,12 +18,10 @@ package org.webappbooster.plugin;
 
 import java.util.HashMap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webappbooster.BoosterApplication;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
+import org.webappbooster.Response;
 
 import android.net.Uri;
 import android.database.Cursor;
@@ -34,10 +32,8 @@ import android.provider.MediaStore;
  */
 public class AudioPlugin extends Plugin {
 
-    private JSONArray songs = null;
-
     @Override
-    public void execute(Request request) throws JSONException {
+    public void execute(Request request) {
         String action = request.getAction();
         if (action.equals("LIST_SONGS")) {
             executeListSongs(request);
@@ -52,17 +48,10 @@ public class AudioPlugin extends Plugin {
 
             @Override
             public void run() {
-                songs = new JSONArray();
-                JSONObject result = new JSONObject();
-                try {
-                    scanForSongs(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songs);
-                    result.put("id", request.getRequestId());
-                    result.put("status", 0);
-                    result.put("songs", songs);
-                } catch (JSONException e) {
-                    // TODO
-                }
-                sendResult(request.getRequestId(), result);
+                scanForSongs(request, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                Response response = request.createResponse(Response.OK);
+                response.add("removeCallbackId", request.getRequestId());
+                response.send();
             }
 
         }).start();
@@ -87,7 +76,7 @@ public class AudioPlugin extends Plugin {
      * Helper method for retrieving songs stored on the device. The result is an
      * array of objects where each object describes the properties of one song.
      */
-    private void scanForSongs(Uri uri, JSONArray result) throws JSONException {
+    private void scanForSongs(Request request, Uri uri) {
         String[] projection = { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.DURATION,
@@ -104,17 +93,17 @@ public class AudioPlugin extends Plugin {
             String duration = cursor.getString(cursor
                     .getColumnIndex(MediaStore.Audio.Media.DURATION));
             String track = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-            JSONObject song = new JSONObject();
-            song.put(
+            Response response = request.createResponse(Response.OK);
+            response.add(
                     "uri",
                     sendResourceViaHTTP(Uri.withAppendedPath(uri, "" + id).toString(), "audio/mpeg"));
-            song.put("data", data);
-            song.put("title", title);
-            song.put("artist", artist);
-            song.put("album", album);
-            song.put("duration", Integer.parseInt(duration));
-            song.put("track", Integer.parseInt(track));
-            result.put(song);
+            response.add("data", data);
+            response.add("title", title);
+            response.add("artist", artist);
+            response.add("album", album);
+            response.add("duration", Integer.parseInt(duration));
+            response.add("track", Integer.parseInt(track));
+            response.send();
         }
         cursor.close();
     }

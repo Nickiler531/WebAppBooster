@@ -16,10 +16,9 @@
 
 package org.webappbooster.plugin;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
+import org.webappbooster.Response;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -56,15 +55,10 @@ public class PickContactPlugin extends Plugin {
                         .getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
             }
             emails.close();
-            JSONObject result = new JSONObject();
-            try {
-                result.put("status", 0);
-                result.put("name", name);
-                result.put("email", emailAddress);
-                sendResult(request.getRequestId(), result);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Response response = request.createResponse(Response.OK);
+            response.add("name", name);
+            response.add("email", emailAddress);
+            response.send();
         }
         c.close();
     }

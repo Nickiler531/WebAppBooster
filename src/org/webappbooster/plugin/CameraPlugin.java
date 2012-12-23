@@ -18,10 +18,9 @@ package org.webappbooster.plugin;
 
 import java.io.File;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
+import org.webappbooster.Response;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -58,19 +57,16 @@ public class CameraPlugin extends Plugin {
          * reasons (otherwise a web app could just read the content of the
          * sdcard).
          */
-        JSONObject result = new JSONObject();
-        try {
-            if (resultCode != Activity.RESULT_OK) {
-                result.put("status", -1); // TODO should be different error code
-                                          // (Aborted)
-            } else {
-                result.put("status", 0);
-                String uri = sendResourceViaHTTP("file://" + path, "image/png");
-                result.put("uri", uri);
-            }
-            sendResult(request.getRequestId(), result);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        Response response;
+        if (resultCode != Activity.RESULT_OK) {
+            response = request.createResponse(-1); // TODO should be different
+                                                   // error code
+            // (Aborted)
+        } else {
+            response = request.createResponse(Response.OK);
+            String uri = sendResourceViaHTTP("file://" + path, "image/png");
+            response.add("uri", uri);
         }
+        response.send();
     }
 }

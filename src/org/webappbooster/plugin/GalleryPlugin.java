@@ -16,12 +16,10 @@
 
 package org.webappbooster.plugin;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webappbooster.BoosterApplication;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
+import org.webappbooster.Response;
 
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
@@ -79,7 +77,7 @@ public class GalleryPlugin extends Plugin {
     }
 
     @Override
-    public void execute(Request request) throws JSONException {
+    public void execute(Request request) {
         String action = request.getAction();
         if (action.equals("CREATE_IMAGE_THUMBNAIL")) {
             executeCreateImageThumbnail(request);
@@ -97,7 +95,7 @@ public class GalleryPlugin extends Plugin {
      * thread. Class MediaScanner is used to inform the Gallery app of the new
      * image.
      */
-    private void executeSaveToGallery(final Request request) throws JSONException {
+    private void executeSaveToGallery(final Request request) {
         File sdcard = Environment.getExternalStorageDirectory();
         File dir = new File(sdcard.getAbsolutePath() + PATH + "Gallery");
         if (!dir.exists()) {
@@ -123,16 +121,12 @@ public class GalleryPlugin extends Plugin {
                     out.write(bytes);
                     out.close();
                     new MediaScanner(BoosterApplication.getAppContext(), imageFile);
-                    JSONObject result = new JSONObject();
-                    result.put("id", request.getRequestId());
-                    result.put("status", 0);
-                    result.put("imageFile", imageFile.getName());
-                    sendResult(request.getRequestId(), result);
+                    Response response = request.createResponse(Response.OK);
+                    response.add("imageFile", imageFile.getName());
+                    response.send();
                 } catch (FileNotFoundException e) {
                     // Do nothing
                 } catch (IOException e) {
-                    // Do nothing
-                } catch (JSONException e) {
                     // Do nothing
                 }
             }
@@ -145,7 +139,7 @@ public class GalleryPlugin extends Plugin {
      * cache does not contain an appropriate thumbnail image, it is computed and
      * stored in the cache.
      */
-    private void executeCreateImageThumbnail(final Request request) throws JSONException {
+    private void executeCreateImageThumbnail(final Request request) {
         final String uri = request.getString("uri");
         final int width = request.getInt("width");
         final int height = request.getInt("height");
@@ -154,7 +148,6 @@ public class GalleryPlugin extends Plugin {
             @Override
             public void run() {
 
-                JSONObject result = new JSONObject();
                 int status = 0;
                 URI thumbUri = null;
                 if (uri != null && uri.length() > 0) {
@@ -180,17 +173,11 @@ public class GalleryPlugin extends Plugin {
                 } else {
                     status = -1;
                 }
-                try {
-                    result.put("id", request);
-                    result.put("status", status);
-                    if (thumbUri != null) {
-                        result.put("thumbUri", thumbUri.toString());
-                    }
-                    sendResult(request.getRequestId(), result);
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                Response response = request.createResponse(status);
+                if (thumbUri != null) {
+                    response.add("thumbUri", thumbUri.toString());
                 }
+                response.send();
             }
 
         }).start();
@@ -217,23 +204,16 @@ public class GalleryPlugin extends Plugin {
     /**
      * Retrieve all images stored in internal and external memory. The result is
      */
-    private void executeListImages(final Request request) throws JSONException {
+    private void executeListImages(final Request request) {
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                JSONArray gallery = new JSONArray();
-                JSONObject result = new JSONObject();
-                try {
-                    scanForImages(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, gallery);
-                    scanForImages(MediaStore.Images.Media.INTERNAL_CONTENT_URI, gallery);
-                    result.put("id", request.getRequestId());
-                    result.put("status", 0);
-                    result.put("gallery", gallery);
-                } catch (JSONException e) {
-                    // TODO
-                }
-                sendResult(request.getRequestId(), result);
+                scanForImages(request, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                scanForImages(request, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                Response response = request.createResponse(Response.OK);
+                response.add("removeCallbackId", request.getRequestId());
+                response.send();
             }
 
         }).start();
@@ -245,7 +225,7 @@ public class GalleryPlugin extends Plugin {
      * describes the properties of one image. There is currently only one
      * property called <code>uri</code> that contains the URI to the image.
      */
-    private void scanForImages(Uri uri, JSONArray result) throws JSONException {
+    private void scanForImages(Request request, Uri uri) {
         String[] projection = { MediaStore.Images.Media._ID,
                 MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME };
         Cursor imageCursor = BoosterApplication.getAppContext().getContentResolver()
@@ -255,11 +235,11 @@ public class GalleryPlugin extends Plugin {
                     .getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
             String bucketName = imageCursor.getString(imageCursor
                     .getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
-            JSONObject image = new JSONObject();
-            image.put("uri",
+            Response response = request.createResponse(Response.OK);
+            response.add("uri",
                     sendResourceViaHTTP(Uri.withAppendedPath(uri, "" + id).toString(), "image/png"));
-            image.put("galleryName", bucketName);
-            result.put(image);
+            response.add("galleryName", bucketName);
+            response.send();
         }
         imageCursor.close();
     }
