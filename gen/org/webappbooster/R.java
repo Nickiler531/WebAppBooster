@@ -53,6 +53,7 @@ public final class R {
         public static final int PERMISSION_GALLERY=0x7f060020;
         public static final int PERMISSION_GYRO=0x7f06001d;
         public static final int PERMISSION_READ_CONTACTS=0x7f06001c;
+        public static final int PERMISSION_VIBRATE=0x7f060022;
         public static final int allow=0x7f06000e;
         public static final int allow_always=0x7f060011;
         public static final int allow_once=0x7f060010;

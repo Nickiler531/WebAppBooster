@@ -37,4 +37,5 @@
     <string name="PERMISSION_AUDIO">Access the songs stored on the device</string>
     <string name="PERMISSION_GALLERY">Access to the photo gallery</string>
     <string name="PERMISSION_CAMERA">Take pictures</string>
+    <string name="PERMISSION_VIBRATE">Vibrate</string>
 </resources>

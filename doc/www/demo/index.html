@@ -45,6 +45,9 @@
                         <option value="action_take_photo">
                             Take photo
                         </option>
+                        <option value="action_vibrate">
+                            Vibrate
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -87,7 +90,6 @@ function log(msg) {
 }
 
 function init() {
-	//$('#log').addClass('logx');
     WebAppBooster.open('/demo', function (res) {
         if (res.status == WebAppBooster.OK) {
             log("WebAppBooster connected");
@@ -109,7 +111,8 @@ function action_request_permissions() {
              WebAppBooster.PERMISSION_GYRO,
              WebAppBooster.PERMISSION_AUDIO,
              WebAppBooster.PERMISSION_GALLERY,
-             WebAppBooster.PERMISSION_CAMERA];
+             WebAppBooster.PERMISSION_CAMERA,
+             WebAppBooster.PERMISSION_VIBRATE];
     WebAppBooster.requestPermissions(p, function(resp) {
         if (resp.status == WebAppBooster.OK) {
             log("Permissions granted");
@@ -160,6 +163,12 @@ function action_take_photo() {
     	} else {
             log(resp);
     	}
+    });
+}
+
+function action_vibrate() {
+    WebAppBooster.vibrate(100, function(resp) {
+        log(resp);
     });
 }
 

@@ -32,6 +32,7 @@ var WebAppBooster = {
     PERMISSION_AUDIO: "AUDIO",
     PERMISSION_GALLERY: "GALLERY",
     PERMISSION_CAMERA: "CAMERA",
+    PERMISSION_VIBRATE: "VIBRATE",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -183,6 +184,12 @@ var WebAppBooster = {
 
     takePhoto: function(cb) {
     	var req = {action: "TAKE_PHOTO"};
+    	this._sendRequest(req, cb, 0);
+    },
+    
+    vibrate: function(millis, cb) {
+    	var req = {action: "VIBRATE",
+    	           millis: millis};
     	this._sendRequest(req, cb, 0);
     }
 };
