@@ -35,7 +35,6 @@ import android.content.res.XmlResourceParser;
 
 public class PluginManager {
 
-    static private Context                       context;
     static private Map<String, Plugin>           pluginInstanceMap = new HashMap<String, Plugin>();
     static private int                           nextRequestId     = 0;
     static private Map<Integer, Request>         requestMap        = new HashMap<Integer, Request>();
@@ -44,12 +43,12 @@ public class PluginManager {
     private Map<String, String>                  permissionMap;
     static private Map<String, String[]>         actionMap;
 
-    public PluginManager(Context c) {
-        context = c;
+    public PluginManager() {
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
         permissionMap = new HashMap<String, String>();
         actionMap = new HashMap<String, String[]>();
-        XmlResourceParser parser = context.getResources().getXml(R.xml.plugins);
+        XmlResourceParser parser = BoosterApplication.getAppContext().getResources()
+                .getXml(R.xml.plugins);
         try {
             parser.next();
             int eventType = parser.getEventType();
@@ -160,7 +159,7 @@ public class PluginManager {
             // No plugin for this connection created yet
             plugin = clazz.newInstance();
             plugin.setConnectionInfo(info);
-            plugin.setContext(context);
+            plugin.setContext(BoosterApplication.getAppContext());
             plugin.onCreate(origin);
             pluginInstanceMap.put(key, plugin);
         }
@@ -169,6 +168,7 @@ public class PluginManager {
 
     static public void callActivityViaProxy(Request request, Intent intent) {
         int id = nextRequestId++;
+        Context context = BoosterApplication.getAppContext();
         requestMap.put(id, request);
         Intent i = new Intent(context, ProxyActivity.class);
         i.putExtra("ACTION", "CALL_ACTIVITY");
@@ -187,6 +187,7 @@ public class PluginManager {
 
     static public void runViaProxy(Request request) {
         int id = nextRequestId++;
+        Context context = BoosterApplication.getAppContext();
         requestMap.put(id, request);
         Intent i = new Intent(context, ProxyActivity.class);
         i.putExtra("ACTION", "CALL_PLUGIN");

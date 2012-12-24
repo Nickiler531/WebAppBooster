@@ -37,9 +37,10 @@ public class AuthenticationPlugin extends Plugin {
             path += "#webappbooster_token=" + info.getToken();
             String url = info.getOrigin() + "/" + path;
             intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse(url));
             info.closeConnection();
-            runInContextOfProxyActivity(request);
+            getContext().startActivity(intent);
         } else {
             double token = request.getDouble("token");
             int status = Response.OK;
@@ -51,11 +52,5 @@ public class AuthenticationPlugin extends Plugin {
             Response response = request.createResponse(status);
             response.send();
         }
-    }
-
-    @Override
-    public void callbackFromProxy(Request request) {
-        getContext().startActivity(intent);
-        finishProxyActivity();
     }
 }

@@ -51,7 +51,7 @@ public class BoosterService extends Service {
     @Override
     public void onCreate() {
         service = this;
-        pluginManager = new PluginManager(this);
+        pluginManager = new PluginManager();
         Log.d("WAB", "Starting WebAppBooster service");
         startWebSocketServer();
         startHttpServer();
