@@ -16,12 +16,16 @@
 
 package org.webappbooster;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,12 +46,20 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         setContentView(R.layout.activity_main);
-        View textView = findViewById(R.id.status_view);
-        textView.setOnClickListener(new OnClickListener() {
+        View view = findViewById(R.id.status_view);
+        view.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 showSettings();
+            }
+        });
+        view = findViewById(R.id.icon_help);
+        view.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                showHelp();
             }
         });
         ListView listView = (ListView) findViewById(R.id.list_connections);
@@ -90,6 +102,12 @@ public class MainActivity extends Activity {
         case R.id.menu_settings:
             showSettings();
             return true;
+        case R.id.menu_help:
+            showHelp();
+            return true;
+        case R.id.menu_about:
+            showAbout();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -97,6 +115,32 @@ public class MainActivity extends Activity {
 
     private void showSettings() {
         startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    private void showAbout() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("http://webappbooster.org"));
+        this.startActivity(intent);
+    }
+
+    private void showHelp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.help, null, false);
+        builder.setView(view);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void refreshView() {
