@@ -46,17 +46,30 @@ public class PickContactPlugin extends Plugin {
         if (c.moveToFirst()) {
             String _id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
             String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            Cursor emails = resolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+            // Get email
+            Cursor cursor = resolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                     null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + _id, null,
                     null);
             String emailAddress = "";
-            if (emails.moveToFirst()) {
-                emailAddress = emails.getString(emails
+            if (cursor.moveToFirst()) {
+                emailAddress = cursor.getString(cursor
                         .getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
             }
-            emails.close();
+            cursor.close();
+            // Get phone
+            cursor = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + _id, null,
+                    null);
+            String phone = "";
+            if (cursor.moveToFirst()) {
+                phone = cursor.getString(cursor
+                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA));
+            }
+            cursor.close();
+            // Send contact
             Response response = request.createResponse(Response.OK);
             response.add("name", name);
+            response.add("phone", phone);
             response.add("email", emailAddress);
             response.send();
         }
