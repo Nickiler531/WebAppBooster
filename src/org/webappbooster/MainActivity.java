@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -129,6 +131,19 @@ public class MainActivity extends Activity {
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.help, null, false);
+        TextView t = (TextView) view.findViewById(R.id.help_text);
+        if (BoosterService.getService() == null) {
+            t.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, R.string.booster_not_enabled,
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            t.setMovementMethod(LinkMovementMethod.getInstance());
+        }
         builder.setView(view);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 

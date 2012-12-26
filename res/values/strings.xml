@@ -7,6 +7,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="booster_active">WebAppBooster enabled</string>
     <string name="booster_deactive">WebAppBooster disabled</string>
+    <string name="booster_not_enabled">WebAppBooster is not enabled!</string>
     <string name="no_connections">No active connections!</string>
     <string name="list_of_connections">Currently open connections:</string>
     <string name="start_booster">Start Booster</string>
@@ -29,7 +30,10 @@
     <string name="help">This application does not do anything by itself. It merely acts
                         as a secure gateway for web apps to safely access information stored
                         on the device. WebAppBooster needs to be enabled before a web app
-                        can access it. Please use the Settings dialog to enable WebAppBooster.</string>
+                        can access it. Please enable WebAppBooster in the settings.
+                        Once WebAppBooster is enabled, you can visit
+                        <a href="http://webappbooster.org/demo/">http://webappbooster.org/demo/</a> for
+                        a demo.</string>
     
     <string name="PERMISSION_READ_CONTACTS">Read contacts from your address book</string>
     <string name="PERMISSION_GYRO">Access the gyroscope</string>
