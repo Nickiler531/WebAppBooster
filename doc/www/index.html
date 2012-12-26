@@ -1,5 +1,4 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!-- saved from url=(0083)http://www.quackit.com/html/templates/download/bryantsmith/creativeinspiration_nav/ -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -75,9 +74,11 @@
 
         <div class="contentTitle"><h1>Where can I get it?</h1></div>
         <div class="contentText">
-          <p>WebAppBooster is an Open Source application. You can download it from
-             the Google Play Store for your Android device. Once WebAppBooster is
-             installed, you can try out a little
+          <p>WebAppBooster is an Open Source application and the complete source code is available
+             at <a href="http://sourceforge.net/projects/webappbooster/">SourceForge</a>.
+             The ready-to-be-used version of WebAppBooster is available at Google's
+             <a href="https://play.google.com/store/apps/details?id=org.webappbooster">Play Store</a>.
+             Once installed, be sure to try out a little
              <a href="#" onclick="return showSection('sectionDemo')">demo</a>.</p>
         </div>
     </div>
@@ -126,7 +127,7 @@ and requires the user to grant a permission called FOO_PERMISSION:</p>
 &lt;/plugins&gt;
 </pre>
 
-<p>The following code excerpt shows the implementation of the plugin NewPlugin. Plugins
+<p>The following code excerpt shows the implementation of the plugin FooPlugin. Plugins
 have their own lifecycle. Each web app is serviced by its own instance of a plugin. When
 the connection is opened, onCreate() is invoked. When the web app terminates the connection,
 onDestroy() is invoked. Whenever the web app calls an action, the execute() method of the
@@ -149,7 +150,7 @@ public class FooPlugin extends Plugin {
     }
 
     @Override
-    public void execute(int requestId, String action, JSONObject request) {
+    public void execute(Request request) {
         // ...
         // runInContextOfProxyActivity();
     }
@@ -207,9 +208,10 @@ var WebAppBooster = {
         <div class="contentTitle"><h1>Demo</h1></div>
         <div class="contentText">
           <p>Before running the demo, please make sure that you have downloaded
-          and installed WebAppBooster from the Google Play Store. Next open this
-          page on your Android device where you have installed WebAppBooster and
-          click on this <a href="/demo/">link</a>.</p>
+          and installed WebAppBooster from the Google
+          <a href="https://play.google.com/store/apps/details?id=org.webappbooster">Play Store</a>.
+          Next open <a href="/demo/">http://webappbooster.org/demo/</a>
+          on your Android device where you have installed WebAppBooster.</p>
         </div>
     </div>
 
@@ -222,7 +224,9 @@ var WebAppBooster = {
           <ol>
             <li>
               <div class="faq">Is WebAppBooster free?</div>
-              <div>Yes. WebAppBooster is released under the BSD Open Source license.<div>
+              <div>Yes. WebAppBooster is released under the BSD Open Source license. The
+              complete source code is available at
+              <a href="http://sourceforge.net/projects/webappbooster/">SourceForge</a>.<div>
             </li>
 
             <li>
@@ -233,16 +237,23 @@ var WebAppBooster = {
 
             <li>
               <div class="faq">What kind of Web API is supported?</div>
-              <div>Currently WebAppBooster only supports access to the users contact list and the gyroscope.
+              <div>Currently WebAppBooster supports the following APIs:
+              <ul>
+                <li> Accelerometer/Gyroscope</li>
+                <li> Vibrator</li>
+                <li> Pick a contact</li>
+                <li> List all songs</li>
+                <li> List all photos</li>
+              </ul>
               Additional plugins can easily be implemented.</div>
             </li>
             
             <li>
               <div class="faq">What permissions does WebAppBooster require?</div>
               <div>WebAppBooster acts as a gateway to the phones data and sensors. As such, it requires
-              Android permissions to access to access data such as contacts and sensors such as GPS.
-              However, a web app will only be given access to those sensitive resources if the user
-              explicitly granted the appropriate permissions.</div>
+              Android permissions to access data such as contacts and sensors such as GPS.
+              However, a web app will only be given access to those sensitive resources after the user
+              explicitly granted the appropriate permissions first.</div>
           </ol>
         </div>
     </div>
