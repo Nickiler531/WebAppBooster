@@ -108,11 +108,17 @@
         <div class="contentTitle"><h1>Developer</h1></div>
         <div class="contentText">
 
+<p>This documentation is intended for Android developers who wish to extend
+WebAppBooster's functionality by adding new plugins. If you are a web developer
+who wants to integrate WebAppBooster into a web app, please see the
+<a href="#" onclick="return showSection('sectionDoc')">documentation</a>
+page.</p>
+
 <p>New plugins have to be registered in res/xml/plugins.xml. A plugin has a name that
 corresponds with the name of the Java class implementing the plugin. A plugin responds
 to one or more actions. Before a web app can access the plugin, the user has to first
 grant the appropriate permission. The following excerpt of plugin.xml shows how to
-add a plugin called NewPlugin that responds to actions FOO_COMMAND_1 and FOO_COMMAND_2
+add a plugin called FooPlugin that responds to actions FOO_COMMAND_1 and FOO_COMMAND_2
 and requires the user to grant a permission called FOO_PERMISSION:</p>
 
 <pre class="prettyprint">
@@ -193,11 +199,47 @@ var WebAppBooster = {
     <div id="sectionDoc" class="hidden">
         <div class="contentTitle"><h1>Documentation</h1></div>
         <div class="contentText">
-          <p>This documentation is intended for web developers who wish to give
-          their web apps a little boost. If you are interested to extend WebAppBooster
-          by new functionality, please see the
-          <a href="#" onclick="return showSection('sectionDeveloper')">developer</a>
-          page.</p>
+
+<p>This documentation is intended for web developers who wish to give
+their web apps a little boost. If you are interested to extend WebAppBooster
+by new functionality, please see the
+<a href="#" onclick="return showSection('sectionDeveloper')">developer</a>
+page.</p>
+
+<p>Using WebAppBooster is easy. If you are a web developer and wish to enrich
+your application by integrating it with a smartphone's capabilities, you simply
+need to include
+<a href="demo/js/webappbooster.js">webappbooster.js</a>:</p>
+
+<pre class="prettyprint">
+&lt;head&gt;
+    &lt;!-- ... --&gt;
+    &lt;script type="text/javascript" src="webappbooster.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+</pre>
+
+<p>Including the JavaScript file will expose a global object called WebAppBooster.
+Various functions of this global object allow access to a smartphone's capabilities.
+E.g., the following code excerpt shows how to take a picture from within your web
+application:</p>
+
+<pre class="prettyprint">
+WebAppBooster.takePhoto(function(resp) {
+    if (resp.status == 0) {
+        // Photo taken. resp.uri will contain a URI to the image.
+    } else {
+        // User aborted action.
+    }
+});
+</pre>
+
+<p>The callback will return a JSON object whose value is specific to the data being returned.
+Note that WebAppBooster will only allow function takePicture() if the web application
+first requested the permission PERMISSION_CAMERA via WebAppBooster.requestPermissions() from
+the user. Please consult the source code of the
+<a href="#" onclick="return showSection('sectionDemo')">demo</a>
+page for further examples.</p>
+
         </div>
     </div>
 
@@ -244,13 +286,14 @@ var WebAppBooster = {
                 <li> Pick a contact</li>
                 <li> List all songs</li>
                 <li> List all photos</li>
+                <li> Take a picture</li>
               </ul>
               Additional plugins can easily be implemented.</div>
             </li>
             
             <li>
               <div class="faq">What permissions does WebAppBooster require?</div>
-              <div>WebAppBooster acts as a gateway to the phones data and sensors. As such, it requires
+              <div>WebAppBooster acts as a gateway to the phone's data and sensors. As such, it requires
               Android permissions to access data such as contacts and sensors such as GPS.
               However, a web app will only be given access to those sensitive resources after the user
               explicitly granted the appropriate permissions first.</div>
