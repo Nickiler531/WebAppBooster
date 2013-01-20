@@ -101,8 +101,12 @@ public class AudioPlugin extends Plugin {
             response.add("title", title);
             response.add("artist", artist);
             response.add("album", album);
-            response.add("duration", Integer.parseInt(duration));
-            response.add("track", Integer.parseInt(track));
+            if (duration != null) {
+                response.add("duration", Integer.parseInt(duration));
+            }
+            if (track != null) {
+                response.add("track", Integer.parseInt(track));
+            }
             response.send();
         }
         cursor.close();

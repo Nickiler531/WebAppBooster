@@ -47,6 +47,9 @@ public class Response {
     }
 
     public void add(String name, String value) {
+        if (value == null) {
+            return;
+        }
         try {
             response.put(name, value);
         } catch (JSONException e) {
