@@ -76,16 +76,19 @@
 
 <script type="text/javascript">
 
+var lastLogs = new Array();
+
 function log(msg) {
     var l = document.getElementById("log");
     var s = msg;
     if (typeof msg != "string") {
         s = JSON.stringify(msg);
     }
-    if (l.innerHTML != '') {
-        l.innerHTML += '\n';
+    lastLogs.push(s);
+    if (lastLogs.length == 20) {
+        lastLogs.shift();
     }
-    l.innerHTML += s;
+    l.innerHTML = lastLogs.join('\n');
     l.scrollTop = l.scrollHeight;
 }
 
