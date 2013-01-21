@@ -85,11 +85,23 @@ function log(msg) {
         s = JSON.stringify(msg);
     }
     lastLogs.push(s);
-    if (lastLogs.length == 20) {
+    if (lastLogs.length == 10) {
         lastLogs.shift();
     }
     l.innerHTML = lastLogs.join('\n');
     l.scrollTop = l.scrollHeight;
+}
+
+function showImage(uri) {
+    var img = document.getElementById("image");
+    img.src = uri;
+    var imgContainer = document.getElementById("image-container");
+    imgContainer.style.display = "inline-block";
+}
+
+function hideImage() {
+    var imgContainer = document.getElementById("image-container");
+    imgContainer.style.display = "none";
 }
 
 function init() {
@@ -128,6 +140,10 @@ function action_request_permissions() {
 function action_pick_contact() {
     WebAppBooster.pickContact(function(resp) {
         log(resp);
+        hideImage();
+        if (resp.photoUri) {
+            showImage(resp.photoUri);
+        }
     });
 }
 
@@ -157,14 +173,13 @@ function action_list_images() {
 
 function action_take_photo() {
     WebAppBooster.takePhoto(function(resp) {
+        log(resp);
         if (resp.status == 0) {
-            log("Photo taken");
+            showImage(resp.uri);
             var img = document.getElementById("image");
             img.src = resp.uri;
             var imgContainer = document.getElementById("image-container");
             imgContainer.style.display = "inline-block";
-    	} else {
-            log(resp);
     	}
     });
 }

@@ -25,6 +25,7 @@ import org.json.JSONObject;
 public class Response {
 
     final public static int OK = 0;
+    final public static int CANCELLED = -1;
 
     private JSONObject      response;
     private Plugin          managingPlugin;
