@@ -171,7 +171,7 @@ public class GalleryPlugin extends Plugin {
                         e.printStackTrace();
                     }
                 } else {
-                    status = -1;
+                    status = Response.INTERNAL_ERROR;
                 }
                 Response response = request.createResponse(status);
                 if (thumbUri != null) {

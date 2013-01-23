@@ -26,9 +26,11 @@ public class Request {
     private String     action;
     private int        requestId;
     private Plugin     managingPlugin;
+    private boolean    requestMalformed;
 
     public Request(String message) {
         managingPlugin = null;
+        requestMalformed = false;
         try {
             msg = new JSONObject(message);
             action = msg.getString("action");
@@ -36,7 +38,12 @@ public class Request {
         } catch (JSONException e) {
             msg = null;
             action = "";
+            requestMalformed = true;
         }
+    }
+
+    public boolean isRequestMalformed() {
+        return this.requestMalformed;
     }
 
     public Response createResponse(int code) {

@@ -32,6 +32,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
+import android.util.Log;
 
 public class PluginManager {
 
@@ -92,26 +93,31 @@ public class PluginManager {
             String origin = info.getOrigin();
 
             Request req = new Request(message);
+            if (req.isRequestMalformed()) {
+                Log.d("WAB", "Malformed request: " + message);
+                return;
+            }
             String action = req.getAction();
             int requestId = req.getRequestId();
             if (!info.isAuthenticated()
                     && !(action.equals("REQUEST_AUTHENTICATION") || action.equals("AUTHENTICATE"))) {
                 // Connection has not yet been authenticated.
-                sendError(connectionId, requestId, -1);
+                sendError(connectionId, requestId, Response.NOT_AUTHORIZED);
                 return;
             }
             if (!hasPermission(connectionId, origin, action)) {
-                sendError(connectionId, requestId, -1);
+                sendError(connectionId, requestId, Response.NOT_AUTHORIZED);
                 return;
             }
             Plugin instance = getPluginInstance(info, origin, action);
+            if (instance == null) {
+                Log.d("WAB", "Cannot get plugin for request: " + message);
+                return;
+            }
             req.setManagingPlugin(instance);
             Class<?>[] args = new Class[] { Request.class };
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
             meth.invoke(instance, req);
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -149,15 +155,22 @@ public class PluginManager {
         return Authorization.checkOnePermission(origin, permission);
     }
 
-    private Plugin getPluginInstance(WebSocketInfo info, String origin, String action)
-            throws InstantiationException, IllegalAccessException {
+    private Plugin getPluginInstance(WebSocketInfo info, String origin, String action) {
         int connectionId = info.getConnectionId();
         Class<? extends Plugin> clazz = pluginClassMap.get(action);
         String key = clazz.getName() + "-" + connectionId;
         Plugin plugin = pluginInstanceMap.get(key);
         if (plugin == null) {
             // No plugin for this connection created yet
-            plugin = clazz.newInstance();
+            try {
+                plugin = clazz.newInstance();
+            } catch (InstantiationException e) {
+                Log.d("WAB", "InstantiationException. origin=" + origin + ", action=" + action);
+                return null;
+            } catch (IllegalAccessException e) {
+                Log.d("WAB", "IllegalAccessException. origin=" + origin + ", action=" + action);
+                return null;
+            }
             plugin.setConnectionInfo(info);
             plugin.setContext(BoosterApplication.getAppContext());
             plugin.onCreate(origin);

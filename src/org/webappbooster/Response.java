@@ -25,7 +25,10 @@ import org.json.JSONObject;
 public class Response {
 
     final public static int OK = 0;
-    final public static int CANCELLED = -1;
+    final public static int NOT_AUTHORIZED = -1;
+    final public static int CANCELLED = -2;
+    final public static int MALFORMED_REQUEST = -3;
+    final public static int INTERNAL_ERROR = -4;
 
     private JSONObject      response;
     private Plugin          managingPlugin;

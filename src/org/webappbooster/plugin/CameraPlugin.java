@@ -59,9 +59,7 @@ public class CameraPlugin extends Plugin {
          */
         Response response;
         if (resultCode != Activity.RESULT_OK) {
-            response = request.createResponse(-1); // TODO should be different
-                                                   // error code
-            // (Aborted)
+            response = request.createResponse(Response.CANCELLED);
         } else {
             response = request.createResponse(Response.OK);
             String uri = sendResourceViaHTTP("file://" + path, "image/png");

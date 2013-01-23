@@ -29,6 +29,7 @@ import org.webappbooster.Request;
 import org.webappbooster.Response;
 
 import android.content.DialogInterface;
+import android.util.Log;
 
 public class PermissionsPlugin extends Plugin {
 
@@ -48,9 +49,14 @@ public class PermissionsPlugin extends Plugin {
     @Override
     public void callbackFromProxy(final Request request) {
         permissions = request.getStringArray("permissions");
+        if (permissions == null) {
+            Log.d("WAB", "PermissionsPlugin: request does not contain permissions");
+            sendStatus(request, Response.MALFORMED_REQUEST);
+            return;
+        }
         if (Authorization.checkPermissions(origin, permissions)) {
             // Permissions were granted earlier
-            sendStatus(request, 0);
+            sendStatus(request, Response.OK);
             return;
         }
 
@@ -65,7 +71,8 @@ public class PermissionsPlugin extends Plugin {
                     Authorization.setPermissions(origin, permissions,
                             which == DialogInterface.BUTTON_NEUTRAL);
                 }
-                sendStatus(request, (which != DialogInterface.BUTTON_NEGATIVE) ? 0 : -1);
+                sendStatus(request, (which != DialogInterface.BUTTON_NEGATIVE) ? Response.OK
+                        : Response.NOT_AUTHORIZED);
             }
         });
     }

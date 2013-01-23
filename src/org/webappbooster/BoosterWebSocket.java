@@ -84,6 +84,10 @@ public class BoosterWebSocket extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         WebSocketInfo info = infoMap.get(conn);
+        if (info == null) {
+            Log.d("WAB", "BoosterWebSocket.onMessage(): info == null");
+            return;
+        }
         pluginManager.dispatchRequest(info, message);
     }
 
