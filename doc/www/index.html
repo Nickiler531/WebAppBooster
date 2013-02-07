@@ -6,10 +6,14 @@
 
     <title>WebAppBooster</title>
     <link rel="stylesheet" type="text/css" href="./css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="./css/prettify.css"/>
     <link rel="stylesheet" type="text/css" href="./css/lightbox.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/shCore.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/shThemeEclipse.css"/>
     <link rel="stylesheet" type="text/css" href="./css/local.css"/>
-    <script type="text/javascript" src="js/prettify.js"></script>
+    <script type="text/javascript" src="js/shCore.js"></script>
+    <script type="text/javascript" src="js/shBrushJScript.js"></script>
+    <script type="text/javascript" src="js/shBrushJava.js"></script>
+    <script type="text/javascript" src="js/shBrushXml.js"></script>
     <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="js/lightbox.js"></script>
     <script type="text/javascript">
@@ -27,7 +31,7 @@
     </script>
 </head>
 
-<body onload="prettyPrint()">
+<body>
   <div id="page">
 	
     <div id="header">
@@ -121,7 +125,7 @@ grant the appropriate permission. The following excerpt of plugin.xml shows how 
 add a plugin called FooPlugin that responds to actions FOO_COMMAND_1 and FOO_COMMAND_2
 and requires the user to grant a permission called FOO_PERMISSION:</p>
 
-<pre class="prettyprint">
+<pre class="brush: xml">
 &lt;plugins&gt;
     &lt;plugin class="AuthenticationPlugin"
             actions="REQUEST_AUTHENTICATION|AUTHENTICATE"/&gt;
@@ -142,7 +146,7 @@ background service. If the plugin needs to render a user interface, it first nee
 method runInContextOfProxyActivity(). This will in turn invoke the method callbackFromProxy():
 </p>
 
-<pre class="prettyprint">
+<pre class="brush: java">
 public class FooPlugin extends Plugin {
 
     @Override
@@ -176,7 +180,7 @@ the action will send one (0) or multiple replies (1). The latter is used for act
 continuous stream of sensor data (e.g., gyroscope):
 </p>
 
-<pre class="prettyprint">
+<pre class="brush: js">
 var WebAppBooster = {
     // ...
     foo1Command: function(cb) {
@@ -211,7 +215,7 @@ your application by integrating it with a smartphone's capabilities, you simply
 need to include
 <a href="demo/js/webappbooster.js">webappbooster.js</a>:</p>
 
-<pre class="prettyprint">
+<pre class="brush: xml">
 &lt;head&gt;
     &lt;!-- ... --&gt;
     &lt;script type="text/javascript" src="webappbooster.js"&gt;&lt;/script&gt;
@@ -223,7 +227,7 @@ Various functions of this global object allow access to a smartphone's capabilit
 E.g., the following code excerpt shows how to take a picture from within your web
 application:</p>
 
-<pre class="prettyprint">
+<pre class="brush: js">
 WebAppBooster.takePhoto(function(resp) {
     if (resp.status == 0) {
         // Photo taken. resp.uri will contain a URI to the image.
@@ -306,6 +310,10 @@ page for further examples.</p>
   <a href="http://www.bryantsmith.com/">bryant smith</a>
 </div>
 
+<script type="text/javascript">
+    SyntaxHighlighter.defaults['toolbar'] = false;
+    SyntaxHighlighter.all()
+</script>
 
 </body>
 </html>
