@@ -47,7 +47,9 @@
 			</intent-filter>
         </activity>
         
-        <service android:name=".BoosterService"></service>
+        <service android:name=".BoosterService"
+            android:exported="false">
+        </service>
 
         <receiver android:name=".BoosterBroadcastReceiver">
             <intent-filter>
