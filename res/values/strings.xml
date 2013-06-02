@@ -22,6 +22,7 @@
     <string name="permissions">WebAppBooster</string>
     <string name="request_permissions">Site %1$s requests the following permissions:</string>
     <string name="show_permissions">Permissions for site %1$s:</string>
+    <string name="num_active_connections">Active connections: %1$d</string>
     <string name="pref_title_general">General</string>
     <string name="pref_title_enable_wab">Enable WebAppBooster</string>
     <string name="pref_summary_enable_wab">Web applications can only access WebAppBooster if it is enabled</string>

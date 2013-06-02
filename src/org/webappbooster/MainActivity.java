@@ -41,7 +41,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    final static public String VERSION = "1.0";
+    final static public String VERSION = "1.0.3";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

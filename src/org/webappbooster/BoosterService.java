@@ -25,7 +25,11 @@ import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -41,6 +45,8 @@ public class BoosterService extends Service {
     static private BoosterService service          = null;
 
     private PluginManager         pluginManager;
+    private Notification          notification;
+    private PendingIntent         contentIntent;
 
     class LocalBinder extends Binder {
         BoosterService getService() {
@@ -55,6 +61,7 @@ public class BoosterService extends Service {
         Log.d("WAB", "Starting WebAppBooster service");
         startWebSocketServer();
         startHttpServer();
+        showNotificationIcon();
     }
 
     @Override
@@ -71,15 +78,35 @@ public class BoosterService extends Service {
     public void onDestroy() {
         service = null;
         Log.d("WAB", "Stopping WebAppBooster service");
+        hideNotificationIcon();
         stopWebSocketServer();
         stopHttpServer();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void showNotificationIcon() {
+        notification = new Notification(R.drawable.ic_stat_wab, getString(R.string.app_name),
+                System.currentTimeMillis());
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        // Create intent
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        // Create PendingIntent
+        contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        updateNotification();
+    }
+
+    private void hideNotificationIcon() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(1);
     }
 
     private void startWebSocketServer() {
         // WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
-                webSocket = new BoosterWebSocket(pluginManager, Config.PORT_WEBSOCKET);
+                webSocket = new BoosterWebSocket(this);
                 webSocket.start();
             }
         } catch (UnknownHostException e) {
@@ -143,5 +170,18 @@ public class BoosterService extends Service {
 
     public String[] getOpenConnections() {
         return webSocket.getOpenConnections();
+    }
+
+    public PluginManager getPluginManager() {
+        return this.pluginManager;
+    }
+
+    public void updateNotification() {
+        notification.setLatestEventInfo(getApplicationContext(), getString(R.string.app_name),
+                getString(R.string.num_active_connections, getOpenConnections().length),
+                contentIntent);
+        // Get NotificationManager and show Notification
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notification);
     }
 }
