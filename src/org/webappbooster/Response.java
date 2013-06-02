@@ -85,4 +85,7 @@ public class Response {
         }
     }
 
+    public void lastForId(int id) {
+        add("lastForId", id);
+    }
 }

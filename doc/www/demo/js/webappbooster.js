@@ -117,8 +117,8 @@ var WebAppBooster = {
                 }
                 cb(resp);
             }
-            if ("removeCallbackId" in resp) {
-                delete WebAppBooster._requestIdMap["id" + resp.removeCallbackId];
+            if ("lastForId" in resp) {
+                delete WebAppBooster._requestIdMap["id" + resp.lastForId];
             }
         } catch(ex) {}
     },
@@ -167,18 +167,14 @@ var WebAppBooster = {
     listSongs: function(cb) {
         var req = {action: "LIST_SONGS"};
         this._sendRequest(req, function (resp) {
-            if (!("removeCallbackId" in resp)) {
-                cb(resp);
-            }
+            cb(resp);
         }, 1);
     },
     
     listImages: function(cb) {
         var req = {action: "LIST_IMAGES"};
         this._sendRequest(req, function (resp) {
-            if (!("removeCallbackId" in resp)) {
-                cb(resp);
-            }
+            cb(resp);
         }, 1);
     },
 

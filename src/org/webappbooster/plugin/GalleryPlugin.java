@@ -212,7 +212,7 @@ public class GalleryPlugin extends Plugin {
                 scanForImages(request, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 scanForImages(request, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                 Response response = request.createResponse(Response.OK);
-                response.add("removeCallbackId", request.getRequestId());
+                response.lastForId(request.getRequestId());
                 response.send();
             }
 

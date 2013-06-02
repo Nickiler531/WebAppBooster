@@ -50,7 +50,7 @@ public class AudioPlugin extends Plugin {
             public void run() {
                 scanForSongs(request, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
                 Response response = request.createResponse(Response.OK);
-                response.add("removeCallbackId", request.getRequestId());
+                response.lastForId(request.getRequestId());
                 response.send();
             }
 

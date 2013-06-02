@@ -49,7 +49,7 @@ public class GyroscopePlugin extends Plugin implements SensorEventListener {
         } else if (action.equals("STOP_GYRO")) {
             sensorManager.unregisterListener(this);
             Response response = request.createResponse(Response.OK);
-            response.add("removeCallbackId", startRequest.getRequestId());
+            response.lastForId(startRequest.getRequestId());
             response.send();
         }
     }
