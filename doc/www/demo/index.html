@@ -42,6 +42,9 @@
                         <option value="action_list_images">
                             List images
                         </option>
+                        <option value="action_pick_image">
+                            Pick image
+                        </option>
                         <option value="action_take_photo">
                             Take photo
                         </option>
@@ -171,15 +174,20 @@ function action_list_images() {
     });
 }
 
+function action_pick_image() {
+    WebAppBooster.pickImage(function(resp) {
+        log(resp);
+        if (resp.status == 0) {
+            showImage(resp.uri);
+        }
+    });
+}
+
 function action_take_photo() {
     WebAppBooster.takePhoto(function(resp) {
         log(resp);
         if (resp.status == 0) {
             showImage(resp.uri);
-            var img = document.getElementById("image");
-            img.src = resp.uri;
-            var imgContainer = document.getElementById("image-container");
-            imgContainer.style.display = "inline-block";
     	}
     });
 }

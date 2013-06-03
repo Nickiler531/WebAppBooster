@@ -26,7 +26,9 @@ import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
@@ -85,6 +87,8 @@ public class GalleryPlugin extends Plugin {
             executeListImages(request);
         } else if (action.equals("SAVE_TO_GALLERY")) {
             executeSaveToGallery(request);
+        } else if (action.equals("PICK_IMAGE")) {
+            executePickImage(request);
         }
     }
 
@@ -243,4 +247,36 @@ public class GalleryPlugin extends Plugin {
         }
         imageCursor.close();
     }
+
+    private void executePickImage(Request request) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        callActivity(request, Intent.createChooser(intent, "Select Picture"));
+    }
+
+    @Override
+    public void resultFromActivity(Request request, int resultCode, Intent data) {
+        Response response;
+
+        if (resultCode != Activity.RESULT_OK || data == null || data.getData() == null) {
+            response = request.createResponse(Response.CANCELLED);
+        } else {
+            Uri _uri = data.getData();
+            Cursor cursor = BoosterApplication
+                    .getAppContext()
+                    .getContentResolver()
+                    .query(_uri,
+                            new String[] { android.provider.MediaStore.Images.ImageColumns.DATA },
+                            null, null, null);
+            cursor.moveToFirst();
+            String path = cursor.getString(0);
+            cursor.close();
+            response = request.createResponse(Response.OK);
+            String uri = sendResourceViaHTTP("file://" + path, "image/png");
+            response.add("uri", uri);
+        }
+        response.send();
+    }
+
 }

@@ -178,6 +178,13 @@ var WebAppBooster = {
         }, 1);
     },
 
+    pickImage: function(cb) {
+        var req = {action: "PICK_IMAGE"};
+        this._sendRequest(req, function (resp) {
+            cb(resp);
+        }, 1);
+    },
+
     takePhoto: function(cb) {
     	var req = {action: "TAKE_PHOTO"};
     	this._sendRequest(req, cb, 0);
