@@ -194,5 +194,11 @@ var WebAppBooster = {
     	var req = {action: "VIBRATE",
     	           millis: millis};
     	this._sendRequest(req, cb, 0);
+    },
+    
+    powerInformation: function(cb) {
+    	var req = {action: "POWER_INFORMATION"};
+    	this._sendRequest(req, cb, 0);
     }
+    
 };

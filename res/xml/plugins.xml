@@ -9,4 +9,5 @@
     <plugin class="GalleryPlugin" actions="CREATE_IMAGE_THUMBNAIL|LIST_IMAGES|SAVE_TO_GALLERY|PICK_IMAGE" permission="GALLERY"/>
     <plugin class="CameraPlugin" actions="TAKE_PHOTO" permission="CAMERA"/>
     <plugin class="VibratePlugin" actions="VIBRATE" permission="VIBRATE"/>
+    <plugin class="BatteryPlugin" actions="POWER_INFORMATION"/>
 </plugins>

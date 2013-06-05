@@ -51,6 +51,9 @@
                         <option value="action_vibrate">
                             Vibrate
                         </option>
+                        <option value="action_power_information">
+                            Power information
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -194,6 +197,12 @@ function action_take_photo() {
 
 function action_vibrate() {
     WebAppBooster.vibrate(100, function(resp) {
+        log(resp);
+    });
+}
+
+function action_power_information() {
+    WebAppBooster.powerInformation(function(resp) {
         log(resp);
     });
 }
