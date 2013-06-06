@@ -30,6 +30,9 @@
                         <option value="action_pick_contact">
                             Pick contact
                         </option>
+                        <option value="action_list_contacts">
+                            List contacts
+                        </option>
                         <option value="action_start_gyro">
                             Start gyroscope
                         </option>
@@ -148,6 +151,17 @@ function action_request_permissions() {
 
 function action_pick_contact() {
     WebAppBooster.pickContact(function(resp) {
+        log(resp);
+        hideImage();
+        if (resp.photoUri) {
+            showImage(resp.photoUri);
+        }
+    });
+}
+
+function action_list_contacts() {
+	log("LIST_CONTACTS for 'Mickey Mouse'");
+    WebAppBooster.listContacts("Mickey Mouse", function(resp) {
         log(resp);
         hideImage();
         if (resp.photoUri) {

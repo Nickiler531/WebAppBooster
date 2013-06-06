@@ -144,6 +144,11 @@ var WebAppBooster = {
         this._sendRequest(req, cb, 0);
     },
     
+    listContacts: function(query, cb) {
+        var req = {action: "LIST_CONTACTS", query: query};
+        this._sendRequest(req, cb, 1);
+    },
+    
     startGyro: function(cb) {
         var req = {action: "START_GYRO"};
         this._sendRequest(req, cb, 1);
