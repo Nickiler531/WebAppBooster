@@ -19,8 +19,11 @@ package org.webappbooster;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,11 +46,13 @@ public class PluginManager {
     private Map<String, Class<? extends Plugin>> pluginClassMap;
     private Map<String, String>                  permissionMap;
     static private Map<String, String[]>         actionMap;
+    static private List<String>                  actionsWithNoPermissions;
 
     public PluginManager() {
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
         permissionMap = new HashMap<String, String>();
         actionMap = new HashMap<String, String[]>();
+        actionsWithNoPermissions = new ArrayList<String>();
         XmlResourceParser parser = BoosterApplication.getAppContext().getResources()
                 .getXml(R.xml.plugins);
         try {
@@ -68,6 +73,8 @@ public class PluginManager {
                             pluginClassMap.put(action, clazz);
                             if (permission != null) {
                                 permissionMap.put(action, permission);
+                            } else {
+                                actionsWithNoPermissions.addAll(Arrays.asList(actions));
                             }
                         }
                     }
@@ -231,5 +238,9 @@ public class PluginManager {
 
     static public String[] getActionsForPermission(String permission) {
         return actionMap.get(permission);
+    }
+
+    static public List<String> getActionsWithoutPermissions() {
+        return actionsWithNoPermissions;
     }
 }
