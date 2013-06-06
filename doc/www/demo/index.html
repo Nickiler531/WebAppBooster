@@ -54,6 +54,9 @@
                         <option value="action_power_information">
                             Power information
                         </option>
+                        <option value="action_network_information">
+                            Network information
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -203,6 +206,12 @@ function action_vibrate() {
 
 function action_power_information() {
     WebAppBooster.powerInformation(function(resp) {
+        log(resp);
+    });
+}
+
+function action_network_information() {
+    WebAppBooster.networkInformation(function(resp) {
         log(resp);
     });
 }

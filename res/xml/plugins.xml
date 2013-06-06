@@ -10,4 +10,5 @@
     <plugin class="CameraPlugin" actions="TAKE_PHOTO" permission="CAMERA"/>
     <plugin class="VibratePlugin" actions="VIBRATE" permission="VIBRATE"/>
     <plugin class="BatteryPlugin" actions="POWER_INFORMATION"/>
+    <plugin class="ConnectivityPlugin" actions="NETWORK_INFORMATION"/>
 </plugins>

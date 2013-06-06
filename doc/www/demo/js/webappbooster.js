@@ -199,6 +199,11 @@ var WebAppBooster = {
     powerInformation: function(cb) {
     	var req = {action: "POWER_INFORMATION"};
     	this._sendRequest(req, cb, 0);
+    },
+    
+    networkInformation: function(cb) {
+    	var req = {action: "NETWORK_INFORMATION"};
+    	this._sendRequest(req, cb, 0);
     }
     
 };
