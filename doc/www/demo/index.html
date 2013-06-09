@@ -66,6 +66,9 @@
                         <option value="action_oauth">
                             OAuth authentication
                         </option>
+                        <option value="action_share_text">
+                            Share text
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -253,6 +256,14 @@ function action_oauth() {
 		log(resp);
 	});
 }
+
+function action_share_text() {
+	log("SHARE 'Hello World!'");
+	WebAppBooster.shareText("Hello World!", function(resp) {
+        log(resp);
+    });
+}
+
 function do_action() {
     eval($('#actions').val() + '();');
 }

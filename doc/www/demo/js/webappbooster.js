@@ -220,5 +220,10 @@ var WebAppBooster = {
     oauth: function(uri, redirectUri, cb) {
         var req = {action: "OAUTH_AUTHENTICATION", uri:uri, redirectUri:redirectUri};
         this._sendRequest(req, cb, 0);
+    },
+
+    shareText: function(text, cb) {
+        var req = {action: "SHARE", text:text};
+        this._sendRequest(req, cb, 0);
     }
 };

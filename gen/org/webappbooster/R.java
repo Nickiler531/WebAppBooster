@@ -48,14 +48,14 @@ public final class R {
         public static final int activity_main=0x7f080000;
     }
     public static final class string {
-        public static final int PERMISSION_ACCELEROMETER=0x7f060021;
-        public static final int PERMISSION_AUDIO=0x7f060022;
-        public static final int PERMISSION_CAMERA=0x7f060024;
-        public static final int PERMISSION_GALLERY=0x7f060023;
-        public static final int PERMISSION_GYRO=0x7f060020;
-        public static final int PERMISSION_READ_CALENDAR=0x7f06001f;
-        public static final int PERMISSION_READ_CONTACTS=0x7f06001e;
-        public static final int PERMISSION_VIBRATE=0x7f060025;
+        public static final int PERMISSION_ACCELEROMETER=0x7f060022;
+        public static final int PERMISSION_AUDIO=0x7f060023;
+        public static final int PERMISSION_CAMERA=0x7f060025;
+        public static final int PERMISSION_GALLERY=0x7f060024;
+        public static final int PERMISSION_GYRO=0x7f060021;
+        public static final int PERMISSION_READ_CALENDAR=0x7f060020;
+        public static final int PERMISSION_READ_CONTACTS=0x7f06001f;
+        public static final int PERMISSION_VIBRATE=0x7f060026;
         public static final int allow=0x7f06000f;
         public static final int allow_always=0x7f060012;
         public static final int allow_once=0x7f060011;
@@ -64,7 +64,7 @@ public final class R {
         public static final int booster_deactive=0x7f060007;
         public static final int booster_not_enabled=0x7f060008;
         public static final int deny=0x7f060010;
-        public static final int help=0x7f06001d;
+        public static final int help=0x7f06001e;
         public static final int list_of_connections=0x7f06000a;
         public static final int menu_about=0x7f060003;
         public static final int menu_help=0x7f060002;
@@ -73,14 +73,15 @@ public final class R {
         public static final int num_active_connections=0x7f060017;
         public static final int ok=0x7f06000d;
         public static final int permissions=0x7f060014;
-        public static final int pref_summary_enable_wab=0x7f06001a;
-        public static final int pref_summary_enable_wab_on_boot=0x7f06001c;
-        public static final int pref_title_enable_wab=0x7f060019;
-        public static final int pref_title_enable_wab_on_boot=0x7f06001b;
-        public static final int pref_title_general=0x7f060018;
+        public static final int pref_summary_enable_wab=0x7f06001b;
+        public static final int pref_summary_enable_wab_on_boot=0x7f06001d;
+        public static final int pref_title_enable_wab=0x7f06001a;
+        public static final int pref_title_enable_wab_on_boot=0x7f06001c;
+        public static final int pref_title_general=0x7f060019;
         public static final int reject=0x7f060013;
         public static final int request_permissions=0x7f060015;
         public static final int revoke=0x7f06000e;
+        public static final int share_options=0x7f060018;
         public static final int show_permissions=0x7f060016;
         public static final int start_booster=0x7f06000b;
         public static final int stop_booster=0x7f06000c;

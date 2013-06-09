@@ -13,4 +13,5 @@
     <plugin class="BatteryPlugin" actions="POWER_INFORMATION"/>
     <plugin class="ConnectivityPlugin" actions="NETWORK_INFORMATION"/>
     <plugin class="OAuthPlugin" actions="OAUTH_AUTHENTICATION"/>
+    <plugin class="SharePlugin" actions="SHARE"/>
 </plugins>
