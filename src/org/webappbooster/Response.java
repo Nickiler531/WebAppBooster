@@ -24,11 +24,11 @@ import org.json.JSONObject;
 
 public class Response {
 
-    final public static int OK = 0;
-    final public static int NOT_AUTHORIZED = -1;
-    final public static int CANCELLED = -2;
+    final public static int OK                = 0;
+    final public static int NOT_AUTHORIZED    = -1;
+    final public static int CANCELLED         = -2;
     final public static int MALFORMED_REQUEST = -3;
-    final public static int INTERNAL_ERROR = -4;
+    final public static int INTERNAL_ERROR    = -4;
 
     private JSONObject      response;
     private Plugin          managingPlugin;
@@ -48,6 +48,14 @@ public class Response {
         BoosterService.getService().sendResult(
                 managingPlugin.getConnectionInfo().getConnectionId(), response.toString());
         managingPlugin.finishProxyActivity();
+    }
+
+    public void add(String name, boolean value) {
+        try {
+            response.put(name, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void add(String name, String value) {
@@ -78,6 +86,22 @@ public class Response {
     }
 
     public void add(String name, double value) {
+        try {
+            response.put(name, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add(String name, JSONObject value) {
+        try {
+            response.put(name, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add(String name, JSONArray value) {
         try {
             response.put(name, value);
         } catch (JSONException e) {

@@ -37,6 +37,7 @@
                         a demo.</string>
     
     <string name="PERMISSION_READ_CONTACTS">Read contacts from your address book</string>
+    <string name="PERMISSION_READ_CALENDAR">Read entries from your calendar</string>
     <string name="PERMISSION_GYRO">Access the gyroscope</string>
     <string name="PERMISSION_ACCELEROMETER">Access the accelerometer</string>
     <string name="PERMISSION_AUDIO">Access the songs stored on the device</string>

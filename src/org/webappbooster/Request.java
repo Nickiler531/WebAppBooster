@@ -74,6 +74,14 @@ public class Request {
         }
     }
 
+    public long getLong(String key) {
+        try {
+            return msg.getLong(key);
+        } catch (JSONException e) {
+            return 0;
+        }
+    }
+
     public int getInt(String key) {
         try {
             return msg.getInt(key);

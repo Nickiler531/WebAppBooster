@@ -27,6 +27,7 @@ var WebAppBooster = {
     ERR_AUTHENTICATION_REQUIRED: -5,
 
     PERMISSION_READ_CONTACTS: "READ_CONTACTS",
+    PERMISSION_READ_CALENDAR: "READ_CALENDAR",
     PERMISSION_GYRO: "GYRO",
     PERMISSION_ACCELEROMETER: "ACCELEROMETER",
     PERMISSION_AUDIO: "AUDIO",
@@ -146,6 +147,11 @@ var WebAppBooster = {
     
     listContacts: function(query, cb) {
         var req = {action: "LIST_CONTACTS", query: query};
+        this._sendRequest(req, cb, 1);
+    },
+    
+    listAppointments: function(start, end, cb) {
+        var req = {action: "LIST_APPOINTMENTS", start:start, end:end};
         this._sendRequest(req, cb, 1);
     },
     
