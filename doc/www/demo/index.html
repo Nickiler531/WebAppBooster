@@ -63,6 +63,9 @@
                         <option value="action_network_information">
                             Network information
                         </option>
+                        <option value="action_oauth">
+                            OAuth authentication
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -243,6 +246,13 @@ function action_network_information() {
     });
 }
 
+function action_oauth() {
+	var uri = "https://accounts.google.com/o/oauth2/auth?state=%2Fprofile&redirect_uri=https%3A%2F%2Foauth2-login-demo.appspot.com%2Fcode&response_type=code&client_id=812741506391.apps.googleusercontent.com&approval_prompt=force&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile";
+	var redirect_uri = "https://oauth2-login-demo.appspot.com/code";
+	WebAppBooster.oauth(uri, redirect_uri, function(resp) {
+		log(resp);
+	});
+}
 function do_action() {
     eval($('#actions').val() + '();');
 }

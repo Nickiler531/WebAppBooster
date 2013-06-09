@@ -49,6 +49,9 @@
 			</intent-filter>
         </activity>
         
+        <activity
+            android:name=".plugin.OAuthActivity"/>
+
         <service android:name=".BoosterService"
             android:exported="false">
         </service>

@@ -215,6 +215,10 @@ var WebAppBooster = {
     networkInformation: function(cb) {
     	var req = {action: "NETWORK_INFORMATION"};
     	this._sendRequest(req, cb, 0);
-    }
+    },
     
+    oauth: function(uri, redirectUri, cb) {
+        var req = {action: "OAUTH_AUTHENTICATION", uri:uri, redirectUri:redirectUri};
+        this._sendRequest(req, cb, 0);
+    }
 };
