@@ -83,9 +83,12 @@ public class PermissionsPlugin extends Plugin {
         if (status == Response.OK) {
             // Get all supported actions for the requested permissions
             List<String> supportedActions = new ArrayList<String>();
+            supportedActions.addAll(PluginManager.getActionsWithoutPermissions());
             for (String p : permissions) {
                 String[] actions = PluginManager.getActionsForPermission(p);
-                supportedActions.addAll(Arrays.asList(actions));
+                if (actions != null) {
+                    supportedActions.addAll(Arrays.asList(actions));
+                }
             }
             response.add("supportedActions", supportedActions);
         }
