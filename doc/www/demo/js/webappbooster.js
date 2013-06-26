@@ -225,5 +225,10 @@ var WebAppBooster = {
     shareText: function(text, cb) {
         var req = {action: "SHARE", text:text};
         this._sendRequest(req, cb, 0);
+    },
+
+    dictate: function(caption, cb) {
+        var req = {action: "DICTATE", caption:caption};
+        this._sendRequest(req, cb, 0);
     }
 };

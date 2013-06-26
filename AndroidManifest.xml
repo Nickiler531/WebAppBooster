@@ -52,6 +52,9 @@
         <activity
             android:name=".plugin.OAuthActivity"/>
 
+        <activity
+            android:name=".plugin.DictActivity"/>
+
         <service android:name=".BoosterService"
             android:exported="false">
         </service>
