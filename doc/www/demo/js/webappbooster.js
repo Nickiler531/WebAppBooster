@@ -34,6 +34,7 @@ var WebAppBooster = {
     PERMISSION_GALLERY: "GALLERY",
     PERMISSION_CAMERA: "CAMERA",
     PERMISSION_VIBRATE: "VIBRATE",
+    PERMISSION_RECORD_AUDIO: "RECORD_AUDIO",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -229,6 +230,11 @@ var WebAppBooster = {
 
     dictate: function(caption, cb) {
         var req = {action: "DICTATE", caption:caption};
+        this._sendRequest(req, cb, 0);
+    },
+
+    record: function(cb) {
+        var req = {action: "RECORD_MICROPHONE"};
         this._sendRequest(req, cb, 0);
     }
 };

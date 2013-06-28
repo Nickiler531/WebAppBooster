@@ -55,6 +55,7 @@ public final class R {
         public static final int PERMISSION_GYRO=0x7f060021;
         public static final int PERMISSION_READ_CALENDAR=0x7f060020;
         public static final int PERMISSION_READ_CONTACTS=0x7f06001f;
+        public static final int PERMISSION_RECORD_AUDIO=0x7f060027;
         public static final int PERMISSION_VIBRATE=0x7f060026;
         public static final int allow=0x7f06000f;
         public static final int allow_always=0x7f060012;

@@ -15,7 +15,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-    
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 	<uses-feature android:name="android.hardware.camera" android:required="false"/>
 	<uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
 	
@@ -54,6 +55,9 @@
 
         <activity
             android:name=".plugin.DictActivity"/>
+
+        <activity
+            android:name=".plugin.RecordActivity"/>
 
         <service android:name=".BoosterService"
             android:exported="false">

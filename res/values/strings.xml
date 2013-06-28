@@ -45,4 +45,5 @@
     <string name="PERMISSION_GALLERY">Access to the photo gallery</string>
     <string name="PERMISSION_CAMERA">Take pictures</string>
     <string name="PERMISSION_VIBRATE">Vibrate</string>
+    <string name="PERMISSION_RECORD_AUDIO">Record audio</string>
 </resources>

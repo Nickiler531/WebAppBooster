@@ -72,6 +72,9 @@
                         <option value="action_dictate">
                             Dictate
                         </option>
+                        <option value="action_record">
+                            Record
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -87,6 +90,8 @@
                 </div>
                 <div id="image-container" style="display:none; background-color: #fbfbfb; border: 1px solid #b8b8b8;">
                     <img id="image" alt="image" />
+                </div>
+                <div id="audio-container">
                 </div>
             </div>
             <div data-theme="a" data-role="footer" data-position="fixed" style="display:table;">
@@ -128,6 +133,16 @@ function hideImage() {
     imgContainer.style.display = "none";
 }
 
+function playAudio(uri) {
+    var container = document.getElementById("audio-container");
+    var audio = document.createElement("audio");
+    audio.setAttribute("preload", "auto");
+    audio.setAttribute("type", "audio/wav");
+    audio.setAttribute("src", uri);
+    container.appendChild(audio);
+    audio.play();
+}
+
 function init() {
     WebAppBooster.open('/demo', function (res) {
         if (res.status == WebAppBooster.OK) {
@@ -152,7 +167,8 @@ function action_request_permissions() {
              WebAppBooster.PERMISSION_AUDIO,
              WebAppBooster.PERMISSION_GALLERY,
              WebAppBooster.PERMISSION_CAMERA,
-             WebAppBooster.PERMISSION_VIBRATE];
+             WebAppBooster.PERMISSION_VIBRATE,
+             WebAppBooster.PERMISSION_RECORD_AUDIO];
     WebAppBooster.requestPermissions(p, function(resp) {
         if (resp.status == WebAppBooster.OK) {
             log("Permissions granted");
@@ -271,6 +287,15 @@ function action_dictate() {
     WebAppBooster.dictate("Please say something", function(resp) {
         log(resp);
     });
+}
+
+function action_record() {
+	WebAppBooster.record(function(resp) {
+        log(resp);
+        if (resp.status == 0) {
+            playAudio(resp.uri);
+        }
+	});
 }
 
 function do_action() {
