@@ -236,5 +236,10 @@ var WebAppBooster = {
     record: function(cb) {
         var req = {action: "RECORD_MICROPHONE"};
         this._sendRequest(req, cb, 0);
+    },
+
+    speakText: function(language, text, cb) {
+        var req = {action: "SPEAK_TEXT", language:language, text:text};
+        this._sendRequest(req, cb, 0);
     }
 };

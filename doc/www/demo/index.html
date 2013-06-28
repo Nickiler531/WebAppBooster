@@ -75,6 +75,9 @@
                         <option value="action_record">
                             Record
                         </option>
+                        <option value="action_speak_text">
+                            Speak text
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -290,12 +293,20 @@ function action_dictate() {
 }
 
 function action_record() {
-	WebAppBooster.record(function(resp) {
+    WebAppBooster.record(function(resp) {
         log(resp);
         if (resp.status == 0) {
             playAudio(resp.uri);
         }
-	});
+    });
+}
+
+function action_speak_text() {
+    var text = "This is cool";
+    log("Saying: " + text);
+    WebAppBooster.speakText("", text, function(resp) {
+        log(resp);
+    });
 }
 
 function do_action() {
