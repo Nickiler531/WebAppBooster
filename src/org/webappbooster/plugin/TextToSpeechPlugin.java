@@ -62,7 +62,9 @@ public class TextToSpeechPlugin extends Plugin implements OnInitListener,
             // missing data, install it
             Intent installIntent = new Intent();
             installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+            installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(installIntent);
+            sendError();
         }
     }
 
