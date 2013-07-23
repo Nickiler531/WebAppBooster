@@ -20,16 +20,21 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import org.webappbooster.Plugin;
+import org.webappbooster.R;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 
 public class TextToSpeechPlugin extends Plugin implements OnInitListener,
-        OnUtteranceCompletedListener {
+        OnUtteranceCompletedListener, OnClickListener {
 
     private TextToSpeech tts = null;
     private Request      request;
@@ -59,12 +64,7 @@ public class TextToSpeechPlugin extends Plugin implements OnInitListener,
             // success, create the TTS instance
             tts = new TextToSpeech(getContext(), this);
         } else {
-            // missing data, install it
-            Intent installIntent = new Intent();
-            installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-            installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getContext().startActivity(installIntent);
-            sendError();
+            runInContextOfProxyActivity(request);
         }
     }
 
@@ -76,6 +76,18 @@ public class TextToSpeechPlugin extends Plugin implements OnInitListener,
             tts.setOnUtteranceCompletedListener(this);
             doSpeak();
         }
+    }
+
+    @Override
+    public void callbackFromProxy(final Request request) {
+        Context context = getContext();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.title_install_tts);
+        builder.setMessage(R.string.install_tts);
+        builder.setPositiveButton(R.string.ok, this);
+        builder.setNegativeButton(R.string.cancel, this);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void sendError() {
@@ -111,5 +123,20 @@ public class TextToSpeechPlugin extends Plugin implements OnInitListener,
     public void onUtteranceCompleted(String arg0) {
         Response response = request.createResponse(Response.OK);
         response.send();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            // missing data, install it
+            Intent installIntent = new Intent();
+            installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+            installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(installIntent);
+        }
+        // Since the TTS module is currently not installed, we always send an
+        // error
+        sendError();
     }
 }

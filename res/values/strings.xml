@@ -13,6 +13,7 @@
     <string name="start_booster">Start Booster</string>
     <string name="stop_booster">Stop Booster</string>
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="revoke">Revoke</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
@@ -36,7 +37,9 @@
                         Once WebAppBooster is enabled, you can visit
                         <a href="http://webappbooster.org/demo/">http://webappbooster.org/demo/</a> for
                         a demo.</string>
-    
+    <string name="title_install_tts">Text-to-Speech Module Missing</string>
+    <string name="install_tts">The Text-to-Speech module is currently not installed. Would you like
+                        to install it now?</string>
     <string name="PERMISSION_READ_CONTACTS">Read contacts from your address book</string>
     <string name="PERMISSION_READ_CALENDAR">Read entries from your calendar</string>
     <string name="PERMISSION_GYRO">Access the gyroscope</string>

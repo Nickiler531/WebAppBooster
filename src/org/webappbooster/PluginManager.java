@@ -213,6 +213,7 @@ public class PluginManager {
         i.putExtra("ACTION", "CALL_PLUGIN");
         i.putExtra("ID", id);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);
     }
 
