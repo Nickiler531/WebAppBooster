@@ -47,7 +47,7 @@ public class AuthenticationPlugin extends Plugin {
             if (token == info.getToken()) {
                 info.connectionIsAuthorized();
             } else {
-                status = Response.NOT_AUTHORIZED;
+                status = Response.ERR_PERMISSION_DENIED;
             }
             Response response = request.createResponse(status);
             response.send();

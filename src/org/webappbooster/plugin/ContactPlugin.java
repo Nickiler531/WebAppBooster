@@ -74,7 +74,7 @@ public class ContactPlugin extends Plugin {
     @Override
     public void resultFromActivity(Request request, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            Response response = request.createResponse(Response.CANCELLED);
+            Response response = request.createResponse(Response.ERR_CANCELLED);
             response.send();
             return;
         }

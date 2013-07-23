@@ -175,7 +175,7 @@ public class GalleryPlugin extends Plugin {
                         e.printStackTrace();
                     }
                 } else {
-                    status = Response.INTERNAL_ERROR;
+                    status = Response.ERR_INTERNAL_ERROR;
                 }
                 Response response = request.createResponse(status);
                 if (thumbUri != null) {
@@ -260,7 +260,7 @@ public class GalleryPlugin extends Plugin {
         Response response;
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getData() == null) {
-            response = request.createResponse(Response.CANCELLED);
+            response = request.createResponse(Response.ERR_CANCELLED);
         } else {
             Uri _uri = data.getData();
             Cursor cursor = BoosterApplication

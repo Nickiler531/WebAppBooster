@@ -109,11 +109,11 @@ public class PluginManager {
             if (!info.isAuthenticated()
                     && !(action.equals("REQUEST_AUTHENTICATION") || action.equals("AUTHENTICATE"))) {
                 // Connection has not yet been authenticated.
-                sendError(connectionId, requestId, Response.NOT_AUTHORIZED);
+                sendError(connectionId, requestId, Response.ERR_PERMISSION_DENIED);
                 return;
             }
             if (!hasPermission(connectionId, origin, action)) {
-                sendError(connectionId, requestId, Response.NOT_AUTHORIZED);
+                sendError(connectionId, requestId, Response.ERR_PERMISSION_DENIED);
                 return;
             }
             Plugin instance = getPluginInstance(info, origin, action);

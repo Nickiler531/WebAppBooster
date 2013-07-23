@@ -24,11 +24,15 @@ import org.json.JSONObject;
 
 public class Response {
 
-    final public static int OK                = 0;
-    final public static int NOT_AUTHORIZED    = -1;
-    final public static int CANCELLED         = -2;
-    final public static int MALFORMED_REQUEST = -3;
-    final public static int INTERNAL_ERROR    = -4;
+    final public static int OK                          = 0;
+    final public static int ERR_PERMISSION_DENIED       = -1;
+    final public static int ERR_WEBSOCK_NOT_AVAILABLE   = -2;
+    final public static int ERR_WEBSOCK_ACCESS_DENIED   = -3;
+    final public static int ERR_WEBSOCK_NOT_CONNECTED   = -4;
+    final public static int ERR_AUTHENTICATION_REQUIRED = -5;
+    final public static int ERR_CANCELLED               = -6;
+    final public static int ERR_MALFORMED_REQUEST       = -7;
+    final public static int ERR_INTERNAL_ERROR          = -8;
 
     private JSONObject      response;
     private Plugin          managingPlugin;

@@ -91,7 +91,7 @@ public class TextToSpeechPlugin extends Plugin implements OnInitListener,
     }
 
     private void sendError() {
-        Response response = request.createResponse(Response.CANCELLED);
+        Response response = request.createResponse(Response.ERR_CANCELLED);
         response.send();
     }
 

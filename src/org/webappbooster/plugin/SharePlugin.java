@@ -53,7 +53,7 @@ public class SharePlugin extends Plugin {
         }
 
         if (intent == null) {
-            Response response = request.createResponse(Response.MALFORMED_REQUEST);
+            Response response = request.createResponse(Response.ERR_MALFORMED_REQUEST);
             response.send();
         } else {
             callActivity(request,
@@ -64,7 +64,7 @@ public class SharePlugin extends Plugin {
     @Override
     public void resultFromActivity(Request request, int resultCode, Intent data) {
         Response response = request.createResponse(resultCode == Activity.RESULT_OK ? Response.OK
-                : Response.CANCELLED);
+                : Response.ERR_CANCELLED);
         response.send();
     }
 

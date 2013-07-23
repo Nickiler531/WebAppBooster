@@ -46,7 +46,7 @@ public class CalendarPlugin extends Plugin {
         long startTime = request.getLong("start");
         long endTime = request.getLong("end");
         if (startTime == 0 || endTime == 0) {
-            Response resp = request.createResponse(Response.MALFORMED_REQUEST);
+            Response resp = request.createResponse(Response.ERR_MALFORMED_REQUEST);
             resp.send();
             return;
         }

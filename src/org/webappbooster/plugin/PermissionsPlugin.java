@@ -51,7 +51,7 @@ public class PermissionsPlugin extends Plugin {
         permissions = request.getStringArray("permissions");
         if (permissions == null) {
             Log.d("WAB", "PermissionsPlugin: request does not contain permissions");
-            sendStatus(request, Response.MALFORMED_REQUEST);
+            sendStatus(request, Response.ERR_MALFORMED_REQUEST);
             return;
         }
         if (Authorization.checkPermissions(origin, permissions)) {
@@ -72,7 +72,7 @@ public class PermissionsPlugin extends Plugin {
                             which == DialogInterface.BUTTON_NEUTRAL);
                 }
                 sendStatus(request, (which != DialogInterface.BUTTON_NEGATIVE) ? Response.OK
-                        : Response.NOT_AUTHORIZED);
+                        : Response.ERR_PERMISSION_DENIED);
             }
         });
     }
