@@ -102,6 +102,7 @@ public class PluginManager {
             Request req = new Request(message);
             if (req.isRequestMalformed()) {
                 Log.d("WAB", "Malformed request: " + message);
+                sendError(connectionId, -1, Response.ERR_MALFORMED_REQUEST);
                 return;
             }
             String action = req.getAction();
@@ -119,6 +120,7 @@ public class PluginManager {
             Plugin instance = getPluginInstance(info, origin, action);
             if (instance == null) {
                 Log.d("WAB", "Cannot get plugin for request: " + message);
+                sendError(connectionId, requestId, Response.ERR_NOT_AVAILABLE);
                 return;
             }
             req.setManagingPlugin(instance);

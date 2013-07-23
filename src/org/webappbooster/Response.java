@@ -32,7 +32,8 @@ public class Response {
     final public static int ERR_AUTHENTICATION_REQUIRED = -5;
     final public static int ERR_CANCELLED               = -6;
     final public static int ERR_MALFORMED_REQUEST       = -7;
-    final public static int ERR_INTERNAL_ERROR          = -8;
+    final public static int ERR_NOT_AVAILABLE           = -8;
+    final public static int ERR_INTERNAL_ERROR          = -500;
 
     private JSONObject      response;
     private Plugin          managingPlugin;
