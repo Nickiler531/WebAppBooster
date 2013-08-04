@@ -149,15 +149,17 @@ public class BoosterService extends Service {
     }
 
     private void stopHttpServer() {
+        if (httpSocket == null) {
+            return;
+        }
         try {
             httpSocket.close();
-            httpSocket = null;
-            httpServerThread.interrupt();
-            httpServerThread = null;
+            httpServerThread.join();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (InterruptedException e) {
         }
+        httpSocket = null;
+        httpServerThread = null;
     }
 
     static public BoosterService getService() {
