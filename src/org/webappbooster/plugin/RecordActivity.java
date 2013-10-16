@@ -17,6 +17,8 @@
 package org.webappbooster.plugin;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.webappbooster.util.ExtAudioRecorder;
 
@@ -32,7 +34,7 @@ import android.widget.RelativeLayout;
 
 public class RecordActivity extends Activity {
 
-    final private static String PATH          = "/WebAppBooster/";
+    final private static String PATH          = "/WebAppBooster/Recordings/";
 
     private static String       mFileName     = null;
 
@@ -90,7 +92,9 @@ public class RecordActivity extends Activity {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        mFileName = dir.getAbsolutePath() + "/recording.wav";
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        mFileName = dir.getAbsolutePath() + "/Recording-" + dateFormat.format(date) + ".wav";
     }
 
     @Override

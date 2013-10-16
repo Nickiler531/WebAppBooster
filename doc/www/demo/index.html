@@ -141,9 +141,9 @@ function playAudio(uri) {
     var audio = document.createElement("audio");
     audio.setAttribute("preload", "auto");
     audio.setAttribute("type", "audio/wav");
+    audio.setAttribute("controls", true);
     audio.setAttribute("src", uri);
     container.appendChild(audio);
-    audio.play();
 }
 
 function init() {
