@@ -28,9 +28,11 @@ import android.hardware.SensorManager;
 
 public class AccelerometerPlugin extends Plugin implements SensorEventListener {
 
-    private SensorManager sensorManager;
-    private Sensor        sensorAccelerometer;
-    private Request       startRequest;
+    private final static float GRAVITY = 9.8067f;
+
+    private SensorManager      sensorManager;
+    private Sensor             sensorAccelerometer;
+    private Request            startRequest;
 
     @Override
     public void onCreate(String origin) {
@@ -66,9 +68,9 @@ public class AccelerometerPlugin extends Plugin implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         Response response = startRequest.createResponse(Response.OK);
-        response.add("x", event.values[0]);
-        response.add("y", event.values[1]);
-        response.add("z", event.values[2]);
+        response.add("x", event.values[0] / GRAVITY);
+        response.add("y", event.values[1] / GRAVITY);
+        response.add("z", event.values[2] / GRAVITY);
         response.send();
     }
 
