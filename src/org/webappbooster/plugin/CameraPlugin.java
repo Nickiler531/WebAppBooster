@@ -17,6 +17,8 @@
 package org.webappbooster.plugin;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
@@ -31,7 +33,7 @@ import android.provider.MediaStore;
 
 public class CameraPlugin extends Plugin {
 
-    final private static String PATH = "/WebAppBooster/";
+    final private static String PATH = "/WebAppBooster/Camera/";
 
     private String              path;
 
@@ -43,7 +45,9 @@ public class CameraPlugin extends Plugin {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        path = dir.getAbsolutePath() + "/camera-output";
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        path = dir.getAbsolutePath() + "/Picture-" + dateFormat.format(date) + ".jpg";
         File file = new File(path);
         Uri fileUri = Uri.fromFile(file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -64,7 +68,7 @@ public class CameraPlugin extends Plugin {
         } else {
             response = request.createResponse(Response.OK);
             String uri = HTTPServer.genResourceUri(this.getConnectionInfo().getToken(), "file://"
-                    + path, "image/png");
+                    + path, "image/jpeg");
             response.add("uri", uri);
         }
         response.send();
