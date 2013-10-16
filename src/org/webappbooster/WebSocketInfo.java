@@ -86,6 +86,10 @@ public class WebSocketInfo {
         }
     }
 
+    public static boolean isValidToken(double token) {
+        return tokenMap.values().contains(token);
+    }
+
     public int getConnectionId() {
         return this.connectionId;
     }

@@ -19,6 +19,7 @@ package org.webappbooster;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class ProxyActivity extends Activity {
 
@@ -41,5 +42,11 @@ public class ProxyActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         PluginManager.resultFromActivity(requestCode, resultCode, data);
         finish();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("WAB", "ProxyActivity.onPause()");
     }
 }

@@ -16,6 +16,7 @@
 
 package org.webappbooster.plugin;
 
+import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
@@ -46,7 +47,8 @@ public class RecordPlugin extends Plugin {
         } else {
             response = request.createResponse(Response.OK);
             String path = data.getStringExtra("path");
-            String uri = sendResourceViaHTTP("file://" + path, "audio/wav");
+            String uri = HTTPServer.genResourceUri(this.getConnectionInfo().getToken(), "file://"
+                    + path, "audio/wav");
             response.add("uri", uri);
         }
         response.send();

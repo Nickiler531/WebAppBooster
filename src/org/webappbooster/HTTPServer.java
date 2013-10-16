@@ -19,8 +19,6 @@ package org.webappbooster;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -33,44 +31,40 @@ import android.util.Log;
 
 public class HTTPServer implements Container {
 
-    static public class Resource {
-        public Resource(String uri, String mimeType) {
-            this.uri = uri;
-            this.mimeType = mimeType;
-        }
-
-        public String uri;
-        public String mimeType;
-    }
-
-    private static Map<String, Resource> resources = new HashMap<String, Resource>();
-
-    public static void addResource(String resourceId, Resource resource) {
-        resources.put(resourceId, resource);
+    public static String genResourceUri(double token, String resourceUri, String mimeType) {
+        Uri.Builder b = Uri.parse("http://localhost:" + Config.PORT_HTTP).buildUpon();
+        b.appendQueryParameter("token", Double.toString(token));
+        b.appendQueryParameter("uri", resourceUri);
+        b.appendQueryParameter("mimeType", mimeType);
+        return b.build().toString();
     }
 
     public void handle(Request request, Response response) {
         PrintStream body = null;
-        String resourceId = null;
         try {
             body = response.getPrintStream();
             long time = System.currentTimeMillis();
 
-            resourceId = request.getPath().getPath().substring(1);
-            Log.d("WAB-HTTP", resourceId);
-            Resource resource = resources.get(resourceId);
-            if (resource == null) {
+            String token = request.getParameter("token");
+            String uri = request.getParameter("uri");
+            String mimeType = request.getParameter("mimeType");
+
+            if (token == null || uri == null || mimeType == null) {
                 throw new IOException();
             }
-            resources.remove(resourceId);
-            response.set("Content-Type", resource.mimeType);
+
+            if (!WebSocketInfo.isValidToken(Double.parseDouble(token))) {
+                throw new IOException();
+            }
+
+            Log.d("WAB-HTTP", uri);
+            response.set("Content-Type", mimeType);
             response.set("Server", "WebAppBooster/1.0");
             // CORS header is not needed since we will never send JavaScript
             // response.set("Access-Control-Allow-Origin", "*");
             response.setDate("Date", time);
             response.setDate("Last-Modified", time);
 
-            String uri = resource.uri;
             if (uri.startsWith("file://")) {
                 FileUtils.copyFile(new File(uri.substring("file://".length())), body);
             }
@@ -80,7 +74,7 @@ public class HTTPServer implements Container {
             }
             body.close();
         } catch (IOException e) {
-            Log.d("WAB", "Cannot load resourceId: " + resourceId);
+            Log.d("WAB", "Cannot load resource: " + request.getPath().getPath());
             response.setCode(404);
             body.close();
         }

@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
@@ -101,18 +102,14 @@ public class ContactPlugin extends Plugin {
         Cursor nameCur = resolver.query(ContactsContract.Data.CONTENT_URI, null, whereName,
                 whereNameParams, ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
         if (nameCur.moveToNext()) {
-            nameGiven = nameCur
-                    .getString(nameCur
-                            .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
-            nameMiddle = nameCur
-                    .getString(nameCur
-                            .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.MIDDLE_NAME));
-            nameFamily = nameCur
-                    .getString(nameCur
-                            .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
-            nameDisplay = nameCur
-                    .getString(nameCur
-                            .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
+            nameGiven = nameCur.getString(nameCur
+                    .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+            nameMiddle = nameCur.getString(nameCur
+                    .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.MIDDLE_NAME));
+            nameFamily = nameCur.getString(nameCur
+                    .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+            nameDisplay = nameCur.getString(nameCur
+                    .getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
         }
         nameCur.close();
 
@@ -170,7 +167,10 @@ public class ContactPlugin extends Plugin {
         response.add("addressOther", addressOther);
         if (photoUri != null) {
             Log.d("WAB", photoUri.toString());
-            response.add("photoUri", sendResourceViaHTTP(photoUri.toString(), "image/png"));
+            response.add(
+                    "photoUri",
+                    HTTPServer.genResourceUri(this.getConnectionInfo().getToken(),
+                            photoUri.toString(), "image/png"));
         }
 
     }

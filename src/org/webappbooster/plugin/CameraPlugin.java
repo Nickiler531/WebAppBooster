@@ -18,6 +18,7 @@ package org.webappbooster.plugin;
 
 import java.io.File;
 
+import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
@@ -62,7 +63,8 @@ public class CameraPlugin extends Plugin {
             response = request.createResponse(Response.ERR_CANCELLED);
         } else {
             response = request.createResponse(Response.OK);
-            String uri = sendResourceViaHTTP("file://" + path, "image/png");
+            String uri = HTTPServer.genResourceUri(this.getConnectionInfo().getToken(), "file://"
+                    + path, "image/png");
             response.add("uri", uri);
         }
         response.send();

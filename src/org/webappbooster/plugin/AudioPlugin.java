@@ -19,6 +19,7 @@ package org.webappbooster.plugin;
 import java.util.HashMap;
 
 import org.webappbooster.BoosterApplication;
+import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
@@ -94,9 +95,8 @@ public class AudioPlugin extends Plugin {
                     .getColumnIndex(MediaStore.Audio.Media.DURATION));
             String track = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
             Response response = request.createResponse(Response.OK);
-            response.add(
-                    "uri",
-                    sendResourceViaHTTP(Uri.withAppendedPath(uri, "" + id).toString(), "audio/mpeg"));
+            response.add("uri", HTTPServer.genResourceUri(this.getConnectionInfo().getToken(), Uri
+                    .withAppendedPath(uri, "" + id).toString(), "audio/mpeg"));
             response.add("data", data);
             response.add("title", title);
             response.add("artist", artist);

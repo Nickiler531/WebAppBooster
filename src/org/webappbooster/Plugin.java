@@ -71,11 +71,4 @@ public abstract class Plugin {
     public void callbackFromProxy(Request request) {
         // Do nothing
     }
-
-    protected String sendResourceViaHTTP(String path, String mimeType) {
-        String resourceId = Double.toString(Math.random());
-        String uri = "http://localhost:" + Config.PORT_HTTP + "/" + resourceId;
-        HTTPServer.addResource(resourceId, new HTTPServer.Resource(path, mimeType));
-        return uri;
-    }
 }

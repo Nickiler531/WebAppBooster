@@ -17,6 +17,7 @@
 package org.webappbooster.plugin;
 
 import org.webappbooster.BoosterApplication;
+import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
@@ -118,7 +119,7 @@ public class GalleryPlugin extends Plugin {
             @Override
             public void run() {
                 try {
-                    String dataURL = request.getString("url");
+                    String dataURL = request.getString("uri");
                     byte[] data = dataURL.substring("data:image/png;base64,".length()).getBytes();
                     byte[] bytes = Base64.decode(data, Base64.DEFAULT);
                     FileOutputStream out = new FileOutputStream(imageFile);
@@ -240,8 +241,8 @@ public class GalleryPlugin extends Plugin {
             String bucketName = imageCursor.getString(imageCursor
                     .getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
             Response response = request.createResponse(Response.OK);
-            response.add("uri",
-                    sendResourceViaHTTP(Uri.withAppendedPath(uri, "" + id).toString(), "image/png"));
+            response.add("uri", HTTPServer.genResourceUri(this.getConnectionInfo().getToken(), Uri
+                    .withAppendedPath(uri, "" + id).toString(), "image/png"));
             response.add("galleryName", bucketName);
             response.send();
         }
@@ -273,7 +274,8 @@ public class GalleryPlugin extends Plugin {
             String path = cursor.getString(0);
             cursor.close();
             response = request.createResponse(Response.OK);
-            String uri = sendResourceViaHTTP("file://" + path, "image/png");
+            String uri = HTTPServer.genResourceUri(this.getConnectionInfo().getToken(), "file://"
+                    + path, "image/png");
             response.add("uri", uri);
         }
         response.send();
