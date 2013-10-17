@@ -48,15 +48,16 @@ public final class R {
         public static final int activity_main=0x7f080000;
     }
     public static final class string {
-        public static final int PERMISSION_ACCELEROMETER=0x7f060025;
-        public static final int PERMISSION_AUDIO=0x7f060026;
-        public static final int PERMISSION_CAMERA=0x7f060028;
-        public static final int PERMISSION_GALLERY=0x7f060027;
-        public static final int PERMISSION_GYRO=0x7f060024;
-        public static final int PERMISSION_READ_CALENDAR=0x7f060023;
-        public static final int PERMISSION_READ_CONTACTS=0x7f060022;
-        public static final int PERMISSION_RECORD_AUDIO=0x7f06002a;
-        public static final int PERMISSION_VIBRATE=0x7f060029;
+        public static final int PERMISSION_ACCELEROMETER=0x7f060026;
+        public static final int PERMISSION_AUDIO=0x7f060027;
+        public static final int PERMISSION_CAMERA=0x7f060029;
+        public static final int PERMISSION_GALLERY=0x7f060028;
+        public static final int PERMISSION_GYRO=0x7f060025;
+        public static final int PERMISSION_READ_CALENDAR=0x7f060024;
+        public static final int PERMISSION_READ_CONTACTS=0x7f060023;
+        public static final int PERMISSION_RECORD_AUDIO=0x7f06002b;
+        public static final int PERMISSION_VIBRATE=0x7f06002a;
+        public static final int acra_toast_text=0x7f060022;
         public static final int allow=0x7f060010;
         public static final int allow_always=0x7f060013;
         public static final int allow_once=0x7f060012;

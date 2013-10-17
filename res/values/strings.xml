@@ -40,6 +40,8 @@
     <string name="title_install_tts">Text-to-Speech Module Missing</string>
     <string name="install_tts">The Text-to-Speech module is currently not installed. Would you like
                         to install it now?</string>
+    <string name="acra_toast_text">Unfortunately WebAppBooster has crashed and needs to close. A bug
+                        report has been filed. Please relaunch the app.</string>
     <string name="PERMISSION_READ_CONTACTS">Read contacts from your address book</string>
     <string name="PERMISSION_READ_CALENDAR">Read entries from your calendar</string>
     <string name="PERMISSION_GYRO">Access the gyroscope</string>
