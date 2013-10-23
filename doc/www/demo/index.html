@@ -78,6 +78,9 @@
                         <option value="action_speak_text">
                             Speak text
                         </option>
+                        <option value="action_proxy">
+                            Proxy request
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -171,7 +174,8 @@ function action_request_permissions() {
              WebAppBooster.PERMISSION_GALLERY,
              WebAppBooster.PERMISSION_CAMERA,
              WebAppBooster.PERMISSION_VIBRATE,
-             WebAppBooster.PERMISSION_RECORD_AUDIO];
+             WebAppBooster.PERMISSION_RECORD_AUDIO,
+             WebAppBooster.PERMISSION_PROXY];
     WebAppBooster.requestPermissions(p, function(resp) {
         if (resp.status == WebAppBooster.OK) {
             log("Permissions granted");
@@ -306,6 +310,17 @@ function action_speak_text() {
     log("Saying: " + text);
     WebAppBooster.speakText("", text, function(resp) {
         log(resp);
+    });
+}
+
+function action_proxy() {
+    var req = {
+        url: "http://www.webappbooster.org",
+        responseType: "text"};
+    log("Do proxy request");
+    WebAppBooster.proxy(req, function(resp) {
+        log("Result code:" + resp.code);
+        log("Result: " + resp.contentText);
     });
 }
 

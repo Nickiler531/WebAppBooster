@@ -53,6 +53,7 @@ public final class R {
         public static final int PERMISSION_CAMERA=0x7f060029;
         public static final int PERMISSION_GALLERY=0x7f060028;
         public static final int PERMISSION_GYRO=0x7f060025;
+        public static final int PERMISSION_PROXY=0x7f06002c;
         public static final int PERMISSION_READ_CALENDAR=0x7f060024;
         public static final int PERMISSION_READ_CONTACTS=0x7f060023;
         public static final int PERMISSION_RECORD_AUDIO=0x7f06002b;

@@ -17,4 +17,5 @@
     <plugin class="ConnectivityPlugin" actions="NETWORK_INFORMATION"/>
     <plugin class="OAuthPlugin" actions="OAUTH_AUTHENTICATION"/>
     <plugin class="SharePlugin" actions="SHARE"/>
+    <plugin class="ProxyPlugin" actions="PROXY" permission="PROXY"/>
 </plugins>

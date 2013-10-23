@@ -40,6 +40,7 @@ var WebAppBooster = {
     PERMISSION_CAMERA: "CAMERA",
     PERMISSION_VIBRATE: "VIBRATE",
     PERMISSION_RECORD_AUDIO: "RECORD_AUDIO",
+    PERMISSION_PROXY: "PROXY",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -246,5 +247,10 @@ var WebAppBooster = {
     speakText: function(language, text, cb) {
         var req = {action: "SPEAK_TEXT", language:language, text:text};
         this._sendRequest(req, cb, 0);
+    },
+
+    proxy: function(request, cb) {
+        request.action = "PROXY";
+        this._sendRequest(request, cb, 0);
     }
 };

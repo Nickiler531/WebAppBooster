@@ -66,6 +66,14 @@ public class Request {
         }
     }
 
+    public String getStringOrNull(String key) {
+        try {
+            return msg.getString(key);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
     public double getDouble(String key) {
         try {
             return msg.getDouble(key);
@@ -100,6 +108,22 @@ public class Request {
             return strings;
         } catch (JSONException e) {
             return new String[0];
+        }
+    }
+
+    public JSONArray getJSONArray(String key) {
+        try {
+            return msg.getJSONArray(key);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    public JSONObject getJSONObject(String key) {
+        try {
+            return msg.getJSONObject(key);
+        } catch (JSONException e) {
+            return null;
         }
     }
 
