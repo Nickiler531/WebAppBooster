@@ -17,6 +17,7 @@
 package org.webappbooster.plugin;
 
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
@@ -26,6 +27,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+@PluginMappingAnnotation(permission="GYRO", actions="START_GYRO|STOP_GYRO")
 public class GyroscopePlugin extends Plugin implements SensorEventListener {
 
     private SensorManager sensorManager;

@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
@@ -33,7 +34,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
-
+@PluginMappingAnnotation(actions="PICK_CONTACT|LIST_CONTACTS",permission="READ_CONTACTS")
 public class ContactPlugin extends Plugin {
 
     @Override

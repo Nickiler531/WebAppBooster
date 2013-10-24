@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.R;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
@@ -32,7 +33,7 @@ import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
-
+@PluginMappingAnnotation(actions="SPEAK_TEXT",permission="")
 public class TextToSpeechPlugin extends Plugin implements OnInitListener,
         OnUtteranceCompletedListener, OnClickListener {
 

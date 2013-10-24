@@ -22,6 +22,7 @@ import java.util.Date;
 
 import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
@@ -30,7 +31,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-
+@PluginMappingAnnotation(actions="TAKE_PHOTO",permission="CAMERA")
 public class CameraPlugin extends Plugin {
 
     final private static String PATH = "/WebAppBooster/Camera/";

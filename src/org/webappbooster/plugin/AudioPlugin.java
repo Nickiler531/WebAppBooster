@@ -21,16 +21,19 @@ import java.util.HashMap;
 import org.webappbooster.BoosterApplication;
 import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
-import android.net.Uri;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 /**
  * The Audio plugin provides access to songs stored on the device.
  */
+
+@PluginMappingAnnotation(permission="AUDIO", actions="LIST_SONGS")
 public class AudioPlugin extends Plugin {
 
     @Override

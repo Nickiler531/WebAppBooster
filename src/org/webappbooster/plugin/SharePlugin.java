@@ -17,13 +17,14 @@
 package org.webappbooster.plugin;
 
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.R;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
 import android.app.Activity;
 import android.content.Intent;
-
+@PluginMappingAnnotation(actions="SHARE",permission="")
 public class SharePlugin extends Plugin {
 
     @Override
