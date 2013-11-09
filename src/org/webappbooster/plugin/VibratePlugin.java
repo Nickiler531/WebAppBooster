@@ -17,12 +17,13 @@
 package org.webappbooster.plugin;
 
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
 import android.content.Context;
 import android.os.Vibrator;
-
+@PluginMappingAnnotation(actions="VIBRATE",permission="VIBRATE")
 public class VibratePlugin extends Plugin {
 
     private Vibrator vibrator;

@@ -17,13 +17,14 @@
 package org.webappbooster.plugin;
 
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
+@PluginMappingAnnotation(actions="NETWORK_INFORMATION",permission="")
 public class ConnectivityPlugin extends Plugin {
 
     @Override

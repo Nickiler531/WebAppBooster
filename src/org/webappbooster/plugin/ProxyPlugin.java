@@ -18,10 +18,8 @@ package org.webappbooster.plugin;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
@@ -38,9 +36,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webappbooster.Plugin;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
-
+@PluginMappingAnnotation(actions="PROXY",permission="PROXY")
 public class ProxyPlugin extends Plugin {
 
     @Override

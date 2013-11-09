@@ -1,19 +1,3 @@
-/*
- * Copyright 2012-2013, webappbooster.org
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.webappbooster;
 
 import java.io.IOException;
@@ -21,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,13 +14,12 @@ import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
+import android.text.TextUtils;
 import android.util.Log;
+import dalvik.system.DexFile;
 
 public class PluginManager {
 
@@ -48,50 +32,56 @@ public class PluginManager {
     static private Map<String, String[]>         actionMap;
     static private List<String>                  actionsWithNoPermissions;
 
+    private void initAnnotationBasedMappings()
+    {
+    	DexFile dexFile = null;
+		try {
+			dexFile = new DexFile(BoosterApplication.getAppContext().getApplicationInfo().sourceDir);
+		} catch (IOException e1) {
+		}
+    	Enumeration<String> enumeratedEntities = dexFile.entries();
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		while (enumeratedEntities.hasMoreElements()) {
+			String entry = enumeratedEntities.nextElement();
+			if (entry.startsWith("org.webappbooster.plugin")) {
+				try {
+					Class<?> targetClass = (Class<?>)classLoader.loadClass(entry);					
+					if (targetClass.isAnnotationPresent(PluginMappingAnnotation.class)) {
+						Class<? extends Plugin> clazz = ((Class<? extends Plugin>)targetClass);
+						PluginMappingAnnotation mappingAnnotation =
+								(PluginMappingAnnotation) clazz.getAnnotation(PluginMappingAnnotation.class);
+						if (mappingAnnotation != null) {							
+							String[] actions = mappingAnnotation.actions().split("\\|");
+	                        String permission = mappingAnnotation.permission();
+	                        actionMap.put(permission, actions);
+	                        for (String action : actions) {
+	                            pluginClassMap.put(action, clazz);
+	                            if (!TextUtils.isEmpty(permission)) {
+	                                permissionMap.put(action, permission);
+	                            } else {
+	                                actionsWithNoPermissions.addAll(Arrays.asList(actions));
+	                            }
+	                        }
+						}
+					}
+				} catch (ClassNotFoundException e) {
+				} catch (IllegalArgumentException e) {
+				}
+			}
+		}
+		try {
+			dexFile.close();
+		} catch (IOException e) {
+		}
+    }
+    
     public PluginManager() {
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
         permissionMap = new HashMap<String, String>();
         actionMap = new HashMap<String, String[]>();
-        actionsWithNoPermissions = new ArrayList<String>();
-        XmlResourceParser parser = BoosterApplication.getAppContext().getResources()
-                .getXml(R.xml.plugins);
-        try {
-            parser.next();
-            int eventType = parser.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG) {
-                    String tagName = parser.getName();
-                    if (tagName.equals("plugin")) {
-                        String clazzName = parser.getAttributeValue(null, "class");
-                        clazzName = "org.webappbooster.plugin." + clazzName;
-                        Class<? extends Plugin> clazz = (Class<? extends Plugin>) Class
-                                .forName(clazzName);
-                        String[] actions = parser.getAttributeValue(null, "actions").split("\\|");
-                        String permission = parser.getAttributeValue(null, "permission");
-                        actionMap.put(permission, actions);
-                        for (String action : actions) {
-                            pluginClassMap.put(action, clazz);
-                            if (permission != null) {
-                                permissionMap.put(action, permission);
-                            } else {
-                                actionsWithNoPermissions.addAll(Arrays.asList(actions));
-                            }
-                        }
-                    }
-                }
-                eventType = parser.next();
-            }
-        } catch (XmlPullParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        parser.close();
+        actionsWithNoPermissions = new ArrayList<String>();       
+        initAnnotationBasedMappings();
     }
 
     public void dispatchRequest(WebSocketInfo info, String message) {
@@ -109,7 +99,6 @@ public class PluginManager {
             int requestId = req.getRequestId();
             if (!info.isAuthenticated()
                     && !(action.equals("REQUEST_AUTHENTICATION") || action.equals("AUTHENTICATE"))) {
-                // Connection has not yet been authenticated.
                 sendError(connectionId, requestId, Response.ERR_PERMISSION_DENIED);
                 return;
             }
@@ -128,24 +117,14 @@ public class PluginManager {
             Method meth = Plugin.class.getDeclaredMethod("execute", args);
             meth.invoke(instance, req);
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (InvocationTargetException e) {
             try {
                 throw e.getCause();
             } catch (Throwable ex) {
-                // TODO Auto-generated catch block
-                ex.printStackTrace();
             }
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 
@@ -170,7 +149,6 @@ public class PluginManager {
         String key = clazz.getName() + "-" + connectionId;
         Plugin plugin = pluginInstanceMap.get(key);
         if (plugin == null) {
-            // No plugin for this connection created yet
             try {
                 plugin = clazz.newInstance();
             } catch (InstantiationException e) {

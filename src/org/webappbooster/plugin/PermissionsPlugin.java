@@ -25,12 +25,13 @@ import org.webappbooster.MainActivity;
 import org.webappbooster.PermissionsDialog;
 import org.webappbooster.Plugin;
 import org.webappbooster.PluginManager;
+import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 
 import android.content.DialogInterface;
 import android.util.Log;
-
+@PluginMappingAnnotation(actions="REQUEST_PERMISSIONS",permission="")
 public class PermissionsPlugin extends Plugin {
 
     private String   origin;
