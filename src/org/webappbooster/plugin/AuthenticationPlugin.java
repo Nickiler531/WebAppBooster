@@ -24,7 +24,9 @@ import org.webappbooster.WebSocketInfo;
 
 import android.content.Intent;
 import android.net.Uri;
-@PluginMappingAnnotation(actions="REQUEST_AUTHENTICATION|AUTHENTICATE",permission="")
+
+
+@PluginMappingAnnotation(actions = "REQUEST_AUTHENTICATION|AUTHENTICATE", permission = "")
 public class AuthenticationPlugin extends Plugin {
 
     private Intent intent;

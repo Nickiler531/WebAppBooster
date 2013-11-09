@@ -24,7 +24,8 @@ import org.webappbooster.Response;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-@PluginMappingAnnotation(actions="POWER_INFORMATION",permission="")
+
+@PluginMappingAnnotation(actions = "POWER_INFORMATION", permission = "")
 public class BatteryPlugin extends Plugin {
 
     @Override

@@ -23,7 +23,9 @@ import org.webappbooster.Response;
 
 import android.app.Activity;
 import android.content.Intent;
-@PluginMappingAnnotation(actions="DICTATE",permission="")
+
+
+@PluginMappingAnnotation(actions = "DICTATE", permission = "")
 public class SpeechPlugin extends Plugin {
 
     @Override

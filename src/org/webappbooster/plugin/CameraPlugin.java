@@ -31,7 +31,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-@PluginMappingAnnotation(actions="TAKE_PHOTO",permission="CAMERA")
+
+@PluginMappingAnnotation(actions = "TAKE_PHOTO", permission = "CAMERA")
 public class CameraPlugin extends Plugin {
 
     final private static String PATH = "/WebAppBooster/Camera/";

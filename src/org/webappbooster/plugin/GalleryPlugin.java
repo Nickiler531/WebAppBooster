@@ -48,7 +48,7 @@ import java.net.URI;
  * external (i.e., /sdcard/) memory. If also provides its own caching mechanism
  * for thumbnails to allow for arbitrary thumbnail resolutions.
  */
-@PluginMappingAnnotation(actions="CREATE_IMAGE_THUMBNAIL|LIST_IMAGES|SAVE_TO_GALLERY|PICK_IMAGE",permission="GALLERY")
+@PluginMappingAnnotation(actions = "CREATE_IMAGE_THUMBNAIL|LIST_IMAGES|SAVE_TO_GALLERY|PICK_IMAGE", permission = "GALLERY")
 public class GalleryPlugin extends Plugin {
 
     final private static String PATH = "/WebAppBooster/";

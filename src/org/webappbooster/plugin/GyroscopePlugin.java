@@ -27,7 +27,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-@PluginMappingAnnotation(permission="GYRO", actions="START_GYRO|STOP_GYRO")
+@PluginMappingAnnotation(permission = "GYRO", actions = "START_GYRO|STOP_GYRO")
 public class GyroscopePlugin extends Plugin implements SensorEventListener {
 
     private SensorManager sensorManager;

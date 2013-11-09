@@ -24,7 +24,9 @@ import org.webappbooster.Response;
 
 import android.app.Activity;
 import android.content.Intent;
-@PluginMappingAnnotation(actions="SHARE",permission="")
+
+
+@PluginMappingAnnotation(actions = "SHARE", permission = "")
 public class SharePlugin extends Plugin {
 
     @Override

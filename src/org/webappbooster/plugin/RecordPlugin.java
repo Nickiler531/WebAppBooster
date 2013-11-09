@@ -24,7 +24,9 @@ import org.webappbooster.Response;
 
 import android.app.Activity;
 import android.content.Intent;
-@PluginMappingAnnotation(actions="RECORD_MICROPHONE",permission="RECORD_AUDIO")
+
+
+@PluginMappingAnnotation(actions = "RECORD_MICROPHONE", permission = "RECORD_AUDIO")
 public class RecordPlugin extends Plugin {
 
     @Override

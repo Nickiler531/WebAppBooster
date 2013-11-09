@@ -32,7 +32,8 @@ import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Instances;
-@PluginMappingAnnotation(actions="LIST_APPOINTMENTS",permission="READ_CALENDAR")
+
+@PluginMappingAnnotation(actions = "LIST_APPOINTMENTS", permission = "READ_CALENDAR")
 public class CalendarPlugin extends Plugin {
 
     @Override

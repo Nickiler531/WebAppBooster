@@ -23,7 +23,9 @@ import org.webappbooster.Response;
 
 import android.app.Activity;
 import android.content.Intent;
-@PluginMappingAnnotation(actions="OAUTH_AUTHENTICATION",permission="")
+
+
+@PluginMappingAnnotation(actions = "OAUTH_AUTHENTICATION", permission = "")
 public class OAuthPlugin extends Plugin {
 
     @Override

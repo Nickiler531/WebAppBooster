@@ -32,8 +32,7 @@ import android.provider.MediaStore;
 /**
  * The Audio plugin provides access to songs stored on the device.
  */
-
-@PluginMappingAnnotation(permission="AUDIO", actions="LIST_SONGS")
+@PluginMappingAnnotation(permission = "AUDIO", actions = "LIST_SONGS")
 public class AudioPlugin extends Plugin {
 
     @Override

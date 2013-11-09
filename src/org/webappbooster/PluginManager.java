@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012-2013, webappbooster.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.webappbooster;
 
 import java.io.IOException;
@@ -32,55 +48,53 @@ public class PluginManager {
     static private Map<String, String[]>         actionMap;
     static private List<String>                  actionsWithNoPermissions;
 
-    private void initAnnotationBasedMappings()
-    {
-    	DexFile dexFile = null;
-		try {
-			dexFile = new DexFile(BoosterApplication.getAppContext().getApplicationInfo().sourceDir);
-		} catch (IOException e1) {
-		}
-    	Enumeration<String> enumeratedEntities = dexFile.entries();
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
-		while (enumeratedEntities.hasMoreElements()) {
-			String entry = enumeratedEntities.nextElement();
-			if (entry.startsWith("org.webappbooster.plugin")) {
-				try {
-					Class<?> targetClass = (Class<?>)classLoader.loadClass(entry);					
-					if (targetClass.isAnnotationPresent(PluginMappingAnnotation.class)) {
-						Class<? extends Plugin> clazz = ((Class<? extends Plugin>)targetClass);
-						PluginMappingAnnotation mappingAnnotation =
-								(PluginMappingAnnotation) clazz.getAnnotation(PluginMappingAnnotation.class);
-						if (mappingAnnotation != null) {							
-							String[] actions = mappingAnnotation.actions().split("\\|");
-	                        String permission = mappingAnnotation.permission();
-	                        actionMap.put(permission, actions);
-	                        for (String action : actions) {
-	                            pluginClassMap.put(action, clazz);
-	                            if (!TextUtils.isEmpty(permission)) {
-	                                permissionMap.put(action, permission);
-	                            } else {
-	                                actionsWithNoPermissions.addAll(Arrays.asList(actions));
-	                            }
-	                        }
-						}
-					}
-				} catch (ClassNotFoundException e) {
-				} catch (IllegalArgumentException e) {
-				}
-			}
-		}
-		try {
-			dexFile.close();
-		} catch (IOException e) {
-		}
+    private void initAnnotationBasedMappings() {
+        DexFile dexFile = null;
+        try {
+            dexFile = new DexFile(BoosterApplication.getAppContext().getApplicationInfo().sourceDir);
+        } catch (IOException e1) {
+        }
+        Enumeration<String> enumeratedEntities = dexFile.entries();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        while (enumeratedEntities.hasMoreElements()) {
+            String entry = enumeratedEntities.nextElement();
+            if (entry.startsWith("org.webappbooster.plugin")) {
+                try {
+                    Class<?> targetClass = (Class<?>) classLoader.loadClass(entry);
+                    if (targetClass.isAnnotationPresent(PluginMappingAnnotation.class)) {
+                        Class<? extends Plugin> clazz = ((Class<? extends Plugin>) targetClass);
+                        PluginMappingAnnotation mappingAnnotation = (PluginMappingAnnotation) clazz
+                                .getAnnotation(PluginMappingAnnotation.class);
+                        if (mappingAnnotation != null) {
+                            String[] actions = mappingAnnotation.actions().split("\\|");
+                            String permission = mappingAnnotation.permission();
+                            actionMap.put(permission, actions);
+                            for (String action : actions) {
+                                pluginClassMap.put(action, clazz);
+                                if (!TextUtils.isEmpty(permission)) {
+                                    permissionMap.put(action, permission);
+                                } else {
+                                    actionsWithNoPermissions.addAll(Arrays.asList(actions));
+                                }
+                            }
+                        }
+                    }
+                } catch (ClassNotFoundException e) {
+                } catch (IllegalArgumentException e) {
+                }
+            }
+        }
+        try {
+            dexFile.close();
+        } catch (IOException e) {
+        }
     }
-    
+
     public PluginManager() {
         pluginClassMap = new HashMap<String, Class<? extends Plugin>>();
         permissionMap = new HashMap<String, String>();
         actionMap = new HashMap<String, String[]>();
-        actionsWithNoPermissions = new ArrayList<String>();       
+        actionsWithNoPermissions = new ArrayList<String>();
         initAnnotationBasedMappings();
     }
 

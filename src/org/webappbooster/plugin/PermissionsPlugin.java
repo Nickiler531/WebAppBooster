@@ -31,7 +31,8 @@ import org.webappbooster.Response;
 
 import android.content.DialogInterface;
 import android.util.Log;
-@PluginMappingAnnotation(actions="REQUEST_PERMISSIONS",permission="")
+
+@PluginMappingAnnotation(actions = "REQUEST_PERMISSIONS", permission = "")
 public class PermissionsPlugin extends Plugin {
 
     private String   origin;

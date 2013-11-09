@@ -27,7 +27,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-@PluginMappingAnnotation(permission="ACCELEROMETER", actions="START_ACCELEROMETER|STOP_ACCELEROMETER")
+@PluginMappingAnnotation(permission = "ACCELEROMETER", actions = "START_ACCELEROMETER|STOP_ACCELEROMETER")
 public class AccelerometerPlugin extends Plugin implements SensorEventListener {
 
     private final static float GRAVITY = 9.8067f;

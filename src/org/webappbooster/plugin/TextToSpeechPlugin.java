@@ -33,7 +33,9 @@ import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
-@PluginMappingAnnotation(actions="SPEAK_TEXT",permission="")
+
+
+@PluginMappingAnnotation(actions = "SPEAK_TEXT", permission = "")
 public class TextToSpeechPlugin extends Plugin implements OnInitListener,
         OnUtteranceCompletedListener, OnClickListener {
 

@@ -39,7 +39,9 @@ import org.webappbooster.Plugin;
 import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
-@PluginMappingAnnotation(actions="PROXY",permission="PROXY")
+
+
+@PluginMappingAnnotation(actions = "PROXY", permission = "PROXY")
 public class ProxyPlugin extends Plugin {
 
     @Override

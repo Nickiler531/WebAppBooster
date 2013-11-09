@@ -34,7 +34,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
-@PluginMappingAnnotation(actions="PICK_CONTACT|LIST_CONTACTS",permission="READ_CONTACTS")
+
+@PluginMappingAnnotation(actions = "PICK_CONTACT|LIST_CONTACTS", permission = "READ_CONTACTS")
 public class ContactPlugin extends Plugin {
 
     @Override
