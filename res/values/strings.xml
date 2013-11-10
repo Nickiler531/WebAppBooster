@@ -52,4 +52,5 @@
     <string name="PERMISSION_VIBRATE">Vibrate</string>
     <string name="PERMISSION_RECORD_AUDIO">Record audio</string>
     <string name="PERMISSION_PROXY">Do requests to other web pages</string>
+    <string name="PERMISSION_BLUETOOTH">Use Bluetooth</string>
 </resources>

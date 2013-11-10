@@ -41,6 +41,7 @@ var WebAppBooster = {
     PERMISSION_VIBRATE: "VIBRATE",
     PERMISSION_RECORD_AUDIO: "RECORD_AUDIO",
     PERMISSION_PROXY: "PROXY",
+    PERMISSION_BLUETOOTH: "BLUETOOTH",
     
     _nextRequestId: 0,
     _requestIdMap: {},
@@ -252,5 +253,10 @@ var WebAppBooster = {
     proxy: function(request, cb) {
         request.action = "PROXY";
         this._sendRequest(request, cb, 0);
+    },
+
+    bluetoothDevices: function(cb) {
+        var req = {action: "BLUETOOTH_DEVICES"};
+    	this._sendRequest(req, cb, 0);
     }
 };

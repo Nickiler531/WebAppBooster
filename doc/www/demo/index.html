@@ -81,6 +81,9 @@
                         <option value="action_proxy">
                             Proxy request
                         </option>
+                        <option value="action_bt_devices">
+                            List Bluetooth devices
+                        </option>
                     </select>
                 </div>
                 <a id="button_do_action" data-role="button" href="#" onclick="do_action(); return false;">
@@ -175,7 +178,8 @@ function action_request_permissions() {
              WebAppBooster.PERMISSION_CAMERA,
              WebAppBooster.PERMISSION_VIBRATE,
              WebAppBooster.PERMISSION_RECORD_AUDIO,
-             WebAppBooster.PERMISSION_PROXY];
+             WebAppBooster.PERMISSION_PROXY,
+             WebAppBooster.PERMISSION_BLUETOOTH];
     WebAppBooster.requestPermissions(p, function(resp) {
         if (resp.status == WebAppBooster.OK) {
             log("Permissions granted");
@@ -324,6 +328,17 @@ function action_proxy() {
     });
 }
 
+function action_bt_devices() {
+	WebAppBooster.bluetoothDevices(function(resp) {
+		log("Bluetooth enabled: " + resp.bluetoothOn);
+		if (resp.devices) {
+			for (var i = 0; i < resp.devices.length; i++) {
+				var d = resp.devices[i];
+				log("  " + (i + 1) + ": " + d.displayName + " (" + d.hostName + ")");
+			}
+		}
+	});
+}
 function do_action() {
     eval($('#actions').val() + '();');
 }
