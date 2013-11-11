@@ -25,10 +25,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -131,6 +133,17 @@ public class MainActivity extends Activity {
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.help, null, false);
+        builder.setView(view);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+
+        });
+
+        final AlertDialog dialog = builder.create();
         TextView t = (TextView) view.findViewById(R.id.help_text);
         if (BoosterService.getService() == null) {
             t.setOnClickListener(new OnClickListener() {
@@ -142,19 +155,17 @@ public class MainActivity extends Activity {
                 }
             });
         } else {
-            t.setMovementMethod(LinkMovementMethod.getInstance());
+            t.setMovementMethod(new LinkMovementMethod() {
+                @Override
+                public
+                boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+                    if (MotionEvent.ACTION_UP == event.getActionMasked()) {
+                        dialog.dismiss();
+                    }
+                    return super.onTouchEvent(widget, buffer, event);
+                }
+            });
         }
-        builder.setView(view);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-
-        });
-
-        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
