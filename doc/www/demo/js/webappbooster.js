@@ -257,6 +257,27 @@ var WebAppBooster = {
 
     bluetoothDevices: function(cb) {
         var req = {action: "BLUETOOTH_DEVICES"};
-    	this._sendRequest(req, cb, 0);
+        this._sendRequest(req, cb, 0);
+    },
+
+    bluetoothConnect: function(hostName, cb) {
+        var req = {action: "BLUETOOTH_CONNECT", hostName: hostName};
+        this._sendRequest(req, cb, 0);
+    },
+
+    bluetoothDisconnect: function(hostName, cb) {
+        var req = {action: "BLUETOOTH_DISCONNECT", hostName: hostName};
+        this._sendRequest(req, cb, 0);
+    },
+
+    bluetoothWrite: function(hostName, data, cb) {
+        var req = {action: "BLUETOOTH_WRITE", hostName: hostName, data:data};
+        this._sendRequest(req, cb, 0);
+    },
+
+    bluetoothRead: function(hostName, len, cb) {
+        var req = {action: "BLUETOOTH_READ", hostName: hostName, length:len};
+        this._sendRequest(req, cb, 0);
     }
+
 };
