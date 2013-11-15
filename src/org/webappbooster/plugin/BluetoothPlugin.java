@@ -37,6 +37,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Base64;
+import android.util.Log;
 
 @PluginMappingAnnotation(actions = "BLUETOOTH_DEVICES|BLUETOOTH_CONNECT|BLUETOOTH_READ|BLUETOOTH_WRITE|BLUETOOTH_DISCONNECT", permission = "BLUETOOTH")
 public class BluetoothPlugin extends Plugin {
@@ -56,14 +57,18 @@ public class BluetoothPlugin extends Plugin {
             isConnected = false;
             try {
                 mmSocket = device.createRfcommSocketToServiceRecord(GENERIC_UUID);
-                mmSocket.connect();
             } catch (IOException e) {
                 return;
             }
             try {
+                mmSocket.connect();
                 mmInStream = mmSocket.getInputStream();
                 mmOutStream = mmSocket.getOutputStream();
             } catch (IOException e) {
+                try {
+                    mmSocket.close();
+                } catch (IOException e1) {
+                }
                 return;
             }
             readBuffer = new ArrayList<Byte>();
@@ -194,9 +199,10 @@ public class BluetoothPlugin extends Plugin {
     private BluetoothThread getBluetoothThread(Request request) {
         String hostName = request.getString("hostName");
         BluetoothThread thread = connections.get(hostName);
-        if (thread == null) {
+        if (thread == null || !thread.isConnected()) {
             // We are not connected
-            Response resp = request.createResponse(Response.ERR_CANCELLED);
+            Response resp = request.createResponse(Response.OK);
+            resp.add("connected", false);
             resp.send();
             return null;
         }
@@ -204,15 +210,20 @@ public class BluetoothPlugin extends Plugin {
     }
 
     private void executeDisconnect(Request request) {
-        BluetoothThread thread = getBluetoothThread(request);
-        if (thread == null) {
-            return;
-        }
         Response resp = request.createResponse(Response.OK);
-        resp.add("connected", thread.isConnected());
-        thread.cancel();
         String hostName = request.getString("hostName");
-        connections.remove(hostName);
+        BluetoothThread thread = connections.get(hostName);
+        boolean wasConnected = false;
+        if (thread != null) {
+            wasConnected = thread.isConnected();
+            try {
+                thread.cancel();
+                thread.join();
+            } catch (InterruptedException e) {
+            }
+            connections.remove(hostName);
+        }
+        resp.add("connected", wasConnected);
         resp.send();
     }
 
@@ -246,15 +257,22 @@ public class BluetoothPlugin extends Plugin {
 
     private void executeConnect(Request request) {
         String hostName = request.getString("hostName");
-        if (connections.containsKey(hostName)) {
-            // We are already connected
-            Response resp = request.createResponse(Response.ERR_CANCELLED);
-            resp.send();
-            return;
+        BluetoothThread thread = connections.get(hostName);
+        if (thread != null) {
+            // We are already connected. First disconnect
+            try {
+                thread.cancel();
+                thread.join();
+                Log.d("WAB", "Before sleep");
+                Thread.sleep(4000);
+                Log.d("WAB", "After sleep");
+            } catch (InterruptedException e) {
+            }
+            connections.remove(hostName);
+            thread = null;
         }
 
         // Find the paired device
-        BluetoothThread thread = null;
         Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
         for (BluetoothDevice device : pairedDevices) {
             if (device.getAddress().equals(hostName)) {
