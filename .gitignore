@@ -1,6 +1,9 @@
 /lib/bin
 /lib/gen
+/main/src
 /main/bin
 /main/gen
+/main/res
+/main/assets
 /demo/bin
 /demo/gen
