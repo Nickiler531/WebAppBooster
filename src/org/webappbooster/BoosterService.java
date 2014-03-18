@@ -20,11 +20,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
-
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
-
+import org.webappbooster.lib.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

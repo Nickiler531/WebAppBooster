@@ -40,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.webappbooster.lib.R;
 
 public class MainActivity extends Activity {
 
@@ -102,17 +103,17 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.menu_settings:
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_settings) {
             showSettings();
             return true;
-        case R.id.menu_help:
+        } else if (itemId == R.id.menu_help) {
             showHelp();
             return true;
-        case R.id.menu_about:
+        } else if (itemId == R.id.menu_about) {
             showAbout();
             return true;
-        default:
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }

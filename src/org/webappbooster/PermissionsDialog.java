@@ -24,6 +24,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import org.webappbooster.lib.R;
 
 public class PermissionsDialog implements DialogInterface.OnClickListener {
 

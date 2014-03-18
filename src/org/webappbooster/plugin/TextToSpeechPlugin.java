@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import org.webappbooster.Plugin;
 import org.webappbooster.PluginMappingAnnotation;
-import org.webappbooster.R;
+import org.webappbooster.lib.R;
 import org.webappbooster.Request;
 import org.webappbooster.Response;
 

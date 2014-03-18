@@ -18,6 +18,7 @@ package org.webappbooster;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import org.webappbooster.lib.R;
 
 public class SettingsActivity extends PreferenceActivity {
 
