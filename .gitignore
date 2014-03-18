@@ -1,2 +1,6 @@
 /lib/bin
 /lib/gen
+/main/bin
+/main/gen
+/demo/bin
+/demo/gen
