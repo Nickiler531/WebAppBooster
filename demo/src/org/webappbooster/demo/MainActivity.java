@@ -25,7 +25,7 @@ import android.os.Bundle;
 
 public class MainActivity extends Activity {
 
-    final static String DEMO_URL = "http://webappbooster.org/demo/";
+    final static String DEMO_URL = "http://webappbooster.org/mini-demo/";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,5 +35,12 @@ public class MainActivity extends Activity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(DEMO_URL));
         startActivity(i);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Intent intent = new Intent(this, BoosterService.class);
+        this.stopService(intent);
     }
 }
