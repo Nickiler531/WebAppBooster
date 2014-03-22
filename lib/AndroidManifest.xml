@@ -26,10 +26,11 @@
         android:name="org.webappbooster.BoosterApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name="org.webappbooster.MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,27 +40,32 @@
         
         <activity
             android:name="org.webappbooster.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:exported="false">
         </activity>
         
         <activity
             android:name="org.webappbooster.ProxyActivity"
             android:theme="@android:style/Theme.NoDisplay"
             android:excludeFromRecents="true"
-            android:taskAffinity="com.android.browser">
+            android:taskAffinity="com.android.browser"
+            android:exported="false">
 			<intent-filter>
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
         </activity>
         
         <activity
-            android:name="org.webappbooster.plugin.OAuthActivity"/>
+            android:name="org.webappbooster.plugin.OAuthActivity"
+            android:exported="false"/>
 
         <activity
-            android:name="org.webappbooster.plugin.DictActivity"/>
+            android:name="org.webappbooster.plugin.DictActivity"
+            android:exported="false"/>
 
         <activity
-            android:name="org.webappbooster.plugin.RecordActivity"/>
+            android:name="org.webappbooster.plugin.RecordActivity"
+            android:exported="false"/>
 
         <service android:name="org.webappbooster.BoosterService"
             android:exported="false">

@@ -29,17 +29,13 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="org.webappbooster.demo.MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="org.webappbooster.SettingsActivity"
-            android:label="@string/title_activity_settings" >
         </activity>
         
         <activity
@@ -52,24 +48,9 @@
             </intent-filter>
         </activity>
         
-        <activity
-            android:name="org.webappbooster.plugin.OAuthActivity"/>
-
-        <activity
-            android:name="org.webappbooster.plugin.DictActivity"/>
-
-        <activity
-            android:name="org.webappbooster.plugin.RecordActivity"/>
-
         <service android:name="org.webappbooster.BoosterService"
             android:exported="false">
         </service>
-
-        <receiver android:name="org.webappbooster.BoosterBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />  
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
