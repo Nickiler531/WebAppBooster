@@ -32,17 +32,14 @@ import android.util.Log;
 
 public class BoosterWebSocket extends WebSocketServer {
 
-    private BoosterService                service;
-
     private Map<WebSocket, WebSocketInfo> infoMap          = new HashMap<WebSocket, WebSocketInfo>();
     private List<String>                  originList       = new ArrayList<String>();
     private Map<Integer, WebSocket>       websocketMap     = new HashMap<Integer, WebSocket>();
 
     static private int                    nextConnectionId = 0;
 
-    public BoosterWebSocket(BoosterService service) throws UnknownHostException {
-        super(new InetSocketAddress(Config.PORT_WEBSOCKET));
-        this.service = service;
+    public BoosterWebSocket(int port) throws UnknownHostException {
+        super(new InetSocketAddress(port));
     }
 
     @Override
@@ -65,7 +62,7 @@ public class BoosterWebSocket extends WebSocketServer {
         infoMap.put(conn, connection);
         websocketMap.put(id, conn);
         originList.add(origin);
-        service.updateNotification();
+        BoosterService.getService().updateNotification();
     }
 
     @Override
@@ -79,7 +76,7 @@ public class BoosterWebSocket extends WebSocketServer {
             infoMap.remove(conn);
             websocketMap.remove(id);
             originList.remove(origin);
-            service.updateNotification();
+            BoosterService.getService().updateNotification();
         }
     }
 
@@ -90,7 +87,7 @@ public class BoosterWebSocket extends WebSocketServer {
             Log.d("WAB", "BoosterWebSocket.onMessage(): info == null");
             return;
         }
-        service.getPluginManager().dispatchRequest(info, message);
+        BoosterService.getService().getPluginManager().dispatchRequest(info, message);
     }
 
     @Override

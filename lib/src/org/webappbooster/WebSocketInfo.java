@@ -29,6 +29,7 @@ import java.util.Map;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
 
+import android.app.Service;
 import android.content.Context;
 
 public class WebSocketInfo {
@@ -50,9 +51,19 @@ public class WebSocketInfo {
         this.webSocket = webSocket;
         this.connectionId = connectionId;
         this.origin = origin;
-        if (!tokenMap.containsKey(origin)) {
-            tokenMap.put(origin, Math.random());
-            writeTokens();
+        double token = BoosterService.getService().getToken();
+        if (token == 0) {
+            token = Math.random();
+            if (!tokenMap.containsKey(origin)) {
+                tokenMap.put(origin, token);
+                writeTokens();
+            }
+        } else {
+            /*
+             * Update token if packaged app provided it. Also do not persist
+             * token.
+             */
+            tokenMap.put(origin, token);
         }
         this.isAuthenticated = false;
     }
@@ -60,7 +71,8 @@ public class WebSocketInfo {
     static private void readTokens() {
         tokenMap = new HashMap<String, Double>();
         try {
-            FileInputStream is = BoosterApplication.getAppContext().openFileInput(FILE_NAME);
+            Service service = BoosterService.getService();
+            FileInputStream is = service.openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(is);
             tokenMap = (Map<String, Double>) ois.readObject();
             ois.close();
@@ -74,8 +86,8 @@ public class WebSocketInfo {
 
     static private void writeTokens() {
         try {
-            FileOutputStream os = BoosterApplication.getAppContext().openFileOutput(FILE_NAME,
-                    Context.MODE_PRIVATE);
+            BoosterService service = BoosterService.getService();
+            FileOutputStream os = service.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
             oos.writeObject(tokenMap);
             oos.close();

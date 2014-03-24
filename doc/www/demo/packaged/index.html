@@ -1,0 +1,96 @@
+<html>
+
+<head>
+<title>WebAppBooster - Packaging demo</title>
+
+<script>
+var ws;
+
+function error() {
+  alert("URL does not contain token and port");
+}
+
+function onmessage(e) {
+  var resp = JSON.parse(e.data);
+  if (resp.id == 0) {
+    // Authentication response
+    return;
+  }
+  alert(JSON.stringify(resp));
+}
+
+function init() {
+  var token;
+  var port;
+
+  var h = window.location.href;
+  var params = h.match(/#([^&]*)/);
+
+  if (!params) {
+    error();
+    return;
+  }
+
+  var p = params[1];
+  var i = p.indexOf("|");
+  var args = [];
+  if (i == -1) {
+    args.push(p);
+  } else {
+    args.push(p.substring(0, i));
+    args.push(p.substring(i + 1));
+  }
+  for (i = 0; i < args.length; i++) {
+    var a = args[i];
+    var key = "webappbooster_token=";
+    if (a.substring(0, key.length) == key) {
+      token = a.substring(key.length);
+    }
+    key = "port=";
+    if (a.substring(0, key.length) == key) {
+      port = a.substring(key.length);
+    }
+  }
+
+  if (!token || !port) {
+    error();
+    return;
+  }
+
+  h = h.replace(/(#[^&]*)/, "");
+  //window.location.replace(h);
+
+  ws = new WebSocket("ws://localhost:" + port);
+  ws.onopen = function () {
+    var req = {
+      id: 0,
+      action: "AUTHENTICATE",
+      token: token
+    };
+    ws.send(JSON.stringify(req));
+  };
+  ws.onmessage = onmessage;
+}
+
+function pick() {
+  if (!ws) {
+    return;
+  }
+  var req = {
+    id: 1,
+    action: "PICK_CONTACT"
+  };
+  ws.send(JSON.stringify(req));
+}
+</script>
+
+</head>
+
+<body onload="init()">
+
+<h1>WebAppBooster - Packaging demo</h1>
+
+<button onclick="pick()">Pick contact</button>
+
+</body>
+</html>

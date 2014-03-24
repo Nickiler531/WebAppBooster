@@ -69,8 +69,9 @@ public class HTTPServer implements Container {
                 FileUtils.copyFile(new File(uri.substring("file://".length())), body);
             }
             if (uri.startsWith("content://")) {
-                IOUtils.copy(BoosterApplication.getAppContext().getContentResolver()
-                        .openInputStream(Uri.parse(uri)), body);
+                IOUtils.copy(
+                        BoosterService.getService().getContentResolver()
+                                .openInputStream(Uri.parse(uri)), body);
             }
             body.close();
         } catch (IOException e) {

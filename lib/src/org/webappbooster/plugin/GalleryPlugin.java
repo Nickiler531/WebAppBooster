@@ -17,6 +17,7 @@
 package org.webappbooster.plugin;
 
 import org.webappbooster.BoosterApplication;
+import org.webappbooster.BoosterService;
 import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
 import org.webappbooster.PluginMappingAnnotation;
@@ -127,7 +128,7 @@ public class GalleryPlugin extends Plugin {
                     FileOutputStream out = new FileOutputStream(imageFile);
                     out.write(bytes);
                     out.close();
-                    new MediaScanner(BoosterApplication.getAppContext(), imageFile);
+                    new MediaScanner(BoosterService.getService(), imageFile);
                     Response response = request.createResponse(Response.OK);
                     response.add("imageFile", imageFile.getName());
                     response.send();
@@ -201,7 +202,7 @@ public class GalleryPlugin extends Plugin {
      */
     private synchronized void generateThumbnail(String uri, int width, int height,
             FileOutputStream out) throws FileNotFoundException, IOException {
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(BoosterApplication.getAppContext()
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(BoosterService.getService()
                 .getContentResolver(), Uri.parse(uri));
         Bitmap bmThumbnail = ThumbnailUtils.extractThumbnail(bitmap, width, height);
 
@@ -235,7 +236,7 @@ public class GalleryPlugin extends Plugin {
     private void scanForImages(Request request, Uri uri) {
         String[] projection = { MediaStore.Images.Media._ID,
                 MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME };
-        Cursor imageCursor = BoosterApplication.getAppContext().getContentResolver()
+        Cursor imageCursor = BoosterService.getService().getContentResolver()
                 .query(uri, projection, null, null, null);
         for (imageCursor.moveToFirst(); !imageCursor.isAfterLast(); imageCursor.moveToNext()) {
             int id = imageCursor.getInt(imageCursor
@@ -266,8 +267,8 @@ public class GalleryPlugin extends Plugin {
             response = request.createResponse(Response.ERR_CANCELLED);
         } else {
             Uri _uri = data.getData();
-            Cursor cursor = BoosterApplication
-                    .getAppContext()
+            Cursor cursor = BoosterService
+                    .getService()
                     .getContentResolver()
                     .query(_uri,
                             new String[] { android.provider.MediaStore.Images.ImageColumns.DATA },

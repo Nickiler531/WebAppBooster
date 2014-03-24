@@ -19,27 +19,55 @@ package org.webappbooster.demo;
 import org.webappbooster.BoosterService;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ServiceConnection {
 
-    final static String DEMO_URL = "http://webappbooster.org/mini-demo/";
+    final static String DEMO_URL = "http://webappbooster.org/demo/packaged";
+
+    private double      token;
+
+    private String constructURL(int port) {
+        String url = DEMO_URL;
+        url += "#webappbooster_token=" + token;
+        url += "|port=" + port;
+        return url;
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName className, IBinder localBinder) {
+        BoosterService.LocalBinder binder = (BoosterService.LocalBinder) localBinder;
+        BoosterService service = binder.getService();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(constructURL(service.getWebSocketPort())));
+        startActivity(i);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName className) {
+        // Do nothing
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = new Intent(this, BoosterService.class);
-        this.startService(intent);
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(DEMO_URL));
-        startActivity(i);
+        token = Math.random();
+        intent.putExtra(BoosterService.PARAM_TOKEN, token);
+        startService(intent);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unbindService(this);
         Intent intent = new Intent(this, BoosterService.class);
         this.stopService(intent);
     }

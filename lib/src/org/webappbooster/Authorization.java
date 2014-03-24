@@ -46,7 +46,7 @@ public class Authorization {
     static private void readPermissions() {
         permissionsAlways = new HashMap<String, List<String>>();
         try {
-            FileInputStream is = BoosterApplication.getAppContext().openFileInput(FILE_NAME);
+            FileInputStream is = BoosterService.getService().openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(is);
             permissionsAlways = (Map<String, List<String>>) ois.readObject();
             ois.close();
@@ -60,7 +60,7 @@ public class Authorization {
 
     static private void writePermissions() {
         try {
-            FileOutputStream os = BoosterApplication.getAppContext().openFileOutput(FILE_NAME,
+            FileOutputStream os = BoosterService.getService().openFileOutput(FILE_NAME,
                     Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
             oos.writeObject(permissionsAlways);

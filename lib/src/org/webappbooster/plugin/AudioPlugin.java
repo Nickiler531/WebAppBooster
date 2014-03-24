@@ -19,6 +19,7 @@ package org.webappbooster.plugin;
 import java.util.HashMap;
 
 import org.webappbooster.BoosterApplication;
+import org.webappbooster.BoosterService;
 import org.webappbooster.HTTPServer;
 import org.webappbooster.Plugin;
 import org.webappbooster.PluginMappingAnnotation;
@@ -84,7 +85,7 @@ public class AudioPlugin extends Plugin {
                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.TRACK };
-        Cursor cursor = BoosterApplication.getAppContext().getContentResolver()
+        Cursor cursor = BoosterService.getService().getContentResolver()
                 .query(uri, projection, null, null, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
@@ -120,8 +121,8 @@ public class AudioPlugin extends Plugin {
         Cursor cursor = null;
         if (genreIdMap == null) {
             genreIdMap = new HashMap<String, String>();
-            cursor = BoosterApplication
-                    .getAppContext()
+            cursor = BoosterService
+                    .getService()
                     .getContentResolver()
                     .query(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
                             new String[] { MediaStore.Audio.Genres._ID,
@@ -136,8 +137,8 @@ public class AudioPlugin extends Plugin {
         }
         String genre = "";
         for (String genreId : genreIdMap.keySet()) {
-            cursor = BoosterApplication
-                    .getAppContext()
+            cursor = BoosterService
+                    .getService()
                     .getContentResolver()
                     .query(makeGenreUri(genreId), new String[] { MediaStore.Audio.Media.DATA },
                             MediaStore.Audio.Media.DATA + " LIKE \"" + path + "\"", null, null);

@@ -29,8 +29,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="org.webappbooster.MainActivity"
-            android:label="@string/title_activity_main"
-            android:exported="false" >
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

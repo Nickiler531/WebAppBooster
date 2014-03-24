@@ -16,6 +16,7 @@
 
 package org.webappbooster.plugin;
 
+import org.webappbooster.BoosterService;
 import org.webappbooster.Plugin;
 import org.webappbooster.PluginMappingAnnotation;
 import org.webappbooster.Request;
@@ -24,7 +25,6 @@ import org.webappbooster.WebSocketInfo;
 
 import android.content.Intent;
 import android.net.Uri;
-
 
 @PluginMappingAnnotation(actions = "REQUEST_AUTHENTICATION|AUTHENTICATE", permission = "")
 public class AuthenticationPlugin extends Plugin {
@@ -36,6 +36,14 @@ public class AuthenticationPlugin extends Plugin {
         WebSocketInfo info = this.getConnectionInfo();
         String action = request.getAction();
         if (action.equals("REQUEST_AUTHENTICATION")) {
+            if (BoosterService.getService().getToken() != 0) {
+                /*
+                 * Application defined token. This means that this is a packaged
+                 * app. There is no need for authentication request. In fact,
+                 * this most likely means a malicious app.
+                 */
+                return;
+            }
             String path = request.getString("path");
             path += "#webappbooster_token=" + info.getToken();
             String url = info.getOrigin() + "/" + path;

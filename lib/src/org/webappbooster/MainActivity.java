@@ -209,6 +209,9 @@ public class MainActivity extends Activity {
 
     private void startBoosterService() {
         Intent intent = new Intent(this, BoosterService.class);
+        intent.putExtra(BoosterService.PARAM_WEBSOCKET_PORT, Config.PORT_WEBSOCKET);
+        intent.putExtra(BoosterService.PARAM_HTTP_PORT, Config.PORT_HTTP);
+        intent.putExtra(BoosterService.PARAM_SHOW_NOTIFICATION, true);
         this.startService(intent);
     }
 

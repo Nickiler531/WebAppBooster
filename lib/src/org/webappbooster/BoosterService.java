@@ -36,31 +36,42 @@ import android.util.Log;
 
 public class BoosterService extends Service {
 
-    private IBinder               binder           = new LocalBinder();
-    private BoosterWebSocket      webSocket        = null;
-    private Connection            httpSocket       = null;
-    private Thread                httpServerThread = null;
+    final static public String    PARAM_WEBSOCKET_PORT    = "WEBSOCKET_PORT";
+    final static public String    PARAM_HTTP_PORT         = "HTTP_PORT";
+    final static public String    PARAM_SHOW_NOTIFICATION = "SHOW_NOTIFICATION";
+    final static public String    PARAM_TOKEN             = "TOKEN";
 
-    static private BoosterService service          = null;
+    private IBinder               binder                  = new LocalBinder();
+
+    private BoosterWebSocket      webSocket               = null;
+    private Connection            httpSocket              = null;
+    private Thread                httpServerThread        = null;
+
+    static private BoosterService service                 = null;
+
+    private int                   paramPortWS;
+    private int                   paramPortHttp;
+    private boolean               paramShowNotification;
+    private double                paramToken;
 
     private PluginManager         pluginManager;
     private Notification          notification;
     private PendingIntent         contentIntent;
 
-    class LocalBinder extends Binder {
-        BoosterService getService() {
+    public class LocalBinder extends Binder {
+        public BoosterService getService() {
             return BoosterService.this;
         }
     }
 
     @Override
     public void onCreate() {
+        paramShowNotification = true;
+        paramToken = 0;
+
         service = this;
         pluginManager = new PluginManager();
         Log.d("WAB", "Starting WebAppBooster service");
-        startWebSocketServer();
-        startHttpServer();
-        showNotificationIcon();
     }
 
     @Override
@@ -70,6 +81,17 @@ public class BoosterService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (webSocket != null) {
+            Log.d("WAB", "Warning: WAB server already started");
+            return START_STICKY;
+        }
+        paramPortWS = intent.getIntExtra(PARAM_WEBSOCKET_PORT, 0);
+        paramPortHttp = intent.getIntExtra(PARAM_HTTP_PORT, 0);
+        paramToken = intent.getDoubleExtra(PARAM_TOKEN, 0);
+        paramShowNotification = intent.getBooleanExtra(PARAM_SHOW_NOTIFICATION, false);
+        startWebSocketServer();
+        startHttpServer();
+        showNotificationIcon();
         return START_STICKY;
     }
 
@@ -84,6 +106,9 @@ public class BoosterService extends Service {
 
     @SuppressWarnings("deprecation")
     private void showNotificationIcon() {
+        if (!paramShowNotification) {
+            return;
+        }
         notification = new Notification(R.drawable.ic_stat_wab, getString(R.string.app_name),
                 System.currentTimeMillis());
         notification.flags |= Notification.FLAG_NO_CLEAR;
@@ -97,6 +122,9 @@ public class BoosterService extends Service {
     }
 
     private void hideNotificationIcon() {
+        if (!paramShowNotification) {
+            return;
+        }
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(1);
     }
@@ -105,12 +133,11 @@ public class BoosterService extends Service {
         // WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
-                webSocket = new BoosterWebSocket(this);
+                webSocket = new BoosterWebSocket(paramPortWS);
                 webSocket.start();
             }
         } catch (UnknownHostException e) {
             webSocket = null;
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -137,7 +164,7 @@ public class BoosterService extends Service {
                 try {
                     Container container = new HTTPServer();
                     httpSocket = new SocketConnection(container);
-                    SocketAddress address = new InetSocketAddress(Config.PORT_HTTP);
+                    InetSocketAddress address = new InetSocketAddress(paramPortHttp);
                     httpSocket.connect(address);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -169,6 +196,14 @@ public class BoosterService extends Service {
         webSocket.sendResult(connectionId, result);
     }
 
+    public int getWebSocketPort() {
+        return webSocket.getPort();
+    }
+
+    public double getToken() {
+        return paramToken;
+    }
+
     public String[] getOpenConnections() {
         return webSocket.getOpenConnections();
     }
@@ -178,6 +213,9 @@ public class BoosterService extends Service {
     }
 
     public void updateNotification() {
+        if (!paramShowNotification) {
+            return;
+        }
         notification.setLatestEventInfo(getApplicationContext(), getString(R.string.app_name),
                 getString(R.string.num_active_connections, getOpenConnections().length),
                 contentIntent);

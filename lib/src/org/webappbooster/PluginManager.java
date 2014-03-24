@@ -31,6 +31,7 @@ import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -51,7 +52,7 @@ public class PluginManager {
     private void initAnnotationBasedMappings() {
         DexFile dexFile = null;
         try {
-            dexFile = new DexFile(BoosterApplication.getAppContext().getApplicationInfo().sourceDir);
+            dexFile = new DexFile(BoosterService.getService().getApplicationInfo().sourceDir);
         } catch (IOException e1) {
         }
         Enumeration<String> enumeratedEntities = dexFile.entries();
@@ -150,6 +151,12 @@ public class PluginManager {
     }
 
     private boolean hasPermission(int connectionId, String origin, String action) {
+        if (BoosterService.getService().getToken() != 0) {
+            /*
+             * This is a packaged app. Always allow.
+             */
+            return true;
+        }
         String permission = permissionMap.get(action);
         if (permission == null) {
             return true;
@@ -173,7 +180,7 @@ public class PluginManager {
                 return null;
             }
             plugin.setConnectionInfo(info);
-            plugin.setContext(BoosterApplication.getAppContext());
+            plugin.setContext(BoosterService.getService());
             plugin.onCreate(origin);
             pluginInstanceMap.put(key, plugin);
         }
@@ -182,14 +189,14 @@ public class PluginManager {
 
     static public void callActivityViaProxy(Request request, Intent intent) {
         int id = nextRequestId++;
-        Context context = BoosterApplication.getAppContext();
         requestMap.put(id, request);
-        Intent i = new Intent(context, ProxyActivity.class);
+        Service service = BoosterService.getService();
+        Intent i = new Intent(service, ProxyActivity.class);
         i.putExtra("ACTION", "CALL_ACTIVITY");
         i.putExtra("INTENT", intent);
         i.putExtra("ID", id);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+        service.startActivity(i);
     }
 
     static public void resultFromActivity(int requestCode, int resultCode, Intent data) {
@@ -201,14 +208,14 @@ public class PluginManager {
 
     static public void runViaProxy(Request request) {
         int id = nextRequestId++;
-        Context context = BoosterApplication.getAppContext();
         requestMap.put(id, request);
-        Intent i = new Intent(context, ProxyActivity.class);
+        Service service = BoosterService.getService();
+        Intent i = new Intent(service, ProxyActivity.class);
         i.putExtra("ACTION", "CALL_PLUGIN");
         i.putExtra("ID", id);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        context.startActivity(i);
+        service.startActivity(i);
     }
 
     static public void runPlugin(Context proxy, int id) {
