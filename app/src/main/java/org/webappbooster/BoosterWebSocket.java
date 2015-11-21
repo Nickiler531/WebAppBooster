@@ -16,19 +16,19 @@
 
 package org.webappbooster;
 
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import android.util.Log;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import android.util.Log;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BoosterWebSocket extends WebSocketServer {
 
@@ -47,7 +47,8 @@ public class BoosterWebSocket extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        if (!conn.getRemoteSocketAddress().getAddress().getHostAddress().equals("127.0.0.1")) {
+        String originAddr = conn.getRemoteSocketAddress().getAddress().getHostAddress();
+        if (!"127.0.0.1".equals(originAddr) && !"::1".equals(originAddr)) {
             Log.d("WAB", "Connection did not originate from localhost");
             conn.close(CloseFrame.GOING_AWAY);
             return;
