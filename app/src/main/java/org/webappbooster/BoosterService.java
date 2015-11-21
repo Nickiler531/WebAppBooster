@@ -16,15 +16,6 @@
 
 package org.webappbooster;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
-
-import org.simpleframework.http.core.Container;
-import org.simpleframework.transport.connect.Connection;
-import org.simpleframework.transport.connect.SocketConnection;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -35,12 +26,21 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.simpleframework.http.core.Container;
+import org.simpleframework.http.core.ContainerSocketProcessor;
+import org.simpleframework.transport.connect.Connection;
+import org.simpleframework.transport.connect.SocketConnection;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
+
 public class BoosterService extends Service {
 
     private IBinder               binder           = new LocalBinder();
     private BoosterWebSocket      webSocket        = null;
-    private Connection            httpSocket       = null;
-    private Thread                httpServerThread = null;
+    private Connection            connection       = null;
 
     static private BoosterService service          = null;
 
@@ -127,39 +127,30 @@ public class BoosterService extends Service {
         }
     }
 
-    private void startHttpServer() {
-        if (httpServerThread != null) {
-            return;
-        }
-        httpServerThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Container container = new HTTPServer();
-                    httpSocket = new SocketConnection(container);
-                    SocketAddress address = new InetSocketAddress(Config.PORT_HTTP);
-                    httpSocket.connect(address);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        httpServerThread.start();
-    }
-
-    private void stopHttpServer() {
-        if (httpSocket == null) {
+    public void startHttpServer() {
+        if (connection != null) {
             return;
         }
         try {
-            httpSocket.close();
-            httpServerThread.join();
-        } catch (IOException e) {
-        } catch (InterruptedException e) {
+            Container container = new HTTPServer();
+            ContainerSocketProcessor processor = new ContainerSocketProcessor(container, 3);
+            connection = new SocketConnection(processor);
+            SocketAddress address = new InetSocketAddress(Config.PORT_HTTP);
+            connection.connect(address);
+
+        } catch (IOException ex) {
+            Log.e("WAB", "Could not start HTTP server: " + ex.getMessage());
         }
-        httpSocket = null;
-        httpServerThread = null;
+
+    }
+
+    public void stopHttpServer() {
+        try {
+            connection.close();
+        } catch (IOException ex) {
+            Log.e("WAB", "Could not stop HTTP server: " + ex.getMessage());
+        }
+        connection = null;
     }
 
     static public BoosterService getService() {

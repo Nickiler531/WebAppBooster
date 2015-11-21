@@ -16,18 +16,18 @@
 
 package org.webappbooster;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import android.net.Uri;
+import android.util.Log;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
 
-import android.net.Uri;
-import android.util.Log;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 public class HTTPServer implements Container {
 
@@ -58,15 +58,16 @@ public class HTTPServer implements Container {
             }
 
             Log.d("WAB-HTTP", uri);
-            response.set("Content-Type", mimeType);
-            response.set("Server", "WebAppBooster/1.0");
+            response.setContentType(mimeType);
+            response.setValue("Server", "WebAppBooster/1.0");
             // CORS header is not needed since we will never send JavaScript
             // response.set("Access-Control-Allow-Origin", "*");
             response.setDate("Date", time);
             response.setDate("Last-Modified", time);
 
             if (uri.startsWith("file://")) {
-                FileUtils.copyFile(new File(uri.substring("file://".length())), body);
+                FileInputStream in = new FileInputStream(new File(uri.substring("file://".length())));
+                IOUtils.copy(in, body);
             }
             if (uri.startsWith("content://")) {
                 IOUtils.copy(BoosterApplication.getAppContext().getContentResolver()
