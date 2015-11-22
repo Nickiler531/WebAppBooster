@@ -19,14 +19,6 @@ package org.webappbooster;
 import android.app.Application;
 import android.content.Context;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.webappbooster.util.ACRAPostSender;
-
-import java.util.HashMap;
-
-@ReportsCrashes(formUri = "", mode = ReportingInteractionMode.TOAST, forceCloseDialogAfterToast = false, resToastText = R.string.acra_toast_text)
 public class BoosterApplication extends Application {
 
     private static Context context;
@@ -34,9 +26,6 @@ public class BoosterApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-        ACRA.init(this);
-        HashMap<String, String> ACRAData = new HashMap<String, String>();
-        ACRA.getErrorReporter().setReportSender(new ACRAPostSender(ACRAData));
     }
 
     public static Context getAppContext() {
