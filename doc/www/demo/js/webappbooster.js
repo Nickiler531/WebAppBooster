@@ -16,7 +16,7 @@
 
 var WebAppBooster = {
 
-    URI: "ws://localhost:8042",
+    URI: "wss://local.webappbooster.org:8042",
     
     OK: 0,
     CLOSED: 1,

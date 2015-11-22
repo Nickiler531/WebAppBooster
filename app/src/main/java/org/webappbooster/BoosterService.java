@@ -26,17 +26,26 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.core.ContainerSocketProcessor;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
+import java.security.KeyStore;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 public class BoosterService extends Service {
+
+    // This is the not very secret KeyStore password
+    final private static String   KEYSTORE_PASSWD  = "mysecret";
 
     private IBinder               binder           = new LocalBinder();
     private BoosterWebSocket      webSocket        = null;
@@ -106,10 +115,24 @@ public class BoosterService extends Service {
         // WebSocket.DEBUG = true;
         try {
             if (webSocket == null) {
-                webSocket = new BoosterWebSocket(this);
-                webSocket.start();
+                KeyStore keyStore = KeyStore.getInstance("BKS");
+                InputStream in = getResources().openRawResource(R.raw.local_webappbooster_org);
+                try {
+                    keyStore.load(in, KEYSTORE_PASSWD.toCharArray());
+                    KeyManagerFactory kmf = KeyManagerFactory.getInstance("X509");
+                    kmf.init(keyStore, KEYSTORE_PASSWD.toCharArray());
+                    TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+                    tmf.init(keyStore);
+                    SSLContext sslContext = SSLContext.getInstance("TLS");
+                    sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+                    webSocket = new BoosterWebSocket(this);
+                    webSocket.setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
+                    webSocket.start();
+                } finally {
+                    in.close();
+                }
             }
-        } catch (UnknownHostException e) {
+        } catch (Exception e) {
             webSocket = null;
             // TODO Auto-generated catch block
             e.printStackTrace();
